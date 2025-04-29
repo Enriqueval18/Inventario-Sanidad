@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contenedorlogin"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#d0eaff">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/fondoanimado"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="background_lottie.json" />
+
+    <LinearLayout
+        android:layout_width="404dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            layout="@layout/tarjeta_error_login"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.85" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textobienvenida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="304dp"
+        android:alpha="0"
+        android:fontFamily="@font/kameron"
+        android:text="@string/bienvenido"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fondoanimado" />
+    <TextView
+        android:id="@+id/textodeinicio"
+        android:layout_width="wrap_content"
+        android:alpha="0"
+        android:layout_height="wrap_content"
+        android:text="@string/inicio"
+        android:fontFamily="@font/inter2"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/textobienvenida"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/casillausuario"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:background="@null"
+        android:drawableStart="@drawable/user"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/kameron"
+        android:hint="@string/usuario"
+        android:alpha="0"
+        android:inputType="textEmailAddress"
+        android:paddingStart="12dp"
+        android:textColor="#000"
+        android:textColorHint="#555"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textodeinicio"
+        app:layout_constraintWidth_percent="0.85" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/casillausuario"
+        app:layout_constraintStart_toStartOf="@id/casillausuario"
+        app:layout_constraintEnd_toEndOf="@id/casillausuario" />
+
+
+    <EditText
+        android:id="@+id/casillacontrasena"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="@string/contrasena"
+        android:fontFamily="@font/kameron"
+        android:drawableStart="@drawable/candado"
+        android:drawablePadding="8dp"
+        android:alpha="0"
+        android:paddingStart="12dp"
+        android:background="@null"
+        android:textColorHint="#555"
+        android:textColor="#000"
+        android:layout_marginTop="20dp"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/casillausuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintWidth_percent="0.85" />
+
+
+
+    <ImageView
+        android:id="@+id/vistacontrena"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ojo_cerrado"
+        app:layout_constraintTop_toTopOf="@id/casillacontrasena"
+        app:layout_constraintBottom_toBottomOf="@id/casillacontrasena"
+        app:layout_constraintEnd_toEndOf="@id/casillacontrasena"
+        android:layout_marginEnd="12dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/casillacontrasena"
+        app:layout_constraintStart_toStartOf="@id/casillacontrasena"
+        app:layout_constraintEnd_toEndOf="@id/casillacontrasena" />
+
+    <Button
+        android:id="@+id/botonlogin"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:text="@string/entrar"
+        android:fontFamily="@font/kameron"
+        android:backgroundTint="#a63317"
+        android:textColor="#ffffff"
+        android:alpha="0"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/casillacontrasena"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

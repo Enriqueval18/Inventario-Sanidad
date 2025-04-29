@@ -25,7 +25,7 @@ public class PantallaInicio extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);  //Animacion a la hora de pasar al siguiente Fragmento
-                //transaction.replace(android.R.id.content, new Login());
+                transaction.replace(android.R.id.content, new Login());
                 transaction.commit();
             }
         }, 3500);
