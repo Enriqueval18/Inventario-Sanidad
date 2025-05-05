@@ -31,4 +31,5 @@ public class PantallaInicio extends AppCompatActivity {
         }, 3500);
     }
 
+
 }
