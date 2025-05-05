@@ -2,71 +2,54 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/errorCard"
+    android:id="@+id/Tarjetanavegacion"
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:layout_marginTop="120dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:background="@android:color/white"
-    android:visibility="visible"
     android:backgroundTint="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="match_parent"
         android:padding="12dp">
 
-        <!-- Primer icono: Se utiliza un width en 0dp y un porcentaje para que se ajuste correctamente -->
         <ImageView
-            android:id="@+id/btnOpcion31"
+            android:id="@+id/btnInventario"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/inventario"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnOpcion2"
+            app:layout_constraintEnd_toStartOf="@+id/btnActividades"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintWidth_percent="0.5" />
 
-        <!-- Segundo icono -->
         <ImageView
-            android:id="@+id/btnOpcion2"
+            android:id="@+id/btnActividades"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="8dp"
             android:src="@drawable/actividades"
-            app:layout_constraintStart_toEndOf="@id/btnOpcion31"
-            app:layout_constraintEnd_toStartOf="@+id/btnOpcion3"
+            app:layout_constraintStart_toEndOf="@id/btnInventario"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
-
-        <!-- Tercer icono -->
-        <ImageView
-            android:id="@+id/btnOpcion3"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="2dp"
-            android:src="@drawable/usuariop"
-            app:layout_constraintStart_toEndOf="@+id/btnOpcion2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintWidth_percent="0.5" />
 
-        <!-- Indicador: Puedes ajustar su tamaño o utilizar guidelines para ubicarlo -->
         <View
             android:id="@+id/indicator"
             android:layout_width="50dp"
             android:layout_height="4dp"
             android:layout_marginTop="4dp"
             android:background="@drawable/rounded_indicator"
-            app:layout_constraintStart_toStartOf="@+id/btnOpcion31"
-            app:layout_constraintEnd_toEndOf="@+id/btnOpcion31"
-            app:layout_constraintTop_toBottomOf="@+id/btnOpcion31" />
+            app:layout_constraintStart_toStartOf="@+id/btnInventario"
+            app:layout_constraintEnd_toEndOf="@+id/btnInventario"
+            app:layout_constraintTop_toBottomOf="@+id/btnInventario" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

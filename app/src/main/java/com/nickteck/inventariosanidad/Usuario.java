@@ -1,31 +1,25 @@
 package com.nickteck.inventariosanidad;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import com.nickteck.inventariosanidad.R;
 
 public class Usuario extends Fragment {
-
-    // Variable global para nuestro indicador
     private View indicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Infla el layout que contiene el contenedor central, la tarjeta de usuario y la navegación
         View view = inflater.inflate(R.layout.fragment_usuario, container, false);
 
-        // Referencias a los botones (imágenes) de navegación.
-        ImageView navHome = view.findViewById(R.id.btnOpcion31);
-        ImageView navNotif = view.findViewById(R.id.btnOpcion2);
-        ImageView navUser  = view.findViewById(R.id.btnOpcion3);
+        ImageView navInventario = view.findViewById(R.id.btnInventario);
+        ImageView navActividades = view.findViewById(R.id.btnActividades);
 
-        // Referencia al indicador (el <View> que se moverá)
+        // Referencia al indicador que se movera
         indicator = view.findViewById(R.id.indicator);
+
+
 
 //        // Si es la primera vez que se crea el fragmento, cargar el fragmento "Cerrars" por defecto
 //        if (savedInstanceState == null) {
@@ -69,7 +63,11 @@ public class Usuario extends Fragment {
         return view;
     }
 
-    private void animateIndicatorTo(View targetView) {
+    /**
+     * Metodo de animacion que hace que se mueva la parte inferior de la pantalla
+     * @param targetView hace referencia a los botones de la navegacion
+     */
+    private void animacion_indicador(View targetView) {
         targetView.post(() -> {
             float targetCenterX = targetView.getX() + (targetView.getWidth() / 2f);
             float newX = targetCenterX - (indicator.getWidth() / 2f);

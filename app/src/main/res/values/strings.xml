@@ -7,5 +7,7 @@
     <string name="contrasena">Contraseña</string>
     <string name="entrar">ENTRAR</string>
     <string name="usuario_incorrecto">Usuario incorrecto</string>
+    <string name="nombre_usuario">Nombre usuario</string>
+    <string name="rol">Rol</string>
 
 </resources>
