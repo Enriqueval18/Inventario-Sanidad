@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.InventarioSanidad" parent="Base.Theme.InventarioSanidad" />
+
+    <style name="PantallaCompleta" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Hace que la ventana sea translúcida y no muestre el fondo de la Activity -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <!-- Esto activa un oscurecimiento -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- Ajusta la opacidad del oscurecimiento -->
+        <item name="android:backgroundDimAmount">0.8</item>
+    </style>
 </resources>

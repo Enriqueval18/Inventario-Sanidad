@@ -9,5 +9,11 @@
     <string name="usuario_incorrecto">Usuario incorrecto</string>
     <string name="nombre_usuario">Nombre usuario</string>
     <string name="rol">Rol</string>
+    <string name="material">Material</string>
+    <string name="nombre">Nombre</string>
+    <string name="descripcion">Descripción</string>
+    <string name="est_s_apunto_de_cerrar_sesi_n">ESTÁS APUNTO DE CERRAR SESIÓN</string>
+    <string name="quedarme">Quedarme</string>
+    <string name="salir">Salir</string>
 
 </resources>

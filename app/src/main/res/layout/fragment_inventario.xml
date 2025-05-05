@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/TablaInventario"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:stretchColumns="*">
+
+    <TableRow
+        android:background="@drawable/rounded_indicator"
+        android:padding="4dp">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/material"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/nombre"
+            android:textStyle="bold"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/descripcion"
+            android:textStyle="bold"
+            android:padding="8dp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/Tablafilamaterial"
+        android:padding="4dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="01"
+            android:textColor="#000000"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Guantes"
+            android:textColor="#000000"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Guantes de seguro"
+            android:textColor="#000000"
+            android:padding="8dp" />
+    </TableRow>
+
+</TableLayout>
