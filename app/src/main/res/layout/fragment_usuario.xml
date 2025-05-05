@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/admistrador"
+    android:id="@+id/usuario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D0EAFF">
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieBackground2"
+        android:id="@+id/lottieBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"
@@ -20,10 +20,59 @@
         android:alpha="0.25"
         android:layout_gravity="center" />
 
+    <!-- Tarjeta usuario con menu-->
+    <include
+        android:id="@+id/tarjetaUsuario"
+        layout="@layout/layout_informacion_usuario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Contenido central dinámico -->
+
+    <!-- Layout de navegación -->
+
+    <FrameLayout
+        android:id="@+id/contenedorFragmento"
+        android:layout_width="0dp"
+        android:layout_height="610dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_frame_background"
+        android:clipToOutline="true"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigationLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tarjetaUsuario">
+
+        <!-- Contenido de los fragmentos se cargará aquí -->
+    </FrameLayout>
+
+    <include
+        android:id="@+id/navigationLayout"
+        layout="@layout/layout_navegacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedorFragmento" />  <!-- Conexión directa con el fragmento -->
 
     <!-- Barra inferior -->
     <LinearLayout
-        android:id="@+id/bottomBar2"
+        android:id="@+id/bottomBar"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:background="@android:color/white"
@@ -35,14 +84,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Usuario"
-        android:textSize="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="251dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
