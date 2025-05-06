@@ -9,7 +9,7 @@
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieBackground2"
+        android:id="@+id/Fondobackgroundpro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"

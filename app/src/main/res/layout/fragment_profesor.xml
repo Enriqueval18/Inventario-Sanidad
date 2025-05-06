@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/admistrador"
+    android:id="@+id/profesor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D0EAFF">
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieBackground2"
+        android:id="@+id/Fondobackgroundpro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"
@@ -20,10 +19,53 @@
         android:alpha="0.25"
         android:layout_gravity="center" />
 
+    <include
+        android:id="@+id/Tarjetaprofesor"
+        layout="@layout/layout_informacion_profesor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Barra inferior -->
+
+    <FrameLayout
+        android:id="@+id/contenedorpro"
+        android:layout_width="0dp"
+        android:layout_height="610dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_frame_background"
+        android:clipToOutline="true"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/navegacionpro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Tarjetaprofesor">
+    </FrameLayout>
+
+    <include
+        android:id="@+id/navegacionpro"
+        layout="@layout/layout_navegacion_profesor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/barrainferior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedorpro" />
+
+
     <LinearLayout
-        android:id="@+id/bottomBar2"
+        android:id="@+id/barrainferior"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:background="@android:color/white"
@@ -35,14 +77,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profesor"
-        android:textSize="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="251dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

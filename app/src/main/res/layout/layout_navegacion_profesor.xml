@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/TarjetanavegacionProfesor"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:layout_marginTop="120dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:background="@android:color/white"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/btnHistorial"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/historial"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnInventariopro"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.20" />
+
+        <ImageView
+            android:id="@+id/btnInventariopro"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/inventario"
+            app:layout_constraintStart_toEndOf="@id/btnHistorial"
+            app:layout_constraintEnd_toStartOf="@+id/btnActividadespro"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.20" />
+
+        <ImageView
+            android:id="@+id/btnActividadespro"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/actividades"
+            app:layout_constraintStart_toEndOf="@id/btnInventariopro"
+            app:layout_constraintEnd_toStartOf="@+id/btnMaterialespro"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.20" />
+
+        <ImageView
+            android:id="@+id/btnMaterialespro"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/material"
+            app:layout_constraintStart_toEndOf="@id/btnActividadespro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.20" />
+
+        <View
+            android:id="@+id/indicator2"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/rounded_indicator"
+            app:layout_constraintStart_toStartOf="@+id/btnHistorial"
+            app:layout_constraintEnd_toEndOf="@+id/btnHistorial"
+            app:layout_constraintTop_toBottomOf="@+id/btnHistorial" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

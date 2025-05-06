@@ -1,4 +1,5 @@
-package com.nickteck.inventariosanidad.Usuario;
+package com.nickteck.inventariosanidad.Profesor;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,68 +9,75 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.Usuario.Inventario;
 
-public class Usuario extends Fragment {
-    private View indicator;
+public class Profesor extends Fragment {
+    private View indicador;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_usuario, container, false);
 
-        ImageView navInventario = view.findViewById(R.id.btnInventario);
-        ImageView navActividades = view.findViewById(R.id.btnActividades);
+        View view = inflater.inflate(R.layout.fragment_profesor, container, false);
+        View navLayout = view.findViewById(R.id.navegacionpro);
+        ImageView navHistorial  = navLayout.findViewById(R.id.btnHistorial);
+        ImageView navInventario = navLayout.findViewById(R.id.btnInventariopro);
+        ImageView navActividades = navLayout.findViewById(R.id.btnActividadespro);
+        ImageView navMateriales  = navLayout.findViewById(R.id.btnMaterialespro);
+        indicador = navLayout.findViewById(R.id.indicator2);
 
-        // Referencia al indicador que se movera
-        indicator = view.findViewById(R.id.indicator);
 
-        //Que cargue por primera vez al fragmento principal
         if (savedInstanceState == null) {
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            transaction.replace(R.id.contenedorFragmento, new Inventario());
+            transaction.replace(R.id.contenedorpro, new HistorialFragment());
             transaction.commit();
 
-            navInventario.post(() -> {
-                float targetCenterX = navInventario.getX() + (navInventario.getWidth() / 2f);
-                float newX = targetCenterX - (indicator.getWidth() / 2f);
-                indicator.setX(newX);
+            navHistorial.post(() -> {
+                float targetCenterX = navHistorial.getX() + (navHistorial.getWidth() / 2f);
+                float newX = targetCenterX - (indicador.getWidth() / 2f);
+                indicador.setX(newX);
             });
         }
+
+        navHistorial.setOnClickListener(v -> {
+            animacion_indicador(v);
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.contenedorpro, new HistorialFragment());
+            transaction.commit();
+        });
 
         navInventario.setOnClickListener(v -> {
             animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorFragmento, new Inventario());
+            transaction.replace(R.id.contenedorpro, new Inventario());
             transaction.commit();
         });
+
 
         navActividades.setOnClickListener(v -> {
             animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorFragmento, new Actividades());
+            transaction.replace(R.id.contenedorpro, new Actividades_profesor());
+            transaction.commit();
+        });
+
+        navMateriales.setOnClickListener(v -> {
+            animacion_indicador(v);
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.contenedorpro, new Materiales());
             transaction.commit();
         });
 
         ImageView btnSalir = view.findViewById(R.id.BtnSalir);
-
         btnSalir.setOnClickListener(v -> Tarjeta_salida());
-        return view;
-    }
 
-    /**
-     * Metodo de animacion que hace que se mueva la parte inferior de la pantalla
-     * @param targetView hace referencia a los botones de la navegacion
-     */
-    private void animacion_indicador(View targetView) {
-        targetView.post(() -> {
-            float targetCenterX = targetView.getX() + (targetView.getWidth() / 2f);
-            float newX = targetCenterX - (indicator.getWidth() / 2f);
-            indicator.animate().x(newX).setDuration(150).start();
-        });
+        return view;
     }
 
     /**
@@ -104,5 +112,14 @@ public class Usuario extends Fragment {
         logoutDialog.show();
     }
 
-
+    /**
+     * Mueve el indicador con una animación para posicionarlo debajo del icono pulsado.
+     */
+    private void animacion_indicador(View targetView) {
+        targetView.post(() -> {
+            float targetCenterX = targetView.getX() + (targetView.getWidth() / 2f);
+            float newX = targetCenterX - (indicador.getWidth() / 2f);
+            indicador.animate().x(newX).setDuration(150).start();
+        });
+    }
 }
