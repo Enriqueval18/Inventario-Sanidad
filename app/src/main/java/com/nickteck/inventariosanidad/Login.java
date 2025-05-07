@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,18 @@ import android.widget.Button;
 import android.os.Vibrator;
 import android.content.Context;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.airbnb.lottie.LottieAnimationView;
+import com.nickteck.inventariosanidad.sampledata.Usuario;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
+import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 
-public class Login extends  Fragment{
+public class Login extends Fragment {
     private EditText contrasena;
     private EditText nombre_usuario;
     private ImageView ver_contrasena;
@@ -34,7 +40,7 @@ public class Login extends  Fragment{
     private boolean estado_contrasena = false;
     private LottieAnimationView errorAnimation;
     private TextView texto_bienvenida;
-    private TextView subtexto ;
+    private TextView subtexto;
     private TextView errortexto;
 
     @Override
@@ -53,35 +59,66 @@ public class Login extends  Fragment{
         return view;
     }
 
-    /**
-     * Configura el botón de login, validando los datos
-     * @param bounce realiza las transicciones
-     */
+
+
     private void Boton_login(Animation bounce) {
         boton_entrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.startAnimation(bounce);
-                String usuario = nombre_usuario.getText().toString().trim();
-                String con = contrasena.getText().toString().trim();
+                try {
+                    // Animación de rebote
+                    v.startAnimation(bounce);
 
-                if (usuario.equals("usuario") && con.equals("usuario")) {
-                    Cambiarfragmento(new Usuario());
-                } else if (usuario.equals("profesor") && con.equals("profesor")) {
-                    Cambiarfragmento(new Profesor());
-                } else if (usuario.equals("admin") && con.equals("admin")) {
-                    Cambiarfragmento(new Administrador());
-                } else {
-                    mostrarerror(usuario, con);
+                    String usuario = nombre_usuario.getText().toString().trim();
+                    String con = contrasena.getText().toString().trim();
+
+                    // Mostramos un Toast indicando que la validación ha comenzado
+                    Toast.makeText(getActivity(), "Verificando usuario...", Toast.LENGTH_SHORT).show();
+
+                    // Llamada a la función de verificación
+                    Utilidades.verificarUsuario(new Usuario(usuario,con), con, new UsuarioCallback() {
+                        @Override
+                        public void onResultado(boolean existe) {
+                            // Aquí estamos asegurándonos de que el cambio de fragmento solo se haga cuando tengamos la respuesta
+                            if (existe) {
+                                // Si el usuario existe, mostramos el Toast
+                                Toast.makeText(getActivity(), "¡Usuario encontrado!", Toast.LENGTH_SHORT).show();
+                                Cambiarfragmento(new Profesor());
+                            } else {
+                                // Si el usuario no existe, mostramos un mensaje de error
+                                Toast.makeText(getActivity(), "¡Usuario NO encontrado!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+
+                        @Override
+                        public void onFailure(boolean error) {
+                            if(error){
+                                // Si el usuario no existe, mostramos un mensaje de error
+                                Toast.makeText(getActivity(), "NO SE CONECTO A LA API!", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+
+
+                    });
+
+                    // 🚨 Recuerda que la respuesta no llega de inmediato,
+                    // por lo que no puedes hacer `if` aquí directamente en el main.
+                    System.out.println("📨 La petición fue enviada. Esperando respuesta...");
+
+                } catch (Exception e) {
+                    // Si ocurre una excepción, mostramos el mensaje de error
+                    Log.e("LoginError", "Error en la validación del usuario", e);
+                    Toast.makeText(getActivity(), "¡Error en la validación! Por favor intente más tarde.", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
-    /**
-     * Metodo para pasar al fragmento correspondiente despues de la validacion
-     * @param targetFragment Para hacer la transiccion al fragmento correspondiente
-     */
+
+
     private void Cambiarfragmento(Fragment targetFragment) {
         boton_entrar.setText("✓");
         boton_entrar.setBackgroundTintList(
@@ -99,11 +136,6 @@ public class Login extends  Fragment{
         }, 2500);
     }
 
-    /**
-     * Muestra diferentes tipos de errores, dependiendo del campo en el cual consultemos, vibra en el caso que sea un error
-     * @param usuario hace referencia al usuario
-     * @param password hace referencia a la contraseña
-     */
     private void mostrarerror(String usuario, String password) {
         if (usuario.isEmpty() && password.isEmpty()) {
             errortexto.setText("Introduce los datos");
@@ -133,16 +165,11 @@ public class Login extends  Fragment{
                 tarjeta_error.setVisibility(View.GONE);
             }
         }, 1500);
+
+        // Agregamos un Toast para mostrar que ocurrió un error
+        Toast.makeText(getActivity(), "Error en la validación", Toast.LENGTH_SHORT).show();
     }
 
-
-
-    //----------------------MODIFICAR SI ES NECESARIO---------------------------------
-
-    /**
-     * Metodo que inicia las variables del layout
-     * @param view permite iniciar
-     */
     private void Asociarvaribles(View view) {
         contrasena = view.findViewById(R.id.casillacontrasena);
         nombre_usuario = view.findViewById(R.id.casillausuario);
@@ -156,51 +183,41 @@ public class Login extends  Fragment{
         errorAnimation = view.findViewById(R.id.animacionerror);
     }
 
-    /**
-     * Metodo que inicia las animaciones de cada texto
-     * @param fadeIn animacion de entrada
-     */
     private void Animacionesentrada(final Animation fadeIn) {
-        //Texto bienvenida
         new Handler().postDelayed(() -> {
             texto_bienvenida.setAlpha(1f);
             texto_bienvenida.startAnimation(fadeIn);
         }, 500);
-        //Subtexto
         new Handler().postDelayed(() -> {
             subtexto.setAlpha(1f);
             subtexto.startAnimation(fadeIn);
         }, 700);
-        //Nombre de usuario
         new Handler().postDelayed(() -> {
             nombre_usuario.setAlpha(1f);
             nombre_usuario.startAnimation(fadeIn);
         }, 900);
-        //Contraseña
         new Handler().postDelayed(() -> {
             contrasena.setAlpha(1f);
             contrasena.startAnimation(fadeIn);
         }, 1100);
-        //Boton de entrar
         new Handler().postDelayed(() -> {
             boton_entrar.setAlpha(1f);
             boton_entrar.startAnimation(fadeIn);
         }, 1300);
     }
 
-    /**
-     * Metodo que Habilita o deshabilita el botón según campos vacíos
-     */
     private void BotonHabilitar() {
         TextWatcher formWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean camposLlenos = !nombre_usuario.getText().toString().trim().isEmpty() && !contrasena.getText().toString().trim().isEmpty();
                 boton_entrar.setEnabled(camposLlenos);
                 boton_entrar.setAlpha(camposLlenos ? 1f : 0.5f);
             }
+
             @Override
             public void afterTextChanged(Editable s) {}
         };
@@ -208,9 +225,6 @@ public class Login extends  Fragment{
         contrasena.addTextChangedListener(formWatcher);
     }
 
-    /**
-     * Alterna la visibilidad de la contraseña y actualiza el icono correspondiente hace llamada
-     */
     private void MostrarContra() {
         ver_contrasena.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,9 +234,6 @@ public class Login extends  Fragment{
         });
     }
 
-    /**
-     * Mostrar o Ocultar contraseña
-     */
     private void Cambioimagenes() {
         if (estado_contrasena) {
             contrasena.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -234,5 +245,4 @@ public class Login extends  Fragment{
         estado_contrasena = !estado_contrasena;
         contrasena.setSelection(contrasena.getText().length());
     }
-
 }
