@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/admistrador"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +8,7 @@
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/Fondobackgroundpro"
+        android:id="@+id/fondolottieadmin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="0dp"
@@ -20,10 +19,53 @@
         android:alpha="0.25"
         android:layout_gravity="center" />
 
+    <include
+        android:id="@+id/tarjetaadming"
+        layout="@layout/layout_informacion_administrador"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Barra inferior -->
+
+    <FrameLayout
+        android:id="@+id/contenedoradmin"
+        android:layout_width="0dp"
+        android:layout_height="610dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_frame_background"
+        android:clipToOutline="true"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/navegacionadming"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tarjetaadming">
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/navegacionadming"
+        layout="@layout/layout_navegacion_administrador"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/parteinferioradmin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contenedoradmin" />  <!-- Conexión directa con el fragmento -->
+
     <LinearLayout
-        android:id="@+id/bottomBar2"
+        android:id="@+id/parteinferioradmin"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:background="@android:color/white"
@@ -35,14 +77,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Administrador"
-        android:textSize="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="251dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/TarjetanavegacionProfesor"
+    android:id="@+id/tarjetaNavegacionAdmin"
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:layout_marginTop="120dp"
@@ -15,56 +15,44 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="match_parent"
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/btnHistorial"
+            android:id="@+id/btnAgregar"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/historial"
+            android:src="@drawable/agregar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnInventariopro"
+            app:layout_constraintEnd_toStartOf="@+id/btnInventarioAdmin"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.20" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_chainStyle="spread" />
 
         <ImageView
-            android:id="@+id/btnInventariopro"
+            android:id="@+id/btnInventarioAdmin"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
             android:layout_marginEnd="4dp"
             android:src="@drawable/inventario"
-            app:layout_constraintStart_toEndOf="@id/btnHistorial"
-            app:layout_constraintEnd_toStartOf="@+id/btnActividadespro"
+            app:layout_constraintStart_toEndOf="@id/btnAgregar"
+            app:layout_constraintEnd_toStartOf="@+id/btnActividadesAdmin"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.20" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1" />
 
         <ImageView
-            android:id="@+id/btnActividadespro"
+            android:id="@+id/btnActividadesAdmin"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
             android:src="@drawable/actividades"
-            app:layout_constraintStart_toEndOf="@id/btnInventariopro"
-            app:layout_constraintEnd_toStartOf="@+id/btnMaterialespro"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.20" />
-
-        <ImageView
-            android:id="@+id/btnMaterialespro"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/material"
-            app:layout_constraintStart_toEndOf="@id/btnActividadespro"
+            app:layout_constraintStart_toEndOf="@id/btnInventarioAdmin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.20" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1" />
 
         <View
             android:id="@+id/indicadorpesadmin"
@@ -72,9 +60,11 @@
             android:layout_height="4dp"
             android:layout_marginTop="4dp"
             android:background="@drawable/rounded_indicator"
-            app:layout_constraintStart_toStartOf="@+id/btnHistorial"
-            app:layout_constraintEnd_toEndOf="@+id/btnHistorial"
-            app:layout_constraintTop_toBottomOf="@+id/btnHistorial" />
+            app:layout_constraintTop_toBottomOf="@id/btnAgregar"
+            app:layout_constraintStart_toStartOf="@id/btnAgregar"
+            app:layout_constraintEnd_toEndOf="@id/btnAgregar"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
+

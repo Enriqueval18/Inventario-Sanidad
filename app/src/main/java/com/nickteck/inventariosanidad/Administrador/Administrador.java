@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Profesor;
+package com.nickteck.inventariosanidad.Administrador;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -9,53 +9,50 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.Inventario;
 
-public class Profesor extends Fragment {
+public class Administrador extends Fragment {
     private View indicador;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_administrador, container, false);
+        View navadmin = view.findViewById(R.id.navegacionadming);
 
-        View view = inflater.inflate(R.layout.fragment_profesor, container, false);
-        View navLayout = view.findViewById(R.id.navegacionpro);
-        ImageView navHistorial  = navLayout.findViewById(R.id.btnHistorial);
-        ImageView navInventario = navLayout.findViewById(R.id.btnInventariopro);
-        ImageView navActividades = navLayout.findViewById(R.id.btnActividadespro);
-        ImageView navMateriales  = navLayout.findViewById(R.id.btnMaterialespro);
-        indicador = navLayout.findViewById(R.id.indicadorpesadmin);
+        ImageView navAgregar = navadmin.findViewById(R.id.btnAgregar);
+        ImageView navInventario = navadmin.findViewById(R.id.btnInventarioAdmin);
+        ImageView navActividades = navadmin.findViewById(R.id.btnActividadesAdmin);
 
+        indicador = navadmin.findViewById(R.id.indicadorpesadmin);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            transaction.replace(R.id.contenedorpro, new HistorialFragment());
+            transaction.replace(R.id.contenedoradmin, new Administrar_usuarios());
             transaction.commit();
 
-            navHistorial.post(() -> {
-                float targetCenterX = navHistorial.getX() + (navHistorial.getWidth() / 2f);
+            navAgregar.post(() -> {
+                float targetCenterX = navAgregar.getX() + (navAgregar.getWidth() / 2f);
                 float newX = targetCenterX - (indicador.getWidth() / 2f);
                 indicador.setX(newX);
             });
         }
 
-        navHistorial.setOnClickListener(v -> {
+        navAgregar.setOnClickListener(v -> {
             animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorpro, new HistorialFragment());
+            transaction.replace(R.id.contenedoradmin, new Administrar_usuarios());
             transaction.commit();
         });
 
         navInventario.setOnClickListener(v -> {
             animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorpro, new Inventario());
+            transaction.replace(R.id.contenedoradmin, new Peticionesusuario());
             transaction.commit();
         });
 
@@ -63,14 +60,7 @@ public class Profesor extends Fragment {
         navActividades.setOnClickListener(v -> {
             animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorpro, new Actividades_profesor());
-            transaction.commit();
-        });
-
-        navMateriales.setOnClickListener(v -> {
-            animacion_indicador(v);
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorpro, new Materiales());
+            transaction.replace(R.id.contenedoradmin, new Dobleinventario());
             transaction.commit();
         });
 
@@ -79,6 +69,8 @@ public class Profesor extends Fragment {
 
         return view;
     }
+
+
 
     /**
      * Metodo que hace que aparezca al usuario una tarjeta para decidir si desea cerrar sesión o no
