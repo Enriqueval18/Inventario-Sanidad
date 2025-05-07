@@ -66,13 +66,14 @@ public class Utilidades {
                     try {
 
                         // Verificamos si el estado es "success"
-                        if ("admin".equals(nombre)) {
-                            Log.e("aaaaaa", "Usuario encontrado");
-                            callback.onResultado(true);  // El usuario existe
-                        } else {
+                        if ("no existe".equals(nombre)) {
                             Log.e("encontrado", "Usuario no encontrado");
                             callback.onResultado(false);  // El usuario no existe
-                        }
+                        } else {
+                            Log.e("aaaaaa", "Usuario encontrado");
+                            callback.onResultado(true);  // El usuario existe
+
+                              }
                     } catch (Exception e) {
                         Log.e("JSONError", "Error al procesar la respuesta JSON", e);
                         callback.onResultado(false);  // En caso de error en el JSON, tratamos como usuario no encontrado
