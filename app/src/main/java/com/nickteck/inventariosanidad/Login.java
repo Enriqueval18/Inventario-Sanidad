@@ -18,13 +18,18 @@ import android.widget.Button;
 import android.os.Vibrator;
 import android.content.Context;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.airbnb.lottie.LottieAnimationView;
 import com.nickteck.inventariosanidad.Administrador.Administrador;
 import com.nickteck.inventariosanidad.Profesor.Profesor;
-import com.nickteck.inventariosanidad.Usuario.Usuario;
+import com.nickteck.inventariosanidad.Usuario.Usuario_Pantalla;
+import com.nickteck.inventariosanidad.sampledata.Usuario;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
+import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 
 public class Login extends  Fragment{
@@ -68,8 +73,39 @@ public class Login extends  Fragment{
                 String usuario = nombre_usuario.getText().toString().trim();
                 String con = contrasena.getText().toString().trim();
 
+                // Mostramos un Toast indicando que la validación ha comenzado
+                Toast.makeText(getActivity(), "Verificando usuario...", Toast.LENGTH_SHORT).show();
+
+                // Llamada a la función de verificación
+                Utilidades.verificarUsuario(new Usuario(usuario,con), con, new UsuarioCallback() {
+                    @Override
+                    public void onResultado(String tipo) {
+                        // Aquí estamos asegurándonos de que el cambio de fragmento solo se haga cuando tengamos la respuesta
+                        if (tipo.equals("admin")) {
+                            // Si el usuario existe, mostramos el Toast
+                            Toast.makeText(getActivity(), "¡Usuario encontrado!", Toast.LENGTH_SHORT).show();
+                            Cambiarfragmento(new Profesor());
+                        } else {
+                            // Si el usuario no existe, mostramos un mensaje de error
+                            Toast.makeText(getActivity(), "¡Usuario NO encontrado!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+
+                    @Override
+                    public void onFailure(boolean error) {
+                        if(error){
+                            // Si el usuario no existe, mostramos un mensaje de error
+                            Toast.makeText(getActivity(), "NO SE CONECTO A LA API!", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+
+                });
                 if (usuario.equals("usuario") && con.equals("usuario")) {
-                    Cambiarfragmento(new Usuario());
+                    Cambiarfragmento(new Usuario_Pantalla());
                 } else if (usuario.equals("profesor") && con.equals("profesor")) {
                     Cambiarfragmento(new Profesor());
                 } else if (usuario.equals("admin") && con.equals("admin")) {
@@ -90,9 +126,9 @@ public class Login extends  Fragment{
         boton_entrar.setBackgroundTintList(
                 ContextCompat.getColorStateList(requireContext(), R.color.green)
         );
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+
+        new Handler().postDelayed(() -> {
+            if (isAdded()) {
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)

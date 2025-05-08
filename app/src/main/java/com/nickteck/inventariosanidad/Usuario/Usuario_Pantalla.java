@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
 
-public class Usuario extends Fragment {
+public class Usuario_Pantalla extends Fragment {
     private View indicator;
 
     @Override
