@@ -85,9 +85,15 @@ public class Login extends  Fragment{
                             // Si el usuario existe, mostramos el Toast
                             Toast.makeText(getActivity(), "¡Usuario encontrado!", Toast.LENGTH_SHORT).show();
                             Cambiarfragmento(new Profesor());
-                        } else {
+                        } else if (tipo.equals("usuario")) {
+                            Cambiarfragmento(new Usuario_Pantalla());
+                        }
+                        else if(tipo.equals("profesor")) {
                             // Si el usuario no existe, mostramos un mensaje de error
-                            Toast.makeText(getActivity(), "¡Usuario NO encontrado!", Toast.LENGTH_SHORT).show();
+                            Cambiarfragmento(new Profesor());  }
+
+                        else {
+                            mostrarerror(usuario, con);
                         }
                     }
 
@@ -102,17 +108,8 @@ public class Login extends  Fragment{
                         }
                     }
 
-
                 });
-                if (usuario.equals("usuario") && con.equals("usuario")) {
-                    Cambiarfragmento(new Usuario_Pantalla());
-                } else if (usuario.equals("profesor") && con.equals("profesor")) {
-                    Cambiarfragmento(new Profesor());
-                } else if (usuario.equals("admin") && con.equals("admin")) {
-                    Cambiarfragmento(new Administrador());
-                } else {
-                    mostrarerror(usuario, con);
-                }
+
             }
         });
     }

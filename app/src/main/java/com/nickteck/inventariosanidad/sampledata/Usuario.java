@@ -3,6 +3,7 @@ package com.nickteck.inventariosanidad.sampledata;
 public class Usuario {
     private String nombre;
     private String contra;
+    private String tipo;
 
     public Usuario(String nombre, String contra) {
         this.nombre = nombre;
@@ -12,6 +13,14 @@ public class Usuario {
     // Getters
     public String getNombre() {
         return nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getContra() {

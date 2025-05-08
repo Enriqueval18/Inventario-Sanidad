@@ -57,34 +57,27 @@ public class Utilidades {
                 // Verificamos si la respuesta fue correcta (código 200–299)
                 // Y además que haya datos (el cuerpo no sea null)
                 if (response.isSuccessful() && response.body() != null) {
-                    // Obtenemos el cuerpo de la respuesta en formato JSON
                     Usuario usuario = response.body();
-                    String nombre = usuario.getNombre();
-                    Log.e("ResponseBody", nombre);  // Solo para depuración
+                    String tipo = usuario.getTipo();
+                    Log.d("LoginResponse", "Tipo recibido: " + tipo);
 
-                    // Si la respuesta es exitosa y no está vacía, verificamos el contenido del JSON
                     try {
-
-                        // Verificamos si el estado es "success"
-                        if ("no existe".equals(nombre)) {
-                            Log.e("encontrado", "Usuario no encontrado");
-                            callback.onResultado("false");  // El usuario no existe
-                        }
-                        else
-                        {
-                            Log.e("aaaaaa", "Usuario encontrado");
-                            callback.onResultado(nombre);  // El usuario existe
+                        if ("no existe".equals(tipo)) {
+                            Log.w("LoginResultado", "Usuario no encontrado en la base de datos.");
+                            callback.onResultado("false");
+                        } else {
+                            Log.i("LoginResultado", "Usuario encontrado. Tipo: " + tipo);
+                            callback.onResultado(tipo);
                         }
                     } catch (Exception e) {
-                        Log.e("JSONError", "Error al procesar la respuesta JSON", e);
-                        callback.onResultado("false");  // En caso de error en el JSON, tratamos como usuario no encontrado
+                        Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
+                        callback.onResultado("false");
                     }
                 } else {
-                    Log.e("encontrado","no encontrado");
-
-                    // Si hubo algún error (usuario no existe o respuesta vacía), avisamos que NO existe
+                    Log.w("LoginResultado", "Respuesta no exitosa o cuerpo vacío. Código: " + response.code());
                     callback.onResultado("false");
                 }
+
             }
 
             @Override
