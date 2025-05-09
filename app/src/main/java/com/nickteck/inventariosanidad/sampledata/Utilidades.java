@@ -98,11 +98,53 @@ public class Utilidades {
     }
 
 
+    public static void obtenerMateriales(final MaterialCallback callback) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<List<Material>> call = api.obtenerMaterial();  // Devuelve una lista de materiales
+        Log.d("Respuesta", "Solicitud creada. Llamando a la API...");
+
+        call.enqueue(new Callback<List<Material>>() {
+            @Override
+            public void onResponse(Call<List<Material>> call, Response<List<Material>> response) {
+                Log.d("Respuesta", "Código de respuesta: " + response.code());
+                Log.d("Respuesta", "Cuerpo de la respuesta: " + response.body());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Material> listaMateriales = response.body();
+                    Log.d("Materiales", "Cantidad de materiales obtenidos: " + listaMateriales.size());
+                    for (Material material : listaMateriales) {
+                        Log.d("Material", "Material recibido: " + material.getNombre() + " - " + material.getDescripcion());
+                        callback.onMaterialObtenido(material);  // Este es el callback para cada material
+                    }
+                } else {
+                    Log.w("Materiales", "Respuesta no exitosa o vacía. Código de respuesta: " + response.code());
+                    callback.onFailure(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Material>> call, Throwable t) {
+                // Si hay un error de comunicación, lo muestra en los logs
+                Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
+
+
 
     /**
      * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
      * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
      * NO tienes que implementar esta interfaz tú mismo.
+     * @QUERY SE USA CON GET SI QUEREMOS ENVIAR DATOS EN LA URL
+     * @FIELD / @BODY SE USA CON POST
      */
     private interface ApiService {
 
@@ -119,8 +161,11 @@ public class Utilidades {
         @POST("index.php")
         Call<Usuario> verificarUsuario(@Body Usuario usuario);
 
+        @GET("profesor.php")
+        Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
     }
+
 
 
 
