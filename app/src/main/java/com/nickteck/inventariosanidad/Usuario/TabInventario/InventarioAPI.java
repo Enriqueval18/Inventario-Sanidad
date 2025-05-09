@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 
 public interface InventarioAPI {
     // Actualiza "inventario" por el endpoint que te indique tu compañero
-    @GET("inventario")
+    @GET("profesor.php")
     Call<List<InventarioItem>> getInventario();
 }

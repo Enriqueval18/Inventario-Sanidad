@@ -4,7 +4,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     // Reemplaza esta URL con la dirección base de la API que te han proporcionado
-    private static final String BASE_URL = "https://api.example.com/";
+    private static final String BASE_URL = "https://inventariosan.ifpleonardo.com/web/";
     private static Retrofit retrofit;
 
     public static Retrofit getClient() {
