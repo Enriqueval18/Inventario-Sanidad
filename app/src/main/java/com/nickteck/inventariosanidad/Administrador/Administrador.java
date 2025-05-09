@@ -9,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,6 +19,7 @@ import com.nickteck.inventariosanidad.R;
 
 public class Administrador extends Fragment {
     private View indicador;
+    private TextView tvNombreUsuario, tvRolUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,6 +29,20 @@ public class Administrador extends Fragment {
         ImageView navAgregar = navadmin.findViewById(R.id.btnAgregar);
         ImageView navInventario = navadmin.findViewById(R.id.btnInventarioAdmin);
         ImageView navActividades = navadmin.findViewById(R.id.btnActividadesAdmin);
+
+        tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
+        tvRolUsuario = view.findViewById(R.id.RolUsuario);
+
+        // Recogemos los argumentos enviados desde el login
+        Bundle args = getArguments();
+        if (args != null) {
+            String nombre = args.getString("nombre");
+            String rol = args.getString("rol");
+            //Sirve para poner la primera en mayuscula
+            tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
+            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+        }
+
 
         indicador = navadmin.findViewById(R.id.indicadorpesadmin);
 

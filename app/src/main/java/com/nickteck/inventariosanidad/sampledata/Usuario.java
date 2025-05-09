@@ -27,7 +27,8 @@ public class Usuario {
         return contra;
     }
 
-    // Setters
+
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

@@ -8,13 +8,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.Usuario.TabInventario.Inventario;
 
 public class Usuario_Pantalla extends Fragment {
     private View indicator;
+    private TextView tvNombreUsuario, tvRolUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,6 +26,19 @@ public class Usuario_Pantalla extends Fragment {
 
         ImageView navInventario = view.findViewById(R.id.btnInventario);
         ImageView navActividades = view.findViewById(R.id.btnActividades);
+
+        tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
+        tvRolUsuario = view.findViewById(R.id.RolUsuario);
+
+        // Recogemos los argumentos enviados desde el login
+        Bundle args = getArguments();
+        if (args != null) {
+            String nombre = args.getString("nombre");
+            String rol = args.getString("rol");
+            //Sirve para poner la primera en mayuscula
+            tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
+            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+        }
 
         // Referencia al indicador que se movera
         indicator = view.findViewById(R.id.indicator);

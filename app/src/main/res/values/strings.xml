@@ -7,13 +7,33 @@
     <string name="contrasena">Contraseña</string>
     <string name="entrar">ENTRAR</string>
     <string name="usuario_incorrecto">Usuario incorrecto</string>
+    <string name="usu_con_inco">Usuario o Contraseña Incorrectos</string>
+
+    <!-- Strings para tarjeta de usuario -->
     <string name="nombre_usuario">Nombre usuario</string>
     <string name="rol">Rol</string>
-    <string name="material">Material</string>
-    <string name="nombre">Nombre</string>
-    <string name="descripcion">Descripción</string>
+
+    <!-- Strings para salir -->
     <string name="est_s_apunto_de_cerrar_sesi_n">ESTÁS APUNTO DE CERRAR SESIÓN</string>
     <string name="quedarme">Quedarme</string>
     <string name="salir">Salir</string>
+
+    <!-- Strings para la tabla de cada material -->
+    <string name="nombre">Nombre</string>
+    <string name="unidades">Unidades</string>
+    <string name="almacen">Almacen</string>
+    <string name="armario">Armario</string>
+
+    <!-- Strings para la parte de la tarjeta de cada material -->
+    <string name="material_t">Material:</string>
+    <string name="nombre_t">Nombre:</string>
+    <string name="unidades_t">Unidades:</string>
+    <string name="almacen_t">Almacen:</string>
+    <string name="armario_t">Armario:</string>
+    <string name="balda_t">Balda:</string>
+    <string name="unidades_minimas_t">Unidades Mínimas:</string>
+    <string name="descripcion_t">Descripción:</string>
+
+
 
 </resources>

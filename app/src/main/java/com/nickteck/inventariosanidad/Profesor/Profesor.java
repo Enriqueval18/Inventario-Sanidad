@@ -9,17 +9,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.Inventario;
+import com.nickteck.inventariosanidad.Usuario.TabInventario.Inventario;
 
 public class Profesor extends Fragment {
     private View indicador;
-
+    private TextView tvNombreUsuario, tvRolUsuario;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -31,6 +32,18 @@ public class Profesor extends Fragment {
         ImageView navMateriales  = navLayout.findViewById(R.id.btnMaterialespro);
         indicador = navLayout.findViewById(R.id.indicadorpesadmin);
 
+        tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
+        tvRolUsuario = view.findViewById(R.id.RolUsuario);
+
+        // Recogemos los argumentos enviados desde el login
+        Bundle args = getArguments();
+        if (args != null) {
+            String nombre = args.getString("nombre");
+            String rol = args.getString("rol");
+            //Sirve para poner la primera en mayuscula
+            tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
+            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+        }
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

@@ -13,18 +13,9 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/material"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:padding="8dp" />
-
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:text="@string/nombre"
             android:textStyle="bold"
+            android:textColor="@color/white"
             android:padding="8dp" />
 
         <TextView
@@ -32,9 +23,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="@string/descripcion"
+            android:text="@string/unidades"
             android:textStyle="bold"
             android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/almacen"
+            android:textStyle="bold"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/armario"
+            android:textStyle="bold"
+            android:padding="8dp" />
+
     </TableRow>
 
     <TableRow
@@ -42,29 +52,7 @@
         android:padding="4dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground">
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="01"
-            android:textColor="#000000"
-            android:padding="8dp" />
+        <!-- Aqui van los datos que nos llegan de la api -->
 
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Guantes"
-            android:textColor="#000000"
-            android:padding="8dp" />
-
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Guantes de seguro"
-            android:textColor="#000000"
-            android:padding="8dp" />
     </TableRow>
-
 </TableLayout>

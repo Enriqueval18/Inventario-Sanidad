@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/PropiedadInventario"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="32dp"
-    android:background="@android:color/white">
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="8dp"
+    card_view:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,48 +20,87 @@
             android:id="@+id/material"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Material: 01"
-            android:textSize="18sp"
+            android:text="@string/material_t"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvTipoAlmacen"
-            android:layout_width="wrap_content"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginVertical="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tipo de Almacen: Reserva"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvNombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nombre_t"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:id="@+id/tvUnidades"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unidades_t"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:id="@+id/tvAlmacen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/almacen_t"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="16dp">
+
+                <TextView
+                    android:id="@+id/tvArmarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/armario_t"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:id="@+id/tvBalda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/balda_t"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp"/>
+                <TextView
+                    android:id="@+id/tvUnidadesMinimas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unidades_minimas_t"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvArmario"
+            android:id="@+id/tvDescripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Armario: 01"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/tvBalda"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Balda: 03"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/tvUnidades"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Unidades: 45"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:id="@+id/tvUnidadesMinimas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Unidades Mínimas: 13"
+            android:text="@string/descripcion_t"
             android:textSize="16sp"
             android:layout_marginTop="8dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
+
