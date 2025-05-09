@@ -31,7 +31,6 @@ import com.nickteck.inventariosanidad.sampledata.Usuario;
 import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
-
 public class Login extends  Fragment{
     private EditText contrasena;
     private EditText nombre_usuario;
@@ -66,53 +65,55 @@ public class Login extends  Fragment{
      * @param bounce realiza las transicciones
      */
     private void Boton_login(Animation bounce) {
-        boton_entrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(bounce);
-                String usuario = nombre_usuario.getText().toString().trim();
-                String con = contrasena.getText().toString().trim();
+            boton_entrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.startAnimation(bounce);
+                    String usuario = nombre_usuario.getText().toString().trim();
+                    String con = contrasena.getText().toString().trim();
+                    Utilidades.verificarUsuario(new Usuario(usuario, con), con, new UsuarioCallback() {
+                        @Override
+                        public void onResultado(String tipo) {
+                            if (tipo.equals("admin")) {
+                                Administrador fragment = new Administrador();
+                                Bundle args = new Bundle();
+                                args.putString("nombre", usuario);
+                                args.putString("rol", tipo);
+                                fragment.setArguments(args);
+                                Cambiarfragmento(fragment);
 
-                // Mostramos un Toast indicando que la validación ha comenzado
-                Toast.makeText(getActivity(), "Verificando usuario...", Toast.LENGTH_SHORT).show();
+                            } else if (tipo.equals("usuario")) {
+                                Usuario_Pantalla fragment = new Usuario_Pantalla();
+                                Bundle args = new Bundle();
+                                args.putString("nombre", usuario);
+                                args.putString("rol", tipo);
+                                fragment.setArguments(args);
+                                Cambiarfragmento(fragment);
 
-                // Llamada a la función de verificación
-                Utilidades.verificarUsuario(new Usuario(usuario,con), con, new UsuarioCallback() {
-                    @Override
-                    public void onResultado(String tipo) {
-                        // Aquí estamos asegurándonos de que el cambio de fragmento solo se haga cuando tengamos la respuesta
-                        if (tipo.equals("admin")) {
-                            // Si el usuario existe, mostramos el Toast
-                            Toast.makeText(getActivity(), "¡Usuario encontrado!", Toast.LENGTH_SHORT).show();
-                            Cambiarfragmento(new Profesor());
-                        } else if (tipo.equals("usuario")) {
-                            Cambiarfragmento(new Usuario_Pantalla());
+                            } else if (tipo.equals("profesor")) {
+                                Profesor fragment = new Profesor();
+                                Bundle args = new Bundle();
+                                args.putString("nombre", usuario);
+                                args.putString("rol", tipo);
+                                fragment.setArguments(args);
+                                Cambiarfragmento(fragment);
+
+                            } else {
+                                mostrarerror();
+                            }
                         }
-                        else if(tipo.equals("profesor")) {
-                            // Si el usuario no existe, mostramos un mensaje de error
-                            Cambiarfragmento(new Profesor());  }
 
-                        else {
-                            mostrarerror(usuario, con);
+                        @Override
+                        public void onFailure(boolean error) {
+                            if (error) {
+                                Toast.makeText(getActivity(), "NO SE CONECTO A LA API!", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
+                    });
+                }
+            });
+        }
 
-
-
-                    @Override
-                    public void onFailure(boolean error) {
-                        if(error){
-                            // Si el usuario no existe, mostramos un mensaje de error
-                            Toast.makeText(getActivity(), "NO SE CONECTO A LA API!", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                });
-
-            }
-        });
-    }
 
     /**
      * Metodo para pasar al fragmento correspondiente despues de la validacion
@@ -136,22 +137,10 @@ public class Login extends  Fragment{
     }
 
     /**
-     * Muestra diferentes tipos de errores, dependiendo del campo en el cual consultemos, vibra en el caso que sea un error
-     * @param usuario hace referencia al usuario
-     * @param password hace referencia a la contraseña
+     * Muestra el error si el usuario o contraseña estan incorrectos atravez de una tarjeta
      */
-    private void mostrarerror(String usuario, String password) {
-        if (usuario.isEmpty() && password.isEmpty()) {
-            errortexto.setText("Introduce los datos");
-        } else {
-            if (!usuario.equals("usuario")) {
-                errortexto.setText("Usuario Incorrecto");
-            }
-            if (!password.equals("usuario")) {
-                errortexto.setText("Contraseña Incorrecta");
-            }
-        }
-
+    private void mostrarerror() {
+        errortexto.setText(R.string.usu_con_inco);
         tarjeta_error.setVisibility(View.VISIBLE);
         errorAnimation.playAnimation();
 
@@ -170,8 +159,6 @@ public class Login extends  Fragment{
             }
         }, 1500);
     }
-
-
 
     //----------------------MODIFICAR SI ES NECESARIO---------------------------------
 
@@ -228,6 +215,9 @@ public class Login extends  Fragment{
      * Metodo que Habilita o deshabilita el botón según campos vacíos
      */
     private void BotonHabilitar() {
+        boton_entrar.setEnabled(false);
+        boton_entrar.setAlpha(0.5f);
+
         TextWatcher formWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

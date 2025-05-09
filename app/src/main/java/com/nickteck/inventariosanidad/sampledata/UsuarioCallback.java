@@ -8,6 +8,5 @@ package com.nickteck.inventariosanidad.sampledata;
 public interface UsuarioCallback {
     void onResultado(String tipo); // El método que se llama con el resultado final
 
-
     void onFailure(boolean error);
 }

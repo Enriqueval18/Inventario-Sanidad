@@ -20,8 +20,8 @@
         android:layout_gravity="center" />
 
     <include
-        android:id="@+id/tarjetaadming"
-        layout="@layout/layout_informacion_administrador"
+        android:id="@+id/tarjetaUsuario"
+        layout="@layout/layout_informacion_usuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tarjetaadming">
+        app:layout_constraintTop_toBottomOf="@id/tarjetaUsuario">
 
     </FrameLayout>
 

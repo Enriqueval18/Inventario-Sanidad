@@ -10,11 +10,9 @@ public class MiCallback implements UsuarioCallback {
     public void onResultado(String tipo) {
 
     }
-
-
-
     @Override
     public void onFailure(boolean error) {
 
     }
+
 }
