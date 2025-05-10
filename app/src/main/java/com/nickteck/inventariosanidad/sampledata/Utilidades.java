@@ -139,6 +139,76 @@ public class Utilidades {
 
 
 
+
+    public static void añadirUsuario(Usuario usuario, RespuestaCallback callback) {
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        // ⚠️ NO usamos "implements" aquí, Retrofit lo hace por nosotros.
+        // Usa reflexión para analizar las anotaciones @GET y @Query, y genera el código necesario internamente.
+        ApiService api = retrofit.create(ApiService.class);
+        Log.e("Verificar usaurio ","coencta apiservidce.clas");
+
+
+
+        // Paso 3: Usamos ese objeto para llamar al método definido en la interfaz.
+        // Esto crea una solicitud HTTP de tipo GET a la URL: api/usuario.php?nombre=juan123 (por ejemplo).
+        // Este objeto "call" representa la solicitud, pero todavía no la envía.
+        Call<Respuesta> call = api.añadirUsuario(usuario);
+        Log.e("nuevo verificar","crea la solicitud ");
+
+        // Paso 4: Ejecutamos la solicitud de forma asíncrona (no bloquea el hilo principal).
+        // Retrofit se encargará de hacer la llamada en segundo plano.
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                // Este método se ejecuta si el servidor respondió, aunque sea con error.
+
+                // Verificamos si la respuesta fue correcta (código 200–299)
+                // Y además que haya datos (el cuerpo no sea null)
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    boolean correcto = recibido.isExiste();
+                    Log.d("LoginResponse", "Tipo recibido: " + correcto);
+
+                    try {
+                        if (correcto) {
+                            Log.w("usuarioNuevo", "nuevo usuario añadido");
+                            callback.onResultado(false);
+                        } else {
+                            Log.i("usuarioNuevo", "no se logro añadir el usuario");
+                            callback.onResultado(false);
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
+                        callback.onResultado(false);
+                    }
+
+                } else {
+                    Log.w("LoginResultado", "Respuesta no exitosa o cuerpo vacío. Código: " + response.code());
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                // Este método se ejecuta si la petición no se pudo hacer (fallo de red, sin internet, etc.)
+                Log.e("usuarioNuevo", "Error en la comunicación: " + t.getMessage());
+                // Avisamos que no se pudo verificar el usuario (asumimos que no existe)
+
+                callback.onFailure(true);
+            }
+        });
+    }
+
     /**
      * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
      * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -164,6 +234,8 @@ public class Utilidades {
         @GET("profesor.php")
         Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
+        @POST("admin.php")
+        Call<Respuesta>añadirUsuario(@Body Usuario nuevoUsuario);
     }
 
 
