@@ -1,17 +1,17 @@
 package com.nickteck.inventariosanidad.sampledata;
 
 public class Respuesta {
-    boolean existe;
+    boolean respuesta;
 
-    public Respuesta(boolean existe) {
-        this.existe = existe;
+    public Respuesta(boolean respuesta) {
+        this.respuesta = respuesta;
     }
 
-    public boolean isExiste() {
-        return existe;
+    public boolean isRespuesta() {
+        return respuesta;
     }
 
-    public void setExiste(boolean existe) {
-        this.existe = existe;
+    public void setRespuesta(boolean respuesta) {
+        this.respuesta = respuesta;
     }
 }

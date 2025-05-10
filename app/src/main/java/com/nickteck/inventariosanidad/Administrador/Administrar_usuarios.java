@@ -16,6 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
+import com.nickteck.inventariosanidad.sampledata.Usuario;
+import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 public class Administrar_usuarios extends Fragment {
     private Button ananirusuario, borrarusuario, modificarusu;
@@ -57,7 +60,21 @@ public class Administrar_usuarios extends Fragment {
                                 String role = spinnerRole.getSelectedItem().toString();
 
                                 if (!username.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
-                                    ananir_usuario_item(username, role);
+                                    Utilidades.añadirUsuario(new Usuario(username, password, role), new RespuestaCallback() {
+                                        @Override
+                                        public void onResultado(boolean correcto) {
+                                            if(correcto){
+                                                ananir_usuario_item(username, role);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(boolean error) {
+
+                                        }
+                                    });
+
+
                                 } else {
                                     Toast.makeText(getContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
                                 }

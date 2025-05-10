@@ -10,6 +10,11 @@ public class Usuario {
         this.contra = contra;
     }
 
+    public Usuario(String nombre, String contra,String tipo) {
+        this.nombre = nombre;
+        this.contra = contra;
+        this.tipo = tipo;
+    }
     // Getters
     public String getNombre() {
         return nombre;

@@ -1,9 +1,7 @@
 package com.nickteck.inventariosanidad.sampledata;
 
 import android.util.Log;
-import android.widget.Toast;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import java.util.List;
 
 import retrofit2.Call;                             // Representa una solicitud HTTP (GET, POST, etc.)
@@ -12,10 +10,8 @@ import retrofit2.Response;                         // Contiene la respuesta del 
 import retrofit2.Retrofit;                         // Clase principal de Retrofit, se encarga de configurar todo
 import retrofit2.converter.gson.GsonConverterFactory; // Convierte JSON recibido en objetos Java automáticamente
 import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.GET;                         // Indica que queremos hacer una petición GET
 import retrofit2.http.POST;
-import retrofit2.http.Query;                       // Permite agregar parámetros a la URL como ?nombre=juan
 
 public class Utilidades {
 
@@ -153,7 +149,6 @@ public class Utilidades {
         // ⚠️ NO usamos "implements" aquí, Retrofit lo hace por nosotros.
         // Usa reflexión para analizar las anotaciones @GET y @Query, y genera el código necesario internamente.
         ApiService api = retrofit.create(ApiService.class);
-        Log.e("Verificar usaurio ","coencta apiservidce.clas");
 
 
 
@@ -161,7 +156,7 @@ public class Utilidades {
         // Esto crea una solicitud HTTP de tipo GET a la URL: api/usuario.php?nombre=juan123 (por ejemplo).
         // Este objeto "call" representa la solicitud, pero todavía no la envía.
         Call<Respuesta> call = api.añadirUsuario(usuario);
-        Log.e("nuevo verificar","crea la solicitud ");
+        Log.d("nuevo verificar","crea la solicitud ");
 
         // Paso 4: Ejecutamos la solicitud de forma asíncrona (no bloquea el hilo principal).
         // Retrofit se encargará de hacer la llamada en segundo plano.
@@ -174,15 +169,15 @@ public class Utilidades {
                 // Y además que haya datos (el cuerpo no sea null)
                 if (response.isSuccessful() && response.body() != null) {
                     Respuesta recibido = response.body();
-                    boolean correcto = recibido.isExiste();
+                    boolean correcto = recibido.isRespuesta();
                     Log.d("LoginResponse", "Tipo recibido: " + correcto);
 
                     try {
                         if (correcto) {
-                            Log.w("usuarioNuevo", "nuevo usuario añadido");
-                            callback.onResultado(false);
+                            Log.d("usuarioNuevo", "nuevo usuario añadido");
+                            callback.onResultado(true);
                         } else {
-                            Log.i("usuarioNuevo", "no se logro añadir el usuario");
+                            Log.d("usuarioNuevo", "no se logro añadir el usuario");
                             callback.onResultado(false);
                         }
 
@@ -192,7 +187,7 @@ public class Utilidades {
                     }
 
                 } else {
-                    Log.w("LoginResultado", "Respuesta no exitosa o cuerpo vacío. Código: " + response.code());
+                    Log.e("LoginResultado", "Respuesta no exitosa o cuerpo vacío. Código: " + response.code());
                     callback.onResultado(false);
                 }
 
