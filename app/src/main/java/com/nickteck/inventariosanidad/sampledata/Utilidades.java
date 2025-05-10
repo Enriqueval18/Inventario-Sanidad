@@ -10,8 +10,11 @@ import retrofit2.Response;                         // Contiene la respuesta del 
 import retrofit2.Retrofit;                         // Clase principal de Retrofit, se encarga de configurar todo
 import retrofit2.converter.gson.GsonConverterFactory; // Convierte JSON recibido en objetos Java automáticamente
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;                         // Indica que queremos hacer una petición GET
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class Utilidades {
 
@@ -202,15 +205,71 @@ public class Utilidades {
                 callback.onFailure(true);
             }
         });
+
     }
 
+
+    public static void eliminarUsuario(Usuario usuario, RespuestaCallback callback) {
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getNombre());
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getNombre());
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.eliminarUsuario(usuario.getNombre());
+        Log.d("EliminarUsuario", "URL de la solicitud: " + call.request().url().toString());
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                Log.d("EliminarUsuario", "Código de respuesta: " + response.code());
+                Log.d("EliminarUsuario", "Cuerpo de la respuesta: " + response.body());
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    if (recibido.isRespuesta()) {
+                        Log.d("respuestaEliminar", "Eliminación exitosa");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("respuestaEliminar", "Error desde el servidor: " + recibido.isRespuesta()+recibido.getError());
+                        callback.onResultado(false);
+                    }
+                } else {
+                    Log.d("EliminarUsuario", "Error en la respuesta HTTP: " + response.message());
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("EliminarUsuario", "Error al eliminar: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
+
+
+
+
     /**
-     * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
-     * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
-     * NO tienes que implementar esta interfaz tú mismo.
-     * @QUERY SE USA CON GET SI QUEREMOS ENVIAR DATOS EN LA URL
-     * @FIELD / @BODY SE USA CON POST
-     */
+         * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
+         * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
+         * NO tienes que implementar esta interfaz tú mismo.
+         * @QUERY SE USA CON GET SI QUEREMOS ENVIAR DATOS EN LA URL
+         * @FIELD / @BODY SE USA CON POST
+         */
     private interface ApiService {
 
         // Anotación que indica que queremos hacer una petición GET a esta ruta: api/usuario.php
@@ -231,6 +290,10 @@ public class Utilidades {
 
         @POST("admin.php")
         Call<Respuesta>añadirUsuario(@Body Usuario nuevoUsuario);
+
+        // Usamos DELETE y pasamos el 'nombre' como parte del path
+        @DELETE("admin/eliminarUsuario.php")
+        Call<Respuesta> eliminarUsuario(@Query("nombre") String nombreUsuario);
     }
 
 

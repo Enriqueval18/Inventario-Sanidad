@@ -2,6 +2,8 @@ package com.nickteck.inventariosanidad.Administrador;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,18 +86,50 @@ public class Administrar_usuarios extends Fragment {
                         .show();
             }
         });
+
+
         borrarusuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (seleccionar_usuario != null) {
-                    listausuarios.removeView(seleccionar_usuario);
-                    seleccionar_usuario = null;
-                    Toast.makeText(getContext(), "Usuario eliminado", Toast.LENGTH_SHORT).show();
+                    Log.e("Eliminar","antes de seleccionar el view");
+                    // Asegurarse de que el 'seleccionar_usuario' es un TextView
+                    TextView textViewUsuario = (TextView) seleccionar_usuario;
+
+                    Log.e("Eliminar","luego de seleccionar");
+                    // Extraer el texto del TextView seleccionado
+                    String usuarioSeleccionado = textViewUsuario.getText().toString();
+
+                    // Obtener solo el nombre del usuario. Aquí asumimos que el nombre está antes del " - "
+                    String[] partes = usuarioSeleccionado.split(" - ");
+                    String nombreUsuario = partes[0]; // El nombre del usuario es la primera parte
+
+                    Log.e("Eliminar",nombreUsuario);
+                    // Llamar a la función para eliminar el usuario de la base de datos
+                    Utilidades.eliminarUsuario(new Usuario(nombreUsuario), new RespuestaCallback() {
+                        @Override
+                        public void onResultado(boolean correcto) {
+                            if(correcto){
+                                // Eliminar el usuario de la interfaz (Vista)
+                                listausuarios.removeView(seleccionar_usuario);
+                                seleccionar_usuario = null; // Resetear la selección
+                                // Mostrar un mensaje de confirmación
+                                Toast.makeText(getContext(), "Usuario eliminado: " + nombreUsuario, Toast.LENGTH_SHORT).show();
+                            }
+                            }
+
+                        @Override
+                        public void onFailure(boolean error) {
+
+                        }
+                    });
+
                 } else {
                     Toast.makeText(getContext(), "Selecciona un usuario para quitar", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
         modificarusu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
