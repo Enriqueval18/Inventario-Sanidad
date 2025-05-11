@@ -27,7 +27,7 @@ public class Utilidades {
      * @param usuario El nombre del usuario que queremos buscar en la base de datos.
      * @param callback Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
-    public static void verificarUsuario(Usuario usuario,String contra, UsuarioCallback callback) {
+    public static void verificarUsuario(Usuario usuario, UsuarioCallback callback) {
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
@@ -260,7 +260,44 @@ public class Utilidades {
 
     }
 
+    public static void mostrarUsuarios(final UsuarioCallback2 callback) {
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<List<Usuario>> call = api.obtenerUsuarios();  // Devuelve una lista de materiales
+        Log.d("Respuesta", "Solicitud creada. Llamando a la API...");
+
+        call.enqueue(new Callback<List<Usuario>>() {
+            @Override
+            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                Log.d("Respuesta", "Código de respuesta: " + response.code());
+                Log.d("Respuesta", "Cuerpo de la respuesta: " + response.body());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Usuario> listaUsuarios = response.body();
+                    Log.d("Usuarios", "Cantidad de materiales obtenidos: " + listaUsuarios.size());
+                    for (Usuario usuario : listaUsuarios) {
+                        Log.d("Usuarios", "Material recibido: " + usuario.getNombre());
+                        callback.onUsuarioObtenido(usuario);  // Este es el callback para cada material
+                    }
+                } else {
+                    Log.w("Materiales", "Respuesta no exitosa o vacía. Código de respuesta: " + response.code());
+                    callback.onFailure(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                // Si hay un error de comunicación, lo muestra en los logs
+                Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
 
 
     /**
@@ -294,6 +331,9 @@ public class Utilidades {
         // Usamos DELETE y pasamos el 'nombre' como parte del path
         @DELETE("admin/eliminarUsuario.php")
         Call<Respuesta> eliminarUsuario(@Query("nombre") String nombreUsuario);
+
+        @GET("admin/mostrarUsuarios.php")
+        Call<List<Usuario>> obtenerUsuarios();  // Esta vez esperamos un List<Material> directamente
     }
 
 

@@ -71,7 +71,7 @@ public class Login extends  Fragment{
                     v.startAnimation(bounce);
                     String usuario = nombre_usuario.getText().toString().trim();
                     String con = contrasena.getText().toString().trim();
-                    Utilidades.verificarUsuario(new Usuario(usuario, con), con, new UsuarioCallback() {
+                    Utilidades.verificarUsuario(new Usuario(usuario, con),  new UsuarioCallback() {
                         @Override
                         public void onResultado(String tipo) {
                             if (tipo.equals("admin")) {

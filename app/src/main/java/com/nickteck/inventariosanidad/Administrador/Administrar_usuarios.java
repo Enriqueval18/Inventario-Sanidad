@@ -20,7 +20,11 @@ import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
+
+import java.util.List;
 
 public class Administrar_usuarios extends Fragment {
     private Button ananirusuario, borrarusuario, modificarusu;
@@ -185,7 +189,26 @@ public class Administrar_usuarios extends Fragment {
                         .show();
             }
         });
+
+
+        cargarUsuariosExistentes();
+
         return view;
+    }
+    private void cargarUsuariosExistentes() {
+        Utilidades.mostrarUsuarios(new UsuarioCallback2() {
+            @Override
+            public void onUsuarioObtenido(Usuario usuario) {
+                ananir_usuario_item(usuario.getNombre(), usuario.getTipo());
+            }
+
+            @Override
+            public void onFailure(boolean error) {
+
+            }
+        }); // Este método debes tenerlo definido
+
+
     }
 
     /**
