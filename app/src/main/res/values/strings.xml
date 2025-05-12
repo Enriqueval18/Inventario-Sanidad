@@ -33,7 +33,8 @@
     <string name="balda_t">Balda:</string>
     <string name="unidades_minimas_t">Unidades Mínimas:</string>
     <string name="descripcion_t">Descripción:</string>
-
+    <string name="nombre_del_material">Nombre del material</string>
+    <string name="cantidad">Cantidad</string>
 
 
 </resources>

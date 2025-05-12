@@ -91,7 +91,6 @@ public class Administrar_usuarios extends Fragment {
             }
         });
 
-
         borrarusuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,7 +189,6 @@ public class Administrar_usuarios extends Fragment {
             }
         });
 
-
         cargarUsuariosExistentes();
 
         return view;
@@ -207,7 +205,6 @@ public class Administrar_usuarios extends Fragment {
 
             }
         }); // Este método debes tenerlo definido
-
 
     }
 

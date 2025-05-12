@@ -7,19 +7,13 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/etNombre"
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:hint="Nombre:" />
-
-    <EditText
-        android:id="@+id/etMateriales"
+        android:id="@+id/item_Mat"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"
         android:hint="Materiales:" />
     <EditText
-        android:id="@+id/etCantidad"
+        android:id="@+id/item_Cant"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"

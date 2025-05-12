@@ -51,7 +51,7 @@ public class Actividades_profesor extends Fragment {
         botonan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item, null);
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Añadir Nuevo Item");
                 builder.setView(dialogView)
