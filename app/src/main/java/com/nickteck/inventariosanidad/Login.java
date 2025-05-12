@@ -74,7 +74,7 @@ public class Login extends  Fragment{
                     Utilidades.verificarUsuario(new Usuario(usuario, con),  new UsuarioCallback() {
                         @Override
                         public void onResultado(String tipo) {
-                            if (tipo.equals("admin")) {
+                            if (tipo.equals("Administrador")) {
                                 Administrador fragment = new Administrador();
                                 Bundle args = new Bundle();
                                 args.putString("nombre", usuario);
