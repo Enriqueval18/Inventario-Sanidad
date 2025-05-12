@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.TabInventario.Inventario;
+import com.nickteck.inventariosanidad.Usuario.Inventario;
 
 public class Profesor extends Fragment {
     private View indicador;

@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.TabInventario.Inventario;
 
 public class Usuario_Pantalla extends Fragment {
     private View indicator;

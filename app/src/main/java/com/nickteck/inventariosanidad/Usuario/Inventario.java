@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Usuario.TabInventario;
+package com.nickteck.inventariosanidad.Usuario;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,11 +9,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
-
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.MostrarInventario;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 import com.nickteck.inventariosanidad.sampledata.Material;
@@ -62,12 +59,12 @@ public class Inventario extends Fragment {
 
         TextView tvUnidades = new TextView(getContext());
         tvUnidades.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvUnidades.setText(""); // O material.getUnidades() si existe
+        tvUnidades.setText("");
         tvUnidades.setPadding(8, 8, 8, 8);
 
         TextView tvExtra = new TextView(getContext());
         tvExtra.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvExtra.setText(""); // O material.getArmario() u otro dato
+        tvExtra.setText("");
         tvExtra.setPadding(8, 8, 8, 8);
 
         fila.addView(tvNombre);
