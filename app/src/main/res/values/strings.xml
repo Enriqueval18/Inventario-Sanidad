@@ -35,6 +35,7 @@
     <string name="descripcion_t">Descripción:</string>
     <string name="nombre_del_material">Nombre del material</string>
     <string name="cantidad">Cantidad</string>
+    <string name="cantidad_anandir_item">Cantidad:</string>
 
 
 </resources>

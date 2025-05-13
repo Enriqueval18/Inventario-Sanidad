@@ -1,5 +1,7 @@
 package com.nickteck.inventariosanidad.Usuario;
 
+import static com.nickteck.inventariosanidad.sampledata.Utilidades.validarMaterial;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +22,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.sampledata.Material;
+import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
+
+import java.util.ArrayList;
 
 public class Actividades extends Fragment {
     private EditText cuadro_busqueda;
@@ -30,9 +36,47 @@ public class Actividades extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_actividades, container, false);
-
         cuadro_busqueda = view.findViewById(R.id.cuadrobus);
+
+
         btnananir = view.findViewById(R.id.btnana);
+        cuadro_busqueda.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No hace nada
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s.toString(); // El texto ingresado
+
+                // Supongamos que tienes un contenedor principal que agrupa tus secciones.
+                // Cada sección contiene un layout de encabezado y otro de contenido.
+                // Aquí iteras todas ellas y aplicas el filtro.
+                int totalSecciones = sectionsContainer.getChildCount(); // sectionsContainer es tu LinearLayout donde agregas secciones
+
+                for (int i = 0; i < totalSecciones; i++) {
+                    // Por ejemplo, cada sección es un LinearLayout que contiene dos hijos: header y content.
+                    View seccion = sectionsContainer.getChildAt(i);
+                    if (seccion instanceof LinearLayout) {
+                        LinearLayout seccionLayout = (LinearLayout) seccion;
+                        if (seccionLayout.getChildCount() >= 2) {
+                            // Suponiendo que el primer hijo es el header y el segundo es el contenido
+                            LinearLayout header = (LinearLayout) seccionLayout.getChildAt(0);
+                            LinearLayout content = (LinearLayout) seccionLayout.getChildAt(1);
+                            Filtrar(header, content, query);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No hace nada
+            }
+        });
+
+
 
         btnananir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +94,22 @@ public class Actividades extends Fragment {
                                 String nombre = etNombre.getText().toString().trim();
                                 String materiales = etMateriales.getText().toString().trim();
                                 String cantidad = etCantidad.getText().toString().trim();
+
                                 if (!nombre.isEmpty() && !materiales.isEmpty() && !cantidad.isEmpty()) {
-                                    addNewSection(nombre, materiales, cantidad);
+                                    if (!nombre.matches("^[^-]+\\s*-\\s*[^-]+$")) {
+                                        Toast.makeText(getContext(), "Formato de Nombre incorrecto", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+                                    validarMaterial(getContext(), materiales, new MaterialCallback() {
+                                        @Override
+                                        public void onMaterialObtenido(Material material) {
+                                            // Se crea la nueva sección, que ya incorpora listener de selección
+                                            addNewSection(nombre, materiales, cantidad);
+                                        }
+
+                                        @Override
+                                        public void onFailure(boolean error) { }
+                                    });
                                 }
                             }
                         })
@@ -59,6 +117,8 @@ public class Actividades extends Fragment {
                 builder.create().show();
             }
         });
+
+
 
         ImageButton btnDeleteSection = view.findViewById(R.id.btnDelete);
         btnDeleteSection.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +133,65 @@ public class Actividades extends Fragment {
             }
         });
 
+        ImageButton btnSend = view.findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Verifica si se ha seleccionado una sección (tabla)
+                if (selectedSection[0] != null) {
+                    // Obtenemos la sección seleccionada
+                    LinearLayout section = selectedSection[0];
+
+                    // Se asume que el primer hijo es el headerLayout que contiene el título
+                    LinearLayout headerLayout = (LinearLayout) section.getChildAt(0);
+                    TextView headerTitle = (TextView) headerLayout.getChildAt(0);
+                    String titulo = headerTitle.getText().toString();
+
+                    // El segundo hijo es el contentLayout que contiene la tabla de datos
+                    LinearLayout contentLayout = (LinearLayout) section.getChildAt(1);
+                    int contentChildCount = contentLayout.getChildCount();
+
+                    ArrayList<String> materiales = new ArrayList<>();
+                    ArrayList<String> cantidades = new ArrayList<>();
+
+                    // Se asume que:
+                    // índice 0: fila de encabezado de la tabla (títulos de columnas)
+                    // índices 1 a contentChildCount-2: filas de datos (se ignora el contenedor de íconos, si lo hay)
+                    if (contentChildCount > 2) {
+                        for (int j = 1; j < contentChildCount - 1; j++) {
+                            View rowView = contentLayout.getChildAt(j);
+                            if (rowView instanceof LinearLayout) {
+                                LinearLayout row = (LinearLayout) rowView;
+                                if (row.getChildCount() >= 2) {
+                                    TextView tvMaterial = (TextView) row.getChildAt(0);
+                                    TextView tvCantidad = (TextView) row.getChildAt(1);
+                                    materiales.add(tvMaterial.getText().toString());
+                                    cantidades.add(tvCantidad.getText().toString());
+                                }
+                            }
+                        }
+                    }
+
+                    // Aquí empaquetas o envías los datos (por ejemplo, con una API o creando un JSON).
+                    // En este ejemplo, mostramos un Toast que indica que se enviaron los datos.
+                    Toast.makeText(getContext(), "Datos enviados de la tabla: " + titulo, Toast.LENGTH_LONG).show();
+
+                    // Cambiar el color del encabezado a verde.
+                    // Puedes usar un recurso o Color.GREEN directamente.
+                    // Ejemplo usando recurso de color:
+                    headerLayout.setBackgroundColor(getResources().getColor(R.color.green));
+                    // Alternativamente, usando Color:
+                    // headerLayout.setBackgroundColor(Color.GREEN);
+                } else {
+                    Toast.makeText(getContext(), "No se ha seleccionado ninguna tabla", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
+
         sectionsContainer = view.findViewById(R.id.Contenedor_actividades);
         return view;
     }
@@ -81,24 +200,26 @@ public class Actividades extends Fragment {
      * Recorre cada hijo de la sección y muestra sólo aquellos cuyo texto contiene la consulta.
      * Si query está vacío, se muestran todos los ítems.
      */
-    private void Filtrar(LinearLayout section, String query) {
-        int count = section.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = section.getChildAt(i);
-            if (child instanceof LinearLayout) {
-                LinearLayout itemLayout = (LinearLayout) child;
-                if (itemLayout.getChildCount() > 0 && itemLayout.getChildAt(0) instanceof TextView) {
-                    TextView tvItem = (TextView) itemLayout.getChildAt(0);
-                    String itemText = tvItem.getText().toString().toLowerCase();
-                    if (query.isEmpty() || itemText.contains(query)) {
-                        itemLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        itemLayout.setVisibility(View.GONE);
-                    }
-                }
+    private void Filtrar(LinearLayout header, LinearLayout content, String query) {
+        // Converter el query a minúsculas eliminando espacios laterales
+        String filtro = query.toLowerCase().trim();
+
+        // Comprueba que el layout del encabezado tenga al menos un TextView
+        if (header.getChildCount() > 0 && header.getChildAt(0) instanceof TextView) {
+            // Obtener el texto del encabezado en minúsculas
+            String headerText = ((TextView) header.getChildAt(0)).getText().toString().toLowerCase();
+
+            // Si no hay query o el encabezado contiene el query, se muestran ambos layouts.
+            if (filtro.isEmpty() || headerText.contains(filtro)) {
+                header.setVisibility(View.VISIBLE);
+                content.setVisibility(View.VISIBLE);
+            } else {
+                header.setVisibility(View.GONE);
+                content.setVisibility(View.GONE);
             }
         }
     }
+
 
 
     /**
@@ -129,15 +250,18 @@ public class Actividades extends Fragment {
         TextView headerTitle = new TextView(getContext());
         LinearLayout.LayoutParams headerTitleParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
         headerTitle.setLayoutParams(headerTitleParams);
+
         if (sectionName != null && !sectionName.isEmpty()) {
-            String formattedName = sectionName.substring(0, 1).toUpperCase() + sectionName.substring(1).toLowerCase();
+            String formattedName = capitalizeWords(sectionName);
             headerTitle.setText(formattedName);
         } else {
             headerTitle.setText("");
         }
+
         headerTitle.setTextSize(18);
         headerTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         headerTitle.setTextColor(getResources().getColor(R.color.white));
+
 
 
 
@@ -287,51 +411,90 @@ public class Actividades extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 EditText etMaterial = cuadroAnadir.findViewById(R.id.item_Mat);
                                 EditText etCantidad = cuadroAnadir.findViewById(R.id.item_Cant);
-                                String material = etMaterial.getText().toString().trim();
-                                String cantidad = etCantidad.getText().toString().trim();
+                                final String material = etMaterial.getText().toString().trim();
+                                final String cantidad = etCantidad.getText().toString().trim();
+
                                 if (!material.isEmpty() && !cantidad.isEmpty()) {
-                                    final LinearLayout newRow = new LinearLayout(getContext());
-                                    newRow.setOrientation(LinearLayout.HORIZONTAL);
-                                    newRow.setLayoutParams(new LinearLayout.LayoutParams(
-                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT));
-                                    newRow.setPadding(0, 8, 0, 8);
-
-                                    TextView tvNewMaterial = new TextView(getContext());
-                                    LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
-                                            0,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                                    tvNewMaterial.setLayoutParams(newNameParams);
-                                    tvNewMaterial.setText(material);
-                                    tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
-
-                                    TextView tvNewCantidad = new TextView(getContext());
-                                    LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
-                                            0,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                                    tvNewCantidad.setLayoutParams(newQuantityParams);
-                                    tvNewCantidad.setText(cantidad);
-                                    tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
-                                    tvNewCantidad.setGravity(Gravity.END);
-
-                                    newRow.addView(tvNewMaterial);
-                                    newRow.addView(tvNewCantidad);
-
-                                    int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
-                                    if (addIconIndex != -1) {
-                                        contentLayout.addView(newRow, addIconIndex);
-                                    } else {
-                                        contentLayout.addView(newRow);
-                                    }
-                                    newRow.setOnClickListener(new View.OnClickListener() {
+                                    // Llamada a la validación: se comprueba que el material exista.
+                                    validarMaterial(getContext(), material, new MaterialCallback() {
                                         @Override
-                                        public void onClick(View v) {
-                                            if (selectedRow[0] != null) {
-                                                selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
-                                            }
-                                            selectedRow[0] = newRow;
+                                        public void onMaterialObtenido(Material materialValidado) {
+                                            // Verificar si ya se ha agregado un material con el mismo nombre.
+                                            boolean existe = false;
+                                            int childCount = contentLayout.getChildCount();
+                                            for (int i = 0; i < childCount; i++) {
+                                                View child = contentLayout.getChildAt(i);
 
-                                            newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
+                                                // Es posible que existan otros elementos (como el contenedor del ícono),
+                                                // por lo que comprobamos que sea un LinearLayout y tenga al menos un hijo.
+                                                if (child instanceof LinearLayout && child != addMaterialIconContainer) {
+                                                    LinearLayout fila = (LinearLayout) child;
+                                                    if (fila.getChildCount() > 0 && fila.getChildAt(0) instanceof TextView) {
+                                                        String nombreExistente = ((TextView) fila.getChildAt(0)).getText().toString().trim();
+                                                        if (nombreExistente.equalsIgnoreCase(material)) {
+                                                            existe = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (existe) {
+                                                // Si ya existe, se muestra un Toast y se cancela la operación.
+                                                Toast.makeText(getContext(), "El material ya ha sido añadido", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            // Si no existe, se añade la nueva fila.
+                                            final LinearLayout newRow = new LinearLayout(getContext());
+                                            newRow.setOrientation(LinearLayout.HORIZONTAL);
+                                            newRow.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                                            newRow.setPadding(0, 8, 0, 8);
+
+                                            TextView tvNewMaterial = new TextView(getContext());
+                                            LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
+                                                    0,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                                            tvNewMaterial.setLayoutParams(newNameParams);
+                                            tvNewMaterial.setText(material);
+                                            tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
+
+                                            TextView tvNewCantidad = new TextView(getContext());
+                                            LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
+                                                    0,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                                            tvNewCantidad.setLayoutParams(newQuantityParams);
+                                            tvNewCantidad.setText(cantidad);
+                                            tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
+                                            tvNewCantidad.setGravity(Gravity.END);
+
+                                            newRow.addView(tvNewMaterial);
+                                            newRow.addView(tvNewCantidad);
+
+                                            int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
+                                            if (addIconIndex != -1) {
+                                                contentLayout.addView(newRow, addIconIndex);
+                                            } else {
+                                                contentLayout.addView(newRow);
+                                            }
+                                            newRow.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if (selectedRow[0] != null) {
+                                                        selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
+                                                    }
+                                                    selectedRow[0] = newRow;
+                                                    newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onFailure(boolean error) {
+                                            // Si el material ingresado no existe, mostramos un Toast de error.
+                                            Toast.makeText(getContext(), "El material ingresado no existe", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
@@ -341,6 +504,7 @@ public class Actividades extends Fragment {
                 builder.create().show();
             }
         });
+
 
 // Ícono de basura para borrar el ítem seleccionado (usa la variable global selectedRow)
         final ImageView trashIcon = new ImageView(getContext());
@@ -390,6 +554,20 @@ public class Actividades extends Fragment {
 
     }
 
+    public static String capitalizeWords(String str) {
+        if (str == null || str.isEmpty()) return str;
+        String[] words = str.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Capitaliza la primera letra y el resto en minúsculas.
+                char firstChar = Character.toUpperCase(word.charAt(0));
+                String rest = word.length() > 1 ? word.substring(1).toLowerCase() : "";
+                sb.append(firstChar).append(rest).append(" ");
+            }
+        }
+        return sb.toString().trim();
+    }
 
 
 

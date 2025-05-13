@@ -1,6 +1,8 @@
 package com.nickteck.inventariosanidad.sampledata;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -299,6 +301,60 @@ public class Utilidades {
         });
     }
 
+    public static void validarMaterial(final Context context, final String materialIngresado, final MaterialCallback callback) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<List<Material>> call = api.obtenerMaterial();  // Devuelve una lista de materiales
+        Log.d("Respuesta", "Solicitud creada. Llamando a la API...");
+
+        call.enqueue(new Callback<List<Material>>() {
+            @Override
+            public void onResponse(Call<List<Material>> call, Response<List<Material>> response) {
+                Log.d("Respuesta", "Código de respuesta: " + response.code());
+                Log.d("Respuesta", "Cuerpo de la respuesta: " + response.body());
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Material> listaMateriales = response.body();
+                    Log.d("Materiales", "Cantidad de materiales obtenidos: " + listaMateriales.size());
+
+                    boolean encontrado = false;
+                    // Recorremos la lista para ver si existe el material ingresado
+                    for (Material material : listaMateriales) {
+                        Log.d("Material", "Material recibido: "
+                                + material.getNombre() + " - " + material.getDescripcion());
+
+                        // Se compara ignorando mayúsculas/minúsculas
+                        if (material.getNombre().equalsIgnoreCase(materialIngresado)) {
+                            encontrado = true;
+                            callback.onMaterialObtenido(material);  // Material encontrado
+                            break;
+                        }
+                    }
+
+                    // Si después de recorrer la lista no se encontró, se muestra un Toast de error
+                    if (!encontrado) {
+                        Toast.makeText(context, "El material ingresado no existe", Toast.LENGTH_SHORT).show();
+                        callback.onFailure(true);
+                    }
+                } else {
+                    Log.w("Materiales", "Respuesta no exitosa o vacía. Código de respuesta: " + response.code());
+                    callback.onFailure(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Material>> call, Throwable t) {
+                // Si hay un error de comunicación, lo muestra en los logs
+                Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
 
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.

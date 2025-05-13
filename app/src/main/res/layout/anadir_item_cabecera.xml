@@ -18,10 +18,12 @@
         android:layout_height="67dp"
         android:layout_marginTop="8dp"
         android:hint="Materiales:" />
+
     <EditText
         android:id="@+id/etCantidad"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"
-        android:hint="Cantidad:" />
+        android:hint="@string/cantidad_anandir_item"
+        android:inputType="number" />
 </LinearLayout>

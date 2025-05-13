@@ -33,6 +33,9 @@ public class Actividades_profesor extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_actividades_profesor, container, false);
         Cbusqueda = view.findViewById(R.id.cuadrobusqueda);
+
+
+
         Cbusqueda.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
