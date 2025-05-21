@@ -7,14 +7,16 @@
     android:padding="16dp"
     android:background="@android:color/white">
 
+
     <TextView
         android:id="@+id/EncabezadoHistorial"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Historial de Materiales"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="@string/historial_de_materiales"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#424242"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="#424242" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHistorial"

@@ -18,23 +18,14 @@ import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
 
 public class Actividades_profesor extends Fragment {
-
     private EditText Cbusqueda;
     private Button botonan;
-    private LinearLayout climpiepro, contlimpiepro;
-    private ImageView flelimpro;
-    private LinearLayout ccompro, contecompro;
-    private ImageView flecompro;
-    private LinearLayout cmantepro, conmantepro;
-    private ImageView flechamantepro;
     private LinearLayout contenedorgeneral;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_actividades_profesor, container, false);
         Cbusqueda = view.findViewById(R.id.cuadrobusqueda);
-
-
 
         Cbusqueda.addTextChangedListener(new TextWatcher() {
             @Override
@@ -43,10 +34,7 @@ public class Actividades_profesor extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                String query = s.toString().toLowerCase().trim();
-                filtrarhijos(climpiepro, contlimpiepro, query);
-                filtrarhijos(ccompro, contecompro, query);
-                filtrarhijos(cmantepro, conmantepro, query);
+
             }
         });
 
@@ -81,66 +69,6 @@ public class Actividades_profesor extends Fragment {
 
 
         contenedorgeneral = view.findViewById(R.id.contenedorgeneral);
-
-        climpiepro = view.findViewById(R.id.cabezeralimpiezapro);
-        contlimpiepro = view.findViewById(R.id.contenidolimpiezapro);
-        flelimpro = view.findViewById(R.id.flechalimpiezapro);
-
-        climpiepro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contlimpiepro.getVisibility() == View.VISIBLE) {
-                    contlimpiepro.setVisibility(View.GONE);
-                    flelimpro.setImageResource(android.R.drawable.arrow_down_float);
-                } else {
-                    contlimpiepro.setVisibility(View.VISIBLE);
-                    flelimpro.setImageResource(android.R.drawable.arrow_up_float);
-                }
-                contlimpiepro.requestLayout();
-                contlimpiepro.invalidate();
-            }
-        });
-
-
-        ccompro = view.findViewById(R.id.cabezeracompraspro);
-        contecompro = view.findViewById(R.id.contenidocomprapro);
-        flecompro = view.findViewById(R.id.flechacomprapro);
-
-        ccompro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contecompro.getVisibility() == View.VISIBLE) {
-                    contecompro.setVisibility(View.GONE);
-                    flecompro.setImageResource(android.R.drawable.arrow_down_float);
-                } else {
-                    contecompro.setVisibility(View.VISIBLE);
-                    flecompro.setImageResource(android.R.drawable.arrow_up_float);
-                }
-                contecompro.requestLayout();
-                contecompro.invalidate();
-            }
-        });
-
-
-        cmantepro = view.findViewById(R.id.cabezeramantepro);
-        conmantepro = view.findViewById(R.id.contenidomantepro);
-        flechamantepro = view.findViewById(R.id.flechamantepro);
-
-        cmantepro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (conmantepro.getVisibility() == View.VISIBLE) {
-                    conmantepro.setVisibility(View.GONE);
-                    flechamantepro.setImageResource(android.R.drawable.arrow_down_float);
-                } else {
-                    conmantepro.setVisibility(View.VISIBLE);
-                    flechamantepro.setImageResource(android.R.drawable.arrow_up_float);
-                }
-                conmantepro.requestLayout();
-                conmantepro.invalidate();
-            }
-        });
-
         return view;
     }
 
@@ -262,7 +190,6 @@ public class Actividades_profesor extends Fragment {
         newSectionContainer.addView(contentLayout);
         contenedorgeneral.addView(newSectionContainer);
     }
-
 
 
 }

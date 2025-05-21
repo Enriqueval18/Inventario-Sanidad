@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="green">#4CAF50</color>
     <color name="blueblack">#001a33</color>
     <color name="marroncito">#A02D07</color>
     <color name="lijero">#d1d4da</color>
     <color name="rojos">#b2260f</color>
+
+    <!-- Texto-->
+    <color name="texto_principal">#0f0f0f</color>
+    <color name="texto_secundario">#3b4753</color>
+    <color name="black">#FF000000</color>
+
+
+
 
 </resources>

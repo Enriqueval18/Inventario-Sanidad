@@ -30,7 +30,7 @@ public class Materiales extends Fragment {
             public void onClick(View v) {
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.pedir_material, null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Pedir Nuevo Item");
+                builder.setTitle("Pedir Nuevo Material");
                 builder.setView(dialogView)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
