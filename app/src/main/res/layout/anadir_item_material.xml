@@ -8,12 +8,14 @@
 
     <EditText
         android:id="@+id/item_Mat"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"
         android:hint="Materiales:" />
     <EditText
         android:id="@+id/item_Cant"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"

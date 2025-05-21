@@ -47,6 +47,7 @@
 
             <Button
                 android:id="@+id/btnQuedarme"
+                style="@style/Button.Danger"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -58,6 +59,7 @@
 
             <Button
                 android:id="@+id/btnSalir"
+                style="@style/Button.Danger"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

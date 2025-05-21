@@ -8,12 +8,14 @@
 
     <EditText
         android:id="@+id/Nombreusuario"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre de usuario" />
 
     <EditText
         android:id="@+id/Contrasena"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Contraseña"

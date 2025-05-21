@@ -225,12 +225,13 @@ public class Administrar_usuarios extends Fragment {
         tvUserItem.setTextSize(16);
         tvUserItem.setTextColor(getResources().getColor(android.R.color.black));
         tvUserItem.setText(username + " - " + role);
-        tvUserItem.setBackgroundResource(R.drawable.rounded_frame_background);
+        tvUserItem.setBackgroundResource(R.drawable.background_white_square);
         tvUserItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (seleccionar_usuario != null) {
                     seleccionar_usuario.setBackgroundResource(R.drawable.rounded_frame_background);
+
                 }
                 if (seleccionar_usuario == v) {
                     seleccionar_usuario = null;

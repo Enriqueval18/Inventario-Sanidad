@@ -7,12 +7,14 @@
 
     <EditText
         android:id="@+id/etNombre"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre del material - Codigo:" />
 
     <EditText
         android:id="@+id/etMateriales"
+        style="@style/Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

@@ -17,4 +17,32 @@
         <!-- Ajusta la opacidad del oscurecimiento -->
         <item name="android:backgroundDimAmount">0.8</item>
     </style>
+
+    <!-- Estilo para EditText -->
+    <style name="Input">
+        <item name="android:background">@color/gray_200</item>
+        <item name="android:textColor">@color/text_100</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Estilo base para botones -->
+    <style name="Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/bg_100</item>
+        <item name="android:padding">10dp</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="backgroundTint">@color/gray_800</item>
+    </style>
+
+    <!-- Botón primario -->
+    <style name="Button.Primary" parent="Button">
+        <item name="backgroundTint">@color/primary_300</item>
+    </style>
+
+    <!-- Botón de alerta -->
+    <style name="Button.Danger" parent="Button">
+        <item name="backgroundTint">@color/error</item>
+    </style>
 </resources>
