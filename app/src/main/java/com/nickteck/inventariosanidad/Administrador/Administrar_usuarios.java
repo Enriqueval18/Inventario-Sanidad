@@ -146,6 +146,12 @@ public class Administrar_usuarios extends Fragment {
                 final EditText etUsername = dialogView.findViewById(R.id.Nombreusuario);
                 final EditText etPassword = dialogView.findViewById(R.id.Contrasena);
                 final Spinner spinnerRole = dialogView.findViewById(R.id.Seleccionarrol);
+                TextView textViewUsuario = (TextView) seleccionar_usuario;
+                String usuarioSeleccionado = textViewUsuario.getText().toString();
+
+                // Obtener solo el nombre del usuario. Aquí asumimos que el nombre está antes del " - "
+                String[] partes = usuarioSeleccionado.split(" - ");
+                String nombreUsuario = partes[0]; // El nombre del usuario es la primera parte
 
                 String[] roles = {"Profesor", "Administrador", "Usuario"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
@@ -177,6 +183,18 @@ public class Administrar_usuarios extends Fragment {
                                 String newRole = spinnerRole.getSelectedItem().toString();
 
                                 if (!newUsername.isEmpty() && !newRole.isEmpty()) {
+
+                                    Utilidades.editarUsuarios(new Usuario(newUsername, newPassword, newRole), nombreUsuario, new RespuestaCallback() {
+                                        @Override
+                                        public void onResultado(boolean correcto) {
+                                            Log.i("EditarUsuario","usuario editado");
+                                        }
+
+                                        @Override
+                                        public void onFailure(boolean error) {
+
+                                        }
+                                    });
                                     ((TextView) seleccionar_usuario).setText(newUsername + " - " + newRole);
                                     Toast.makeText(getContext(), "Usuario modificado", Toast.LENGTH_SHORT).show();
                                 } else {
