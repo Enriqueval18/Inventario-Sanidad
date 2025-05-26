@@ -11,13 +11,12 @@
         android:id="@+id/Fondobackgroundpro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        app:lottie_fileName="background2.json"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        android:scaleType="centerCrop"
+        android:layout_gravity="center"
         android:alpha="0.25"
-        android:layout_gravity="center" />
+        android:background="@drawable/fondo"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <include
         android:id="@+id/tarjetaUsuario"
