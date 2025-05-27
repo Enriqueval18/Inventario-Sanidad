@@ -1,7 +1,7 @@
 package com.nickteck.inventariosanidad.sampledata;
 
 public interface MaterialCallback {
-    void onMaterialObtenido(Material material);
-
-    void onFailure(boolean b);
+    void onMaterialObtenido(String nombre, int unidades, String alamacen, String armario, String estante, int unidades_min, String descripcion);
+    void onFailure(boolean error);
 }
+

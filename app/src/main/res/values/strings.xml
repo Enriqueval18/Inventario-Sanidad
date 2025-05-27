@@ -25,12 +25,12 @@
     <string name="armario">Armario</string>
 
     <!-- Strings para la parte de la tarjeta de cada material -->
-    <string name="material_t">Material:</string>
+    <string name="material_t">Material</string>
     <string name="nombre_t">Nombre:</string>
     <string name="unidades_t">Unidades:</string>
     <string name="almacen_t">Almacen:</string>
     <string name="armario_t">Armario:</string>
-    <string name="balda_t">Balda:</string>
+    <string name="estante_t">Estante:</string>
     <string name="unidades_minimas_t">Unidades Mínimas:</string>
     <string name="descripcion_t">Descripción:</string>
     <string name="nombre_del_material">Nombre del material</string>

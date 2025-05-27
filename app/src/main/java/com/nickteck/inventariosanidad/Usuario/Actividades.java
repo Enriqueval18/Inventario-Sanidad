@@ -85,14 +85,14 @@ public class Actividades extends Fragment {
                                         Toast.makeText(getContext(), "Formato de Nombre incorrecto", Toast.LENGTH_LONG).show();
                                         return;
                                     }
-                                    validarMaterial(getContext(), materiales, new MaterialCallback() {
-                                        @Override
-                                        public void onMaterialObtenido(Material material) {
-                                            anandir_nueva_tabla(nombre, materiales, cantidad);
-                                        }
-                                        @Override
-                                        public void onFailure(boolean error) { }
-                                    });
+//                                    validarMaterial(getContext(), materiales, new MaterialCallback() {
+//                                        @Override
+//                                        public void onMaterialObtenido(Material material) {
+//                                            anandir_nueva_tabla(nombre, materiales, cantidad);
+//                                        }
+//                                        @Override
+//                                        public void onFailure(boolean error) { }
+//                                    });
                                 }
                             }
                         })
@@ -366,80 +366,80 @@ public class Actividades extends Fragment {
                                 final String cantidad = etCantidad.getText().toString().trim();
 
                                 if (!material.isEmpty() && !cantidad.isEmpty()) {
-                                    validarMaterial(getContext(), material, new MaterialCallback() {
-                                        @Override
-                                        public void onMaterialObtenido(Material materialValidado) {
-                                            boolean existe = false;
-                                            int childCount = contentLayout.getChildCount();
-                                            for (int i = 0; i < childCount; i++) {
-                                                View child = contentLayout.getChildAt(i);
-                                                if (child instanceof LinearLayout && child != addMaterialIconContainer) {
-                                                    LinearLayout fila = (LinearLayout) child;
-                                                    if (fila.getChildCount() > 0 && fila.getChildAt(0) instanceof TextView) {
-                                                        String nombreExistente = ((TextView) fila.getChildAt(0)).getText().toString().trim();
-                                                        if (nombreExistente.equalsIgnoreCase(material)) {
-                                                            existe = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            if (existe) {
-                                                Toast.makeText(getContext(), "El material ya ha sido añadido", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-
-                                            final LinearLayout newRow = new LinearLayout(getContext());
-                                            newRow.setOrientation(LinearLayout.HORIZONTAL);
-                                            newRow.setLayoutParams(new LinearLayout.LayoutParams(
-                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
-                                            newRow.setPadding(0, 8, 0, 8);
-
-                                            TextView tvNewMaterial = new TextView(getContext());
-                                            LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
-                                                    0,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                                            tvNewMaterial.setLayoutParams(newNameParams);
-                                            tvNewMaterial.setText(material);
-                                            tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
-
-                                            TextView tvNewCantidad = new TextView(getContext());
-                                            LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
-                                                    0,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-                                            tvNewCantidad.setLayoutParams(newQuantityParams);
-                                            tvNewCantidad.setText(cantidad);
-                                            tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
-                                            tvNewCantidad.setGravity(Gravity.END);
-
-                                            newRow.addView(tvNewMaterial);
-                                            newRow.addView(tvNewCantidad);
-
-                                            int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
-                                            if (addIconIndex != -1) {
-                                                contentLayout.addView(newRow, addIconIndex);
-                                            } else {
-                                                contentLayout.addView(newRow);
-                                            }
-                                            newRow.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    if (selectedRow[0] != null) {
-                                                        selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
-                                                    }
-                                                    selectedRow[0] = newRow;
-                                                    newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onFailure(boolean error) {
-                                            Toast.makeText(getContext(), "El material ingresado no existe", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+//                                    validarMaterial(getContext(), material, new MaterialCallback() {
+//                                        @Override
+//                                        public void onMaterialObtenido(Material materialValidado) {
+//                                            boolean existe = false;
+//                                            int childCount = contentLayout.getChildCount();
+//                                            for (int i = 0; i < childCount; i++) {
+//                                                View child = contentLayout.getChildAt(i);
+//                                                if (child instanceof LinearLayout && child != addMaterialIconContainer) {
+//                                                    LinearLayout fila = (LinearLayout) child;
+//                                                    if (fila.getChildCount() > 0 && fila.getChildAt(0) instanceof TextView) {
+//                                                        String nombreExistente = ((TextView) fila.getChildAt(0)).getText().toString().trim();
+//                                                        if (nombreExistente.equalsIgnoreCase(material)) {
+//                                                            existe = true;
+//                                                            break;
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+//
+//                                            if (existe) {
+//                                                Toast.makeText(getContext(), "El material ya ha sido añadido", Toast.LENGTH_SHORT).show();
+//                                                return;
+//                                            }
+//
+//                                            final LinearLayout newRow = new LinearLayout(getContext());
+//                                            newRow.setOrientation(LinearLayout.HORIZONTAL);
+//                                            newRow.setLayoutParams(new LinearLayout.LayoutParams(
+//                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+//                                            newRow.setPadding(0, 8, 0, 8);
+//
+//                                            TextView tvNewMaterial = new TextView(getContext());
+//                                            LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
+//                                                    0,
+//                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+//                                            tvNewMaterial.setLayoutParams(newNameParams);
+//                                            tvNewMaterial.setText(material);
+//                                            tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
+//
+//                                            TextView tvNewCantidad = new TextView(getContext());
+//                                            LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
+//                                                    0,
+//                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+//                                            tvNewCantidad.setLayoutParams(newQuantityParams);
+//                                            tvNewCantidad.setText(cantidad);
+//                                            tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
+//                                            tvNewCantidad.setGravity(Gravity.END);
+//
+//                                            newRow.addView(tvNewMaterial);
+//                                            newRow.addView(tvNewCantidad);
+//
+//                                            int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
+//                                            if (addIconIndex != -1) {
+//                                                contentLayout.addView(newRow, addIconIndex);
+//                                            } else {
+//                                                contentLayout.addView(newRow);
+//                                            }
+//                                            newRow.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View v) {
+//                                                    if (selectedRow[0] != null) {
+//                                                        selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
+//                                                    }
+//                                                    selectedRow[0] = newRow;
+//                                                    newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
+//                                                }
+//                                            });
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(boolean error) {
+//                                            Toast.makeText(getContext(), "El material ingresado no existe", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
                                 }
                             }
                         })

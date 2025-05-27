@@ -79,10 +79,10 @@
                     android:textSize="16sp"
                     android:layout_marginBottom="4dp"/>
                 <TextView
-                    android:id="@+id/tvBalda"
+                    android:id="@+id/tvEstante"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/balda_t"
+                    android:text="@string/estante_t"
                     android:textSize="16sp"
                     android:layout_marginBottom="4dp"/>
                 <TextView

@@ -2,6 +2,7 @@ package com.nickteck.inventariosanidad.Usuario;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,8 @@ public class Inventario extends Fragment {
     private void obtenerDatosInventario() {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
-            public void onMaterialObtenido(Material material) {
-                agregarFila(material);
+            public void onMaterialObtenido(String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
+                agregarFila(nombre, unidades, almacen, armario, estante,unidades_min,descripcion);
             }
 
             @Override
@@ -41,44 +42,48 @@ public class Inventario extends Fragment {
             }
         });
     }
-
-    private void agregarFila(final Material material) {
+    private void agregarFila(String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
         TableRow fila = new TableRow(getContext());
         fila.setPadding(4, 4, 4, 4);
 
         TextView tvNombre = new TextView(getContext());
         tvNombre.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvNombre.setText(material.getNombre());
+        tvNombre.setText(nombre);
         tvNombre.setPadding(8, 8, 8, 8);
-
-        TextView tvDescripcion = new TextView(getContext());
-        tvDescripcion.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvDescripcion.setText(material.getDescripcion());
-        tvDescripcion.setPadding(8, 8, 8, 8);
-
 
         TextView tvUnidades = new TextView(getContext());
         tvUnidades.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvUnidades.setText("");
+        tvUnidades.setText(String.valueOf(unidades));
         tvUnidades.setPadding(8, 8, 8, 8);
+        tvUnidades.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        TextView tvExtra = new TextView(getContext());
-        tvExtra.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
-        tvExtra.setText("");
-        tvExtra.setPadding(8, 8, 8, 8);
+        TextView tvAlmacen = new TextView(getContext());
+        tvAlmacen.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
+        tvAlmacen.setText(almacen);
+        tvAlmacen.setPadding(8, 8, 8, 8);
+
+        TextView tvArmario = new TextView(getContext());
+        tvArmario.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
+        tvArmario.setText(armario);
+        tvArmario.setPadding(8, 8, 8, 8);
 
         fila.addView(tvNombre);
-        fila.addView(tvDescripcion);
         fila.addView(tvUnidades);
-        fila.addView(tvExtra);
+        fila.addView(tvAlmacen);
+        fila.addView(tvArmario);
 
         fila.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MostrarInventario dialog = new MostrarInventario();
                 Bundle args = new Bundle();
-                args.putString("nombre", material.getNombre());
-                args.putString("descripcion", material.getDescripcion());
+                args.putString("nombre", nombre);
+                args.putInt("unidades", unidades);
+                args.putString("almacen",almacen);
+                args.putString("armario", armario);
+                args.putString("estante", estante);
+                args.putInt("unidadesm", unidades_min);
+                args.putString("descripcion", descripcion);
                 dialog.setArguments(args);
                 dialog.show(getParentFragmentManager(), "MostrarInventario");
             }
@@ -86,4 +91,5 @@ public class Inventario extends Fragment {
 
         tablaInventario.addView(fila);
     }
+
 }

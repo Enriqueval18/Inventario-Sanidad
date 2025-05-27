@@ -5,9 +5,9 @@ public class Material {
     String descripcion;
     int unidades;
     int unidades_min;
-    String alamacen;
+    String almacen;
     String armario;
-    String balda;
+    String estante;
     String cajon;
     public Material() {
 
@@ -21,14 +21,14 @@ public class Material {
         this.cajon = cajon;
     }
 
-    public Material(String nombre, String descripcion, int unidades, int unidades_min, String alamacen, String armario, String balda) {
+    public Material(String nombre, String descripcion, int unidades, int unidades_min, String almacen, String armario, String estante) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.unidades = unidades;
         this.unidades_min = unidades_min;
-        this.alamacen = alamacen;
+        this.almacen = almacen;
         this.armario = armario;
-        this.balda = balda;
+        this.estante = estante;
     }
 
     public int getUnidades() {
@@ -47,12 +47,12 @@ public class Material {
         this.unidades_min = unidades_min;
     }
 
-    public String getAlamacen() {
-        return alamacen;
+    public String getAlmacen() {
+        return almacen;
     }
 
-    public void setAlamacen(String alamacen) {
-        this.alamacen = alamacen;
+    public void setAlmacen(String almacen) {
+        this.almacen = almacen;
     }
 
     public String getArmario() {
@@ -63,12 +63,12 @@ public class Material {
         this.armario = armario;
     }
 
-    public String getBalda() {
-        return balda;
+    public String getEstante() {
+        return estante;
     }
 
-    public void setBalda(String balda) {
-        this.balda = balda;
+    public void setEstante(String estante) {
+        this.estante = estante;
     }
 
     public Material(String nombre, String descripcion) {
