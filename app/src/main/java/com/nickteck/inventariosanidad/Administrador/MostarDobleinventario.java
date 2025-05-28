@@ -34,13 +34,13 @@ public class MostarDobleinventario extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.propiedades_inventario_doble, container, false);
 
-        //TextView tvNombre = view.findViewById(R.id.tvNombre);
+        TextView tvNombre = view.findViewById(R.id.tvNombre1);
         TextView tvUnidades = view.findViewById(R.id.tvUnidades1);
-        TextView tvAlmacen = view.findViewById(R.id.tvTipoAlmacen1);
-        TextView tvArmarios = view.findViewById(R.id.tvArmario1);
-        //TextView tvEstante = view.findViewById(R.id.tvEstante);
+        TextView tvAlmacen = view.findViewById(R.id.tvAlmacen1);
+        TextView tvArmarios = view.findViewById(R.id.tvArmarios1);
+        TextView tvEstante = view.findViewById(R.id.tvEstante1);
         TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas1);
-        //TextView tvDescripcion = view.findViewById(R.id.tvDescripcion);
+        TextView tvDescripcion = view.findViewById(R.id.tvDescripcion1);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -53,13 +53,13 @@ public class MostarDobleinventario extends DialogFragment {
             int unidadesMin = args.getInt("unidadesm", 0);
 
             // Usamos el metodo auxiliar para que esté en negrita
-            //tvNombre.setText(createBoldLabel("Nombre: ", nombre));
+            tvNombre.setText(createBoldLabel("Nombre: ", nombre));
             tvUnidades.setText(createBoldLabel("Unidades: ", String.valueOf(unidades)));
             tvAlmacen.setText(createBoldLabel("Almacén: ", almacen));
             tvArmarios.setText(createBoldLabel("Armario: ", armario));
-            //tvEstante.setText(createBoldLabel("Estante: ", balda));
+            tvEstante.setText(createBoldLabel("Estante: ", balda));
             tvUnidadesMinimas.setText(createBoldLabel("Unidades mínimas: ", String.valueOf(unidadesMin)));
-            //tvDescripcion.setText(createBoldLabel("Descripción: ", descripcion));
+            tvDescripcion.setText(createBoldLabel("Descripción: ", descripcion));
         }
 
         return view;
