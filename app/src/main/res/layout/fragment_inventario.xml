@@ -1,62 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TableLayout
-        android:id="@+id/TablaInventario"
+    <!-- Buscador -->
+    <SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:stretchColumns="*">
+        android:queryHint="Buscar item..." />
 
-        <TableRow
-            android:background="@drawable/rounded_indicator"
-            android:padding="4dp">
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/nombre"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+    <!-- ScrollView que contiene la tabla -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/unidades"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+        <TableLayout
+            android:id="@+id/TablaInventario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:stretchColumns="*">
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/almacen"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+            <!-- Fila de encabezado -->
+            <TableRow
+                android:background="@drawable/rounded_indicator"
+                android:padding="4dp">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nombre"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/armario"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
-        </TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unidades"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
 
-        <TableRow
-            android:id="@+id/Tablafilamaterial"
-            android:padding="4dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground">
-            <!-- Aquí van los datos que nos llegan desde la API -->
-        </TableRow>
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/almacen"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
 
-    </TableLayout>
-</ScrollView>
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/armario"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:padding="8dp" />
+            </TableRow>
+
+            <!-- Fila para los datos dinámicos -->
+            <TableRow
+                android:id="@+id/Tablafilamaterial"
+                android:padding="4dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground">
+                <!-- Aquí van los datos que llegan desde la API -->
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+</LinearLayout>

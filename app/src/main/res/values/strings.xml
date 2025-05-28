@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InventarioSanidad</string>
+    <string name="app_name">Inventario Sanidad</string>
     <!-- Strings para la parte del Login -->
     <string name="bienvenido">¡Bienvenido!</string>ç
     <string name="inicio">Inicia sesión en tu cuenta</string>
