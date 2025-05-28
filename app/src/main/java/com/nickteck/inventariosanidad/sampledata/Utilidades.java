@@ -97,7 +97,6 @@ public class Utilidades {
             }
         });
     }
-
     public static void obtenerMateriales(final MaterialCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -135,7 +134,6 @@ public class Utilidades {
                     callback.onFailure(true);
                 }
             }
-
             @Override
             public void onFailure(Call<List<Material>> call, Throwable t) {
                 Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
@@ -143,9 +141,6 @@ public class Utilidades {
             }
         });
     }
-
-
-
     public static void editarUsuarios(Usuario usuario, String nombreAntiguo ,RespuestaCallback callback) {
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
@@ -195,11 +190,6 @@ public class Utilidades {
         });
 
     }
-
-
-
-
-
     public static void añadirUsuario(Usuario usuario, RespuestaCallback callback) {
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
@@ -268,8 +258,6 @@ public class Utilidades {
         });
 
     }
-
-
     public static void eliminarUsuario(Usuario usuario, RespuestaCallback callback) {
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
@@ -320,7 +308,6 @@ public class Utilidades {
         });
 
     }
-
     public static void mostrarUsuarios(final UsuarioCallback2 callback) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -359,7 +346,6 @@ public class Utilidades {
             }
         });
     }
-
     public static void validarMaterial(final Context context, final String materialIngresado, final MaterialCallback callback) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -382,7 +368,7 @@ public class Utilidades {
                     Log.d("Materiales", "Cantidad de materiales obtenidos: " + listaMateriales.size());
 
                     boolean encontrado = false;
-                    // Recorremos la lista para ver si existe el material ingresado
+                    // Recorrer la lista para ver si existe el material ingresado
                     for (Material material : listaMateriales) {
                         Log.d("Material", "Material recibido: "
                                 + material.getNombre() + " - " + material.getDescripcion());
@@ -390,12 +376,21 @@ public class Utilidades {
                         // Se compara ignorando mayúsculas/minúsculas
                         if (material.getNombre().equalsIgnoreCase(materialIngresado)) {
                             encontrado = true;
-                            //callback.onMaterialObtenido(material);  // Material encontrado
+                            // Material encontrado; se invoca el callback con los datos
+                            callback.onMaterialObtenido(
+                                    material.getNombre(),
+                                    material.getUnidades(),
+                                    material.getAlmacen(),
+                                    material.getArmario(),
+                                    material.getEstante(),
+                                    material.getUnidades_min(),
+                                    material.getDescripcion()
+                            );
                             break;
                         }
                     }
 
-                    // Si después de recorrer la lista no se encontró, se muestra un Toast de error
+                    // Si no se encontró el material, se muestra un mensaje y se notifica error
                     if (!encontrado) {
                         Toast.makeText(context, "El material ingresado no existe", Toast.LENGTH_SHORT).show();
                         callback.onFailure(true);
@@ -408,7 +403,7 @@ public class Utilidades {
 
             @Override
             public void onFailure(Call<List<Material>> call, Throwable t) {
-                // Si hay un error de comunicación, lo muestra en los logs
+                // Si hay un error de comunicación, se muestra el error en los logs y se notifica mediante callback
                 Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
                 callback.onFailure(true);
             }
@@ -456,6 +451,29 @@ public class Utilidades {
         Call<Respuesta> editarUsuarios(@Body Usuario nuevoUsuario,@Query("nombre_antiguo") String nombreUsuario);
 
 
+    }
+
+    public static void getMaterialList(final MaterialListCallback callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)  // Asegúrate de que BASE_URL esté definido correctamente
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<List<Material>> call = api.obtenerMaterial();
+        call.enqueue(new Callback<List<Material>>() {
+            @Override
+            public void onResponse(Call<List<Material>> call, Response<List<Material>> response) {
+                if (response.isSuccessful() && response.body() != null)
+                    callback.onSuccess(response.body());
+                else
+                    callback.onFailure();
+            }
+            @Override
+            public void onFailure(Call<List<Material>> call, Throwable t) {
+                callback.onFailure();
+            }
+        });
     }
 
 

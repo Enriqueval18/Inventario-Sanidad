@@ -16,15 +16,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/cuadrobus"
-            style="@style/Input"
+        <SearchView
+            android:id="@+id/busquedatabla"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/edit_text"
-            android:hint="Buscar..."
-            android:padding="10dp"
-            android:textColor="@color/black" />
+            android:queryHint="Buscar Cabecera..." />
     </LinearLayout>
 
     <!-- ScrollView, que se extiende entre el buscador y el contenedor inferior -->

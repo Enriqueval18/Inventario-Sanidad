@@ -13,13 +13,12 @@
         android:layout_height="67dp"
         android:hint="Nombre Cabecera:" />
 
-    <EditText
-        android:id="@+id/etMateriales"
-        style="@style/Input"
+    <Button
+        android:id="@+id/btnSelectMaterial"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_marginTop="8dp"
-        android:hint="Materiales:" />
+        android:text="Seleccionar Material" />
 
     <EditText
         android:id="@+id/etCantidad"

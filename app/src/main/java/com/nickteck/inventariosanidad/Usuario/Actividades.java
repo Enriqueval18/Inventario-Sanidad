@@ -1,102 +1,140 @@
 package com.nickteck.inventariosanidad.Usuario;
-
-import static com.nickteck.inventariosanidad.sampledata.Utilidades.validarMaterial;
-
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
+import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
+import com.nickteck.inventariosanidad.sampledata.MaterialSelectionListener;
+import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Actividades extends Fragment {
-    private EditText cuadro_busqueda;
+    private SearchView cuadrobus;
     private ImageView btnananir;
     private LinearLayout sectionsContainer;
     final LinearLayout[] selectedSection = new LinearLayout[1];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_actividades, container, false);
-        //-----------------Cuadro de busqueda-------------------------------------
-        cuadro_busqueda = view.findViewById(R.id.cuadrobus);
-        cuadro_busqueda.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String texto = s.toString();
-                int totalSecciones = sectionsContainer.getChildCount(); //Busca entre las secciones
-                for (int i = 0; i < totalSecciones; i++) {
-                    View seccion = sectionsContainer.getChildAt(i);
-                    if (seccion instanceof LinearLayout) {
-                        LinearLayout seccionLayout = (LinearLayout) seccion;
-                        if (seccionLayout.getChildCount() >= 2) {
-                            LinearLayout header = (LinearLayout) seccionLayout.getChildAt(0);
-                            LinearLayout content = (LinearLayout) seccionLayout.getChildAt(1);
-                            Filtrar(header, content, texto);
+
+        //----------------------- Cuadro de busqueda-------------------------------------
+        cuadrobus = view.findViewById(R.id.busquedatabla);
+        if (cuadrobus != null) {
+            cuadrobus.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    String texto = query;
+                    int totalSecciones = sectionsContainer.getChildCount();
+                    for (int i = 0; i < totalSecciones; i++) {
+                        View seccion = sectionsContainer.getChildAt(i);
+                        if (seccion instanceof LinearLayout) {
+                            LinearLayout seccionLayout = (LinearLayout) seccion;
+                            if (seccionLayout.getChildCount() >= 2) {
+                                LinearLayout header = (LinearLayout) seccionLayout.getChildAt(0);
+                                LinearLayout content = (LinearLayout) seccionLayout.getChildAt(1);
+                                Filtrar(header, content, texto);
+                            }
                         }
                     }
+                    return false;
                 }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
 
-        //-----------------Boton de añadir----------------------------------------
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    String texto = newText.toString();
+                    int totalSecciones = sectionsContainer.getChildCount();
+                    for (int i = 0; i < totalSecciones; i++) {
+                        View seccion = sectionsContainer.getChildAt(i);
+                        if (seccion instanceof LinearLayout) {
+                            LinearLayout seccionLayout = (LinearLayout) seccion;
+                            if (seccionLayout.getChildCount() >= 2) {
+                                LinearLayout header = (LinearLayout) seccionLayout.getChildAt(0);
+                                LinearLayout content = (LinearLayout) seccionLayout.getChildAt(1);
+                                Filtrar(header, content, texto);
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+
+        //------------------------Boton de añadir----------------------------------------
         btnananir = view.findViewById(R.id.btnana);
         btnananir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View cuadroañadir = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
+                final View petitionView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
+                final EditText etNombre = petitionView.findViewById(R.id.etNombre);
+                final Button btnSelectMaterial = petitionView.findViewById(R.id.btnSelectMaterial);
+                final EditText etCantidad = petitionView.findViewById(R.id.etCantidad);
+                final String[] selectedMaterial = new String[1];
+                btnSelectMaterial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showMaterialSelectionDialog(new MaterialSelectionListener() {
+                            @Override
+                            public void onMaterialSelected(String material) {
+                                selectedMaterial[0] = material;
+                                btnSelectMaterial.setText(material);
+                            }
+                        });
+                    }
+                });
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Añadir Nueva Peticion");
-                builder.setView(cuadroañadir)
+                builder.setTitle("Añadir Nueva Petición");
+                builder.setView(petitionView)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditText etNombre = cuadroañadir.findViewById(R.id.etNombre);
-                                EditText etMateriales = cuadroañadir.findViewById(R.id.etMateriales);
-                                EditText etCantidad = cuadroañadir.findViewById(R.id.etCantidad);
                                 String nombre = etNombre.getText().toString().trim();
-                                String materiales = etMateriales.getText().toString().trim();
                                 String cantidad = etCantidad.getText().toString().trim();
+                                String material = selectedMaterial[0];
 
-                                if (!nombre.isEmpty() && !materiales.isEmpty() && !cantidad.isEmpty()) {
-                                    if (!nombre.matches("^[^-]+\\s*-\\s*[^-]+$")) {  //Hace que el formato sea: Material - Nombre del alumno
-                                        Toast.makeText(getContext(), "Formato de Nombre incorrecto", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-//                                    validarMaterial(getContext(), materiales, new MaterialCallback() {
-//                                        @Override
-//                                        public void onMaterialObtenido(Material material) {
-//                                            anandir_nueva_tabla(nombre, materiales, cantidad);
-//                                        }
-//                                        @Override
-//                                        public void onFailure(boolean error) { }
-//                                    });
+                                if (nombre.isEmpty() || cantidad.isEmpty() || material == null || material.isEmpty()) {
+                                    Toast.makeText(getContext(), "Rellena todos los campos y selecciona un material", Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
+                                anandir_nueva_tabla(nombre, material, cantidad);
                             }
                         })
                         .setNegativeButton("Cancelar", null);
+
                 builder.create().show();
             }
         });
@@ -120,61 +158,106 @@ public class Actividades extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selectedSection[0] != null) {
-                    LinearLayout section = selectedSection[0];
-                    LinearLayout headerLayout = (LinearLayout) section.getChildAt(0);
-                    TextView headerTitle = (TextView) headerLayout.getChildAt(0);
-                    String titulo = headerTitle.getText().toString();
-                    LinearLayout contentLayout = (LinearLayout) section.getChildAt(1);
-                    int contentChildCount = contentLayout.getChildCount();
+                try {
+                    if (selectedSection[0] != null) {
+                        // Obtenemos la sección (tabla)
+                        LinearLayout section = selectedSection[0];
 
-                    ArrayList<String> materiales = new ArrayList<>();
-                    ArrayList<String> cantidades = new ArrayList<>();
+                        // Buscamos dinámicamente el TextView del header (para evitar errores de cast)
+                        LinearLayout headerLayout = (LinearLayout) section.getChildAt(0);
+                        TextView headerTitle = null;
+                        for (int i = 0; i < headerLayout.getChildCount(); i++) {
+                            View child = headerLayout.getChildAt(i);
+                            if (child instanceof TextView) {
+                                headerTitle = (TextView) child;
+                                break;
+                            }
+                        }
+                        if (headerTitle == null) {
+                            Toast.makeText(getContext(), "Error: no se encontró el título", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String titulo = headerTitle.getText().toString();
+                        Log.d("btnSend", "Título obtenido: " + titulo);
 
-                    if (contentChildCount > 2) {
-                        for (int j = 1; j < contentChildCount - 1; j++) {
+                        // Obtenemos el contenedor de filas (content)
+                        LinearLayout contentLayout = (LinearLayout) section.getChildAt(1);
+                        int childCount = contentLayout.getChildCount();
+
+                        ArrayList<String> materiales = new ArrayList<>();
+                        ArrayList<String> cantidades = new ArrayList<>();
+
+                        // Recorremos todas las filas del content
+                        for (int j = 0; j < childCount; j++) {
                             View rowView = contentLayout.getChildAt(j);
                             if (rowView instanceof LinearLayout) {
                                 LinearLayout row = (LinearLayout) rowView;
                                 if (row.getChildCount() >= 2) {
-                                    TextView tvMaterial = (TextView) row.getChildAt(0);
-                                    TextView tvCantidad = (TextView) row.getChildAt(1);
-                                    materiales.add(tvMaterial.getText().toString());
-                                    cantidades.add(tvCantidad.getText().toString());
+                                    // Comprobamos que los dos hijos sean TextView
+                                    View viewMaterial = row.getChildAt(0);
+                                    View viewCantidad = row.getChildAt(1);
+                                    if (viewMaterial instanceof TextView && viewCantidad instanceof TextView) {
+                                        TextView tvMaterial = (TextView) viewMaterial;
+                                        TextView tvCantidad = (TextView) viewCantidad;
+                                        materiales.add(tvMaterial.getText().toString());
+                                        cantidades.add(tvCantidad.getText().toString());
+                                    } else {
+                                        Log.e("btnSend", "Fila " + j + ": elemento 0 o 1 no es TextView");
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Toast.makeText(getContext(), "Datos enviados de la tabla: " + titulo, Toast.LENGTH_LONG).show();
-                    headerLayout.setBackgroundColor(getResources().getColor(R.color.green));
-                } else {
-                    Toast.makeText(getContext(), "No se ha seleccionado ninguna tabla", Toast.LENGTH_SHORT).show();
+                        StringBuilder fileContent = new StringBuilder();
+                        fileContent.append("Titulo: ").append(titulo).append("\n");
+                        for (int i = 0; i < materiales.size(); i++) {
+                            fileContent.append(materiales.get(i))
+                                    .append(",")
+                                    .append(cantidades.get(i))
+                                    .append("\n");
+                        }
+                        // Agregamos un separador para distinguir entre tablas
+                        fileContent.append("\n");
+
+                        Log.d("btnSend", "Contenido a guardar:\n" + fileContent.toString());
+
+                        // Usamos MODE_APPEND para agregar al archivo y no sobrescribirlo
+                        FileOutputStream fos = getContext().openFileOutput("tabla_guardada.txt", Context.MODE_APPEND);
+                        fos.write(fileContent.toString().getBytes());
+                        fos.close();
+                        Log.d("btnSend", "Archivo guardado correctamente.");
+
+                        // Bloqueamos la edición de la tabla: deshabilitamos la interacción en cada fila
+                        for (int j = 0; j < contentLayout.getChildCount(); j++) {
+                            View rowView = contentLayout.getChildAt(j);
+                            rowView.setClickable(false);
+                            rowView.setEnabled(false);
+                        }
+
+                        // Actualizamos el header para indicar visualmente que la tabla ha sido enviada
+                        headerLayout.setBackgroundColor(getResources().getColor(R.color.green));
+
+                        Toast.makeText(getContext(), "Datos enviados de la tabla: " + titulo, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "No se ha seleccionado ninguna tabla", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e("btnSend", "Error en btnSend: " + e.getMessage(), e);
+                    Toast.makeText(getContext(), "Error al enviar: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+
+
+
         sectionsContainer = view.findViewById(R.id.Contenedor_actividades);
+        loadSavedTable();
         return view;
+
     }
 
-    /**
-     * Recorre cada hijo de la sección y muestra sólo aquellos cuyo texto contiene la consulta.
-     * Si query está vacío, se muestran todos los ítems.
-     */
-    private void Filtrar(LinearLayout header, LinearLayout content, String query) {
-        String filtro = query.toLowerCase().trim();
-        if (header.getChildCount() > 0 && header.getChildAt(0) instanceof TextView) {
-            String headerText = ((TextView) header.getChildAt(0)).getText().toString().toLowerCase();
-            if (filtro.isEmpty() || headerText.contains(filtro)) {
-                header.setVisibility(View.VISIBLE);
-                content.setVisibility(View.VISIBLE);
-            } else {
-                header.setVisibility(View.GONE);
-                content.setVisibility(View.GONE);
-            }
-        }
-    }
+
 
     /**
      * Crea y añade dinámicamente una nueva sección tipo accordion a partir de los parámetros.
@@ -353,100 +436,136 @@ public class Actividades extends Fragment {
         addMaterialIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Inflamos el layout del diálogo "Añadir Nuevo Material"
                 final View cuadroAnadir = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_material, null);
+
+                // Obtenemos la referencia del botón para seleccionar el material y del EditText para la cantidad
+                final Button btnSelectMaterial = cuadroAnadir.findViewById(R.id.btnSelectMaterial);
+                final EditText etCantidad = cuadroAnadir.findViewById(R.id.item_Cant);
+
+                // Variable para almacenar el material seleccionado (usamos un array para poder modificar su valor desde el inner class)
+                final String[] selectedMaterial = new String[1];
+
+                // Al pulsar el botón, se muestra el diálogo con la lista filtrable de materiales
+                btnSelectMaterial.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showMaterialSelectionDialog(new MaterialSelectionListener() {
+                            @Override
+                            public void onMaterialSelected(String material) {
+                                selectedMaterial[0] = material;
+                                // Actualizamos el texto del botón para mostrar el material seleccionado
+                                btnSelectMaterial.setText(material);
+                            }
+                        });
+                    }
+                });
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Añadir Nuevo Material");
                 builder.setView(cuadroAnadir)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                EditText etMaterial = cuadroAnadir.findViewById(R.id.item_Mat);
-                                EditText etCantidad = cuadroAnadir.findViewById(R.id.item_Cant);
-                                final String material = etMaterial.getText().toString().trim();
-                                final String cantidad = etCantidad.getText().toString().trim();
+                                // Obtenemos el valor de cantidad y el material seleccionado
+                                String cantidad = etCantidad.getText().toString().trim();
+                                String material = selectedMaterial[0];
 
-                                if (!material.isEmpty() && !cantidad.isEmpty()) {
-//                                    validarMaterial(getContext(), material, new MaterialCallback() {
-//                                        @Override
-//                                        public void onMaterialObtenido(Material materialValidado) {
-//                                            boolean existe = false;
-//                                            int childCount = contentLayout.getChildCount();
-//                                            for (int i = 0; i < childCount; i++) {
-//                                                View child = contentLayout.getChildAt(i);
-//                                                if (child instanceof LinearLayout && child != addMaterialIconContainer) {
-//                                                    LinearLayout fila = (LinearLayout) child;
-//                                                    if (fila.getChildCount() > 0 && fila.getChildAt(0) instanceof TextView) {
-//                                                        String nombreExistente = ((TextView) fila.getChildAt(0)).getText().toString().trim();
-//                                                        if (nombreExistente.equalsIgnoreCase(material)) {
-//                                                            existe = true;
-//                                                            break;
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//
-//                                            if (existe) {
-//                                                Toast.makeText(getContext(), "El material ya ha sido añadido", Toast.LENGTH_SHORT).show();
-//                                                return;
-//                                            }
-//
-//                                            final LinearLayout newRow = new LinearLayout(getContext());
-//                                            newRow.setOrientation(LinearLayout.HORIZONTAL);
-//                                            newRow.setLayoutParams(new LinearLayout.LayoutParams(
-//                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
-//                                            newRow.setPadding(0, 8, 0, 8);
-//
-//                                            TextView tvNewMaterial = new TextView(getContext());
-//                                            LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
-//                                                    0,
-//                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-//                                            tvNewMaterial.setLayoutParams(newNameParams);
-//                                            tvNewMaterial.setText(material);
-//                                            tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
-//
-//                                            TextView tvNewCantidad = new TextView(getContext());
-//                                            LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
-//                                                    0,
-//                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-//                                            tvNewCantidad.setLayoutParams(newQuantityParams);
-//                                            tvNewCantidad.setText(cantidad);
-//                                            tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
-//                                            tvNewCantidad.setGravity(Gravity.END);
-//
-//                                            newRow.addView(tvNewMaterial);
-//                                            newRow.addView(tvNewCantidad);
-//
-//                                            int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
-//                                            if (addIconIndex != -1) {
-//                                                contentLayout.addView(newRow, addIconIndex);
-//                                            } else {
-//                                                contentLayout.addView(newRow);
-//                                            }
-//                                            newRow.setOnClickListener(new View.OnClickListener() {
-//                                                @Override
-//                                                public void onClick(View v) {
-//                                                    if (selectedRow[0] != null) {
-//                                                        selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
-//                                                    }
-//                                                    selectedRow[0] = newRow;
-//                                                    newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
-//                                                }
-//                                            });
-//                                        }
-//
-//                                        @Override
-//                                        public void onFailure(boolean error) {
-//                                            Toast.makeText(getContext(), "El material ingresado no existe", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    });
+                                if (material != null && !material.isEmpty() && !cantidad.isEmpty()) {
+                                    // Validamos que el material exista llamando a la API
+                                    Utilidades.validarMaterial(getContext(), material, new MaterialCallback() {
+                                        @Override
+                                        public void onMaterialObtenido(String nombreMaterial, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
+                                            // Verificamos si el material ya ha sido añadido en contentLayout.
+                                            // Se recorre contentLayout y se compara el nombre del material.
+                                            boolean existe = false;
+                                            int childCount = contentLayout.getChildCount();
+                                            for (int i = 0; i < childCount; i++) {
+                                                View child = contentLayout.getChildAt(i);
+                                                // Excluimos el contenedor del icono para añadir
+                                                if (child instanceof LinearLayout && child != addMaterialIconContainer) {
+                                                    LinearLayout fila = (LinearLayout) child;
+                                                    if (fila.getChildCount() > 0 && fila.getChildAt(0) instanceof TextView) {
+                                                        String nombreExistente = ((TextView) fila.getChildAt(0)).getText().toString().trim();
+                                                        if (nombreExistente.equalsIgnoreCase(material)) {
+                                                            existe = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (existe) {
+                                                Toast.makeText(getContext(), "El material ya ha sido añadido", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            // Creamos una nueva fila para agregar el material y la cantidad
+                                            final LinearLayout newRow = new LinearLayout(getContext());
+                                            newRow.setOrientation(LinearLayout.HORIZONTAL);
+                                            newRow.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                                            newRow.setPadding(0, 8, 0, 8);
+
+                                            TextView tvNewMaterial = new TextView(getContext());
+                                            LinearLayout.LayoutParams newNameParams = new LinearLayout.LayoutParams(
+                                                    0,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                                            tvNewMaterial.setLayoutParams(newNameParams);
+                                            tvNewMaterial.setText(material);
+                                            tvNewMaterial.setTextColor(getResources().getColor(R.color.black));
+
+                                            TextView tvNewCantidad = new TextView(getContext());
+                                            LinearLayout.LayoutParams newQuantityParams = new LinearLayout.LayoutParams(
+                                                    0,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+                                            tvNewCantidad.setLayoutParams(newQuantityParams);
+                                            tvNewCantidad.setText(cantidad);
+                                            tvNewCantidad.setTextColor(getResources().getColor(R.color.black));
+                                            tvNewCantidad.setGravity(Gravity.END);
+
+                                            newRow.addView(tvNewMaterial);
+                                            newRow.addView(tvNewCantidad);
+
+                                            // Insertamos la nueva fila antes del contenedor del icono si se encuentra
+                                            int addIconIndex = contentLayout.indexOfChild(addMaterialIconContainer);
+                                            if (addIconIndex != -1) {
+                                                contentLayout.addView(newRow, addIconIndex);
+                                            } else {
+                                                contentLayout.addView(newRow);
+                                            }
+
+                                            // Configuramos la selección de la fila
+                                            newRow.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if (selectedRow[0] != null) {
+                                                        selectedRow[0].setBackgroundColor(Color.TRANSPARENT);
+                                                    }
+                                                    selectedRow[0] = newRow;
+                                                    newRow.setBackgroundColor(getResources().getColor(R.color.lijero));
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onFailure(boolean error) {
+                                            Toast.makeText(getContext(), "El material ingresado no existe", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getContext(), "Rellena todos los campos y selecciona un material", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
                         .setNegativeButton("Cancelar", null);
+
                 builder.create().show();
             }
         });
+
+
 
         //------------------------------- Icono de basura para borrar el item seleccionado-----------------------
         final ImageView trashIcon = new ImageView(getContext());
@@ -496,7 +615,6 @@ public class Actividades extends Fragment {
 
     }
 
-
     /**
      * Metodo que transfoma la primera en Mayuscula y el resto en minisculas
      * @param str la palabra que se introduce
@@ -515,6 +633,181 @@ public class Actividades extends Fragment {
         }
         return sb.toString().trim();
     }
+    private void showMaterialSelectionDialog(final MaterialSelectionListener listener) {
+        // Inflamos el layout del diálogo con el buscador y ListView
+        final View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_material, null);
+        final SearchView searchView = dialogView.findViewById(R.id.searchView);
+        final ListView listView = dialogView.findViewById(R.id.listViewMaterials);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Selecciona un Material")
+                .setView(dialogView)
+                .setNegativeButton("Cancelar", null);
+
+        final AlertDialog dialog = builder.create();
+
+        // Obtén la lista de materiales desde la API (método en Utilidades)
+        Utilidades.getMaterialList(new MaterialListCallback() {
+            @Override
+            public void onSuccess(List<Material> materialList) {
+                // Extraemos los nombres de los materiales
+                final List<String> materialNames = new ArrayList<>();
+                for (Material m : materialList) {
+                    materialNames.add(m.getNombre());
+                }
+                // Configuramos un ArrayAdapter para el ListView
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        getContext(),
+                        android.R.layout.simple_list_item_1,
+                        materialNames
+                );
+                listView.setAdapter(adapter);
+
+                // Configuramos el SearchView para filtrar el contenido del adapter
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+                    @Override
+                    public boolean onQueryTextSubmit(String query){
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextChange(String newText){
+                        adapter.getFilter().filter(newText);
+                        return false;
+                    }
+                });
+
+                // Al pulsar sobre un item se retorna el material seleccionado
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedMaterial = adapter.getItem(position);
+                        listener.onMaterialSelected(selectedMaterial);
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(getContext(), "Error al cargar los materiales", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    /**
+     * Recorre cada hijo de la sección y muestra sólo aquellos cuyo texto contiene la consulta.
+     * Si query está vacío, se muestran todos los ítems.
+     */
+    private void Filtrar(LinearLayout header, LinearLayout content, String query) {
+        String filtro = query.toLowerCase().trim();
+        if (header.getChildCount() > 0 && header.getChildAt(0) instanceof TextView) {
+            String headerText = ((TextView) header.getChildAt(0)).getText().toString().toLowerCase();
+            if (filtro.isEmpty() || headerText.contains(filtro)) {
+                header.setVisibility(View.VISIBLE);
+                content.setVisibility(View.VISIBLE);
+            } else {
+                header.setVisibility(View.GONE);
+                content.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void loadSavedTable() {
+        Log.d("LoadSavedTable", "Iniciando loadSavedTable()...");
+
+        // Verificar si el archivo existe en el almacenamiento interno
+        File file = getContext().getFileStreamPath("tabla_guardada.txt");
+        if (file == null || !file.exists()) {
+            Log.d("LoadSavedTable", "El archivo 'tabla_guardada.txt' no existe.");
+            Toast.makeText(getContext(), "Tabla guardada no encontrada", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            FileInputStream fis = getContext().openFileInput("tabla_guardada.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+
+            // Recorrer todo el archivo. Cada bloque (tabla) se separa por una línea vacía:
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue; // Saltamos líneas vacías
+                }
+
+                // La primera línea del bloque es el título
+                String headerLine = line.trim();
+                String titulo;
+                if (headerLine.startsWith("Titulo: ")) {
+                    // "Titulo: " ocupa 8 caracteres (0-7)
+                    titulo = headerLine.substring(8).trim();
+                } else {
+                    titulo = headerLine;
+                }
+                Log.d("LoadSavedTable", "Cargando tabla con título: " + titulo);
+
+                // Se descarta la siguiente línea que es el encabezado de columnas
+                if ((line = reader.readLine()) != null) {
+                    Log.d("LoadSavedTable", "Saltando encabezado: " + line);
+                }
+
+                // Leer las filas de datos (omitiendo la fila de encabezado) hasta encontrar una línea vacía
+                ArrayList<String> materialRows = new ArrayList<>();
+                ArrayList<String> cantidadRows = new ArrayList<>();
+                while ((line = reader.readLine()) != null && !line.trim().isEmpty()) {
+                    Log.d("LoadSavedTable", "Leyendo fila: " + line);
+                    String[] parts = line.split(",");
+                    if (parts.length >= 2) {
+                        materialRows.add(parts[0].trim());
+                        cantidadRows.add(parts[1].trim());
+                    } else {
+                        Log.e("LoadSavedTable", "La línea tiene formato incorrecto: " + line);
+                    }
+                }
+
+                // Combinar las filas usando salto de línea
+                String materialesCombined = android.text.TextUtils.join("\n", materialRows);
+                String cantidadesCombined = android.text.TextUtils.join("\n", cantidadRows);
+
+                // Crear la tabla usando tu método personalizado
+                // Se espera que anandir_nueva_tabla agregue la nueva sección a sectionsContainer
+                anandir_nueva_tabla(titulo, materialesCombined, cantidadesCombined);
+
+                // Una vez creada la tabla, la deshabilitamos: asumimos que se agregó al final del contenedor.
+                int count = sectionsContainer.getChildCount();
+                if (count > 0) {
+                    View lastSection = sectionsContainer.getChildAt(count - 1);
+                    lastSection.setClickable(false);
+                    lastSection.setEnabled(false);
+                    // También aseguramos que el header tenga fondo verde
+                    if (lastSection instanceof LinearLayout) {
+                        LinearLayout sec = (LinearLayout) lastSection;
+                        if (sec.getChildCount() > 0) {
+                            View headerView = sec.getChildAt(0);
+                            if (headerView instanceof LinearLayout) {
+                                ((LinearLayout) headerView).setBackgroundColor(getResources().getColor(R.color.green));
+                            }
+                        }
+                    }
+                }
+                Log.d("LoadSavedTable", "Tabla '" + titulo + "' cargada y deshabilitada.");
+            }
+            reader.close();
+            Log.d("LoadSavedTable", "Finalizada carga de tablas desde el archivo.");
+        } catch (FileNotFoundException e) {
+            Log.e("LoadSavedTable", "Archivo no encontrado: " + e.getMessage());
+            Toast.makeText(getContext(), "No se encontró la tabla guardada", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e("LoadSavedTable", "Error de lectura: " + e.getMessage());
+            Toast.makeText(getContext(), "Error al cargar la tabla", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
