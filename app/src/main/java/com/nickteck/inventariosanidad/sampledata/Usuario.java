@@ -1,11 +1,20 @@
 package com.nickteck.inventariosanidad.sampledata;
 
 public class Usuario {
+    private int user_id;
     private String first_name;
     private String last_name;
     private String email;
     private String password;
     private String user_type;
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
 
     public Usuario(String first_name) {
         this.first_name = first_name;
@@ -19,6 +28,15 @@ public class Usuario {
 
     public Usuario(String first_name, String password, String user_type) {
         this.first_name = first_name;
+        this.password = password;
+        this.user_type = user_type;
+    }
+
+    public Usuario(int user_id, String first_name, String last_name, String email, String password, String user_type) {
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
         this.password = password;
         this.user_type = user_type;
     }

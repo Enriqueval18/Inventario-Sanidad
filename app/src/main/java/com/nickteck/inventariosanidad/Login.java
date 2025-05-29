@@ -82,7 +82,7 @@ public class Login extends  Fragment{
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
-                            } else if (tipo.equals("user")) {
+                            } else if (tipo.equals("student")) {
                                 Usuario_Pantalla fragment = new Usuario_Pantalla();
                                 Bundle args = new Bundle();
                                 args.putString("nombre", correo);
