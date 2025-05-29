@@ -431,10 +431,10 @@ public class Utilidades {
         // y enviar un objeto 'Usuario' en el cuerpo de la solicitud
         // @POST("api/usuario.php")
         //Call<Usuario> verificarUsuario(@Field("nombre") String nombre); // El parámetro "nombre" que se enviará
-        @POST("/general/Login.php")
+        @POST("general/Login.php")
         Call<Usuario> verificarUsuario(@Body Usuario usuario);
 
-        @GET("/usuario/ObtenerMateriales.php")
+        @GET("usuario/ObtenerMateriales.php")
         Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
         @POST("admin.php")
