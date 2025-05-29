@@ -1,11 +1,9 @@
 package com.nickteck.inventariosanidad.Usuario;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +28,6 @@ import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialSelectionListener;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -138,6 +135,24 @@ public class Actividades extends Fragment {
                 builder.create().show();
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //-----------------Boton de borrar---------------------------------------
         ImageButton btnDeleteSection = view.findViewById(R.id.btnDelete);

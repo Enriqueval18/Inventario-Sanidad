@@ -2,7 +2,6 @@ package com.nickteck.inventariosanidad.Administrador;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -20,15 +20,12 @@ import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
-import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
 import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
-import java.util.List;
-
 public class Administrar_usuarios extends Fragment {
     private Button ananirusuario, borrarusuario, modificarusu;
-    private LinearLayout listausuarios;
+    private LinearLayout tabla;
     private View seleccionar_usuario = null;
 
     @Override
@@ -38,7 +35,7 @@ public class Administrar_usuarios extends Fragment {
         ananirusuario = view.findViewById(R.id.btnanausua);
         borrarusuario = view.findViewById(R.id.btneliminarusu);
         modificarusu = view.findViewById(R.id.btnmodiusu);
-        listausuarios = view.findViewById(R.id.contenedor_usu);
+        tabla = view.findViewById(R.id.tabla_usuarios);
 
         ananirusuario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +111,7 @@ public class Administrar_usuarios extends Fragment {
                         public void onResultado(boolean correcto) {
                             if(correcto){
                                 // Eliminar el usuario de la interfaz (Vista)
-                                listausuarios.removeView(seleccionar_usuario);
+                                tabla.removeView(seleccionar_usuario);
                                 seleccionar_usuario = null; // Resetear la selección
                                 // Mostrar un mensaje de confirmación
                                 Toast.makeText(getContext(), "Usuario eliminado: " + nombreUsuario, Toast.LENGTH_SHORT).show();
@@ -233,32 +230,51 @@ public class Administrar_usuarios extends Fragment {
      * @param role     Rol asignado al usuario.
      */
     private void ananir_usuario_item(String username, String role) {
-        TextView tvUserItem = new TextView(getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 8, 0, 8);
-        tvUserItem.setLayoutParams(params);
-        tvUserItem.setPadding(16, 16, 16, 16);
-        tvUserItem.setTextSize(16);
-        tvUserItem.setTextColor(getResources().getColor(android.R.color.black));
-        tvUserItem.setText(username + " - " + role);
-        tvUserItem.setBackgroundResource(R.drawable.background_white_square);
-        tvUserItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (seleccionar_usuario != null) {
-                    seleccionar_usuario.setBackgroundResource(R.drawable.rounded_frame_background);
+        // 1. Contenedor de la fila
+        LinearLayout fila = new LinearLayout(getContext());
+        fila.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams lpFila =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpFila.setMargins(0, 8, 0, 8);
+        fila.setLayoutParams(lpFila);
+        fila.setBackgroundResource(R.drawable.background_white_square);
 
-                }
-                if (seleccionar_usuario == v) {
-                    seleccionar_usuario = null;
-                } else {
-                    v.setBackgroundResource(R.drawable.rounded_indicator);
-                    seleccionar_usuario = v;
-                }
+        // 2. Celda Nombre
+        TextView tvNombre = new TextView(getContext());
+        LinearLayout.LayoutParams lpCelda =
+                new LinearLayout.LayoutParams(0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        tvNombre.setLayoutParams(lpCelda);
+        tvNombre.setPadding(16, 16, 16, 16);
+        tvNombre.setText(username);
+
+        // 3. Celda Rol
+        TextView tvRol = new TextView(getContext());
+        tvRol.setLayoutParams(lpCelda);
+        tvRol.setPadding(16, 16, 16, 16);
+        tvRol.setText(role);
+
+        // 4. Click / selección sobre toda la fila
+        fila.setOnClickListener(v -> {
+            if (seleccionar_usuario != null) {
+                seleccionar_usuario.setBackgroundResource(
+                        R.drawable.background_white_square);
+            }
+            if (seleccionar_usuario == v) {
+                seleccionar_usuario = null;
+            } else {
+                v.setBackgroundResource(R.drawable.rounded_indicator);
+                seleccionar_usuario = v;
             }
         });
-        listausuarios.addView(tvUserItem);
+
+        // 5. Añade las dos celdas y la fila al ScrollView
+        fila.addView(tvNombre);
+        fila.addView(tvRol);
+        tabla.addView(fila);
     }
+
+
 }
