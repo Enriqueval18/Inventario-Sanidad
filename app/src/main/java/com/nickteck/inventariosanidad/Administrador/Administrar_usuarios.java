@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -223,9 +222,9 @@ public class Administrar_usuarios extends Fragment {
         Utilidades.mostrarUsuarios(new UsuarioCallback2() {
             @Override
             public void onUsuarioObtenido(Usuario usuario) {
-                Log.d("Usuarios", "correo a mostrar en pantalla "+usuario.getCorreo());
+                Log.d("Usuarios", "correo a mostrar en pantalla "+usuario.getEmail());
 
-                ananir_usuario_item(usuario.getNombre(), usuario.getTipo());
+                ananir_usuario_item(usuario.getFirst_name(), usuario.getUser_type());
             }
 
             @Override

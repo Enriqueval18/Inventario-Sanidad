@@ -65,7 +65,7 @@ public class Utilidades {
                     Log.d("LoginResponse", "no es nulo ");
 
                     Usuario usuario = response.body();
-                    String tipo = usuario.getTipo();
+                    String tipo = usuario.getUser_type();
                     Log.d("LoginResponse", "Tipo recibido: " + tipo);
 
                     try {
@@ -266,15 +266,15 @@ public class Utilidades {
                 .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
                 .build(); // Creamos la instancia final de Retrofit
 
-        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getCorreo() + "nombre: " + usuario.getNombre());
+        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
 
         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
 
-        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getCorreo() + "nombre: " + usuario.getNombre());
+        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
 
 // Llamar a la función para eliminar el usuario de la base de datos
-        Call<Respuesta> call = api.eliminarUsuario(usuario.getCorreo());
+        Call<Respuesta> call = api.eliminarUsuario(usuario.getEmail());
         Log.d("EliminarUsuario", "URL de la solicitud: " + call.request().url().toString());
 
         call.enqueue(new Callback<Respuesta>() {
@@ -329,7 +329,7 @@ public class Utilidades {
                     List<Usuario> listaUsuarios = response.body();
                     Log.d("Usuarios", "Cantidad de usuarios obtenidos: " + listaUsuarios.size());
                     for (Usuario usuario : listaUsuarios) {
-                        Log.d("Usuarios", "usuario recibido: " + usuario.getNombre());
+                        Log.d("Usuarios", "usuario recibido: " + usuario.getFirst_name());
                         callback.onUsuarioObtenido(usuario);  // Este es el callback para cada material
                     }
                 } else {
