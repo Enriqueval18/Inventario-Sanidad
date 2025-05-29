@@ -62,6 +62,8 @@ public class Utilidades {
                 // Verificamos si la respuesta fue correcta (código 200–299)
                 // Y además que haya datos (el cuerpo no sea null)
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("LoginResponse", "no es nulo ");
+
                     Usuario usuario = response.body();
                     String tipo = usuario.getTipo();
                     Log.d("LoginResponse", "Tipo recibido: " + tipo);
@@ -429,10 +431,10 @@ public class Utilidades {
         // y enviar un objeto 'Usuario' en el cuerpo de la solicitud
         // @POST("api/usuario.php")
         //Call<Usuario> verificarUsuario(@Field("nombre") String nombre); // El parámetro "nombre" que se enviará
-        @POST("index.php")
+        @POST("/general/Login.php")
         Call<Usuario> verificarUsuario(@Body Usuario usuario);
 
-        @GET("profesor.php")
+        @GET("/usuario/ObtenerMateriales.php")
         Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
         @POST("admin.php")

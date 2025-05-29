@@ -69,31 +69,31 @@ public class Login extends  Fragment{
                 @Override
                 public void onClick(View v) {
                     v.startAnimation(bounce);
-                    String usuario = nombre_usuario.getText().toString().trim();
+                    String correo = nombre_usuario.getText().toString().trim();
                     String con = contrasena.getText().toString().trim();
-                    Utilidades.verificarUsuario(new Usuario(usuario, con),  new UsuarioCallback() {
+                    Utilidades.verificarUsuario(new Usuario(correo,con),  new UsuarioCallback() {
                         @Override
                         public void onResultado(String tipo) {
-                            if (tipo.equals("Administrador")) {
+                            if (tipo.equals("admin")) {
                                 Administrador fragment = new Administrador();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", usuario);
+                                args.putString("nombre", correo);
                                 args.putString("rol", tipo);
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
-                            } else if (tipo.equals("usuario")) {
+                            } else if (tipo.equals("user")) {
                                 Usuario_Pantalla fragment = new Usuario_Pantalla();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", usuario);
+                                args.putString("nombre", correo);
                                 args.putString("rol", tipo);
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
-                            } else if (tipo.equals("profesor")) {
+                            } else if (tipo.equals("teacher")) {
                                 Profesor fragment = new Profesor();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", usuario);
+                                args.putString("nombre", correo);
                                 args.putString("rol", tipo);
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);

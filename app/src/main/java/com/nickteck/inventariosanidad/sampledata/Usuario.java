@@ -4,9 +4,18 @@ public class Usuario {
     private String nombre;
     private String contra;
     private String tipo;
+    private  String correo;
 
-    public Usuario(String nombre, String contra) {
-        this.nombre = nombre;
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public Usuario(String correo, String contra) {
+        this.correo = correo;
         this.contra = contra;
     }
     public Usuario(String nombre) {
