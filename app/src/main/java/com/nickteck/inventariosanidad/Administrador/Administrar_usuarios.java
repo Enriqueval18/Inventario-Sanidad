@@ -212,11 +212,14 @@ public class Administrar_usuarios extends Fragment {
         Utilidades.mostrarUsuarios(new UsuarioCallback2() {
             @Override
             public void onUsuarioObtenido(Usuario usuario) {
+                Log.d("Usuarios", "correo a mostrar en pantalla "+usuario.getCorreo());
+
                 ananir_usuario_item(usuario.getNombre(), usuario.getTipo());
             }
 
             @Override
             public void onFailure(boolean error) {
+                Log.d("Usuarios", "error obtener usuarios");
 
             }
         }); // Este método debes tenerlo definido

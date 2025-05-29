@@ -329,9 +329,9 @@ public class Utilidades {
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Usuario> listaUsuarios = response.body();
-                    Log.d("Usuarios", "Cantidad de materiales obtenidos: " + listaUsuarios.size());
+                    Log.d("Usuarios", "Cantidad de usuarios obtenidos: " + listaUsuarios.size());
                     for (Usuario usuario : listaUsuarios) {
-                        Log.d("Usuarios", "Material recibido: " + usuario.getNombre());
+                        Log.d("Usuarios", "usuario recibido: " + usuario.getNombre());
                         callback.onUsuarioObtenido(usuario);  // Este es el callback para cada material
                     }
                 } else {
