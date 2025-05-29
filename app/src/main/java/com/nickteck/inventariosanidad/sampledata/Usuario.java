@@ -1,77 +1,77 @@
 package com.nickteck.inventariosanidad.sampledata;
 
 public class Usuario {
-    private String nombre;
-    private String apellido;
-    private String correo;
-    private String contra;
-    private String tipo;
+    private String first_name;
+    private String last_name;
+    private String email;
+    private String password;
+    private String user_type;
 
-    public Usuario(String nombre) {
-        this.nombre = nombre;
+    public Usuario(String first_name) {
+        this.first_name = first_name;
 
     }
 
-    public Usuario(String correo, String contra) {
-        this.correo = correo;
-        this.contra = contra;
+    public Usuario(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
-    public Usuario(String nombre, String contra,String tipo) {
-        this.nombre = nombre;
-        this.contra = contra;
-        this.tipo = tipo;
+    public Usuario(String first_name, String password,String user_type) {
+        this.first_name = first_name;
+        this.password = password;
+        this.user_type = user_type;
     }
 
     //este se usa para crear el usuario en la base de datos con las tablas nuevas
     //por si acaso estos campos estan como:
     //first_name,  last_name, email, password, user_type
-    public Usuario(String nombre, String apellido, String correo, String contra, String tipo) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.correo = correo;
-        this.contra = contra;
-        this.tipo = tipo;
+    public Usuario(String first_name, String last_name, String email, String password, String user_type) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.password = password;
+        this.user_type = user_type;
     }
 
     public String getNombre() {
-        return nombre;
+        return first_name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombre(String first_name) {
+        this.first_name = first_name;
     }
 
     public String getApellido() {
-        return apellido;
+        return last_name;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setApellido(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getCorreo() {
-        return correo;
+        return email;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setCorreo(String email) {
+        this.email = email;
     }
 
     public String getContra() {
-        return contra;
+        return password;
     }
 
-    public void setContra(String contra) {
-        this.contra = contra;
+    public void setContra(String password) {
+        this.password = password;
     }
 
     public String getTipo() {
-        return tipo;
+        return user_type;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTipo(String user_type) {
+        this.user_type = user_type;
     }
 
 }
