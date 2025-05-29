@@ -1,18 +1,22 @@
 package com.nickteck.inventariosanidad.Administrador;
 
-import android.graphics.Typeface;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
 import com.nickteck.inventariosanidad.sampledata.UsuarioListCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
@@ -21,31 +25,25 @@ import java.util.List;
 
 public class Administrar_usuarios extends Fragment {
 
-    private LinearLayout tabla; // Contenedor de filas de usuarios
+    private LinearLayout tabla;
     private View seleccionar_usuario = null;
-    private Usuario usuarioSeleccionado; // Para almacenar el usuario seleccionado
+    private Usuario usuarioSeleccionado;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agregar_usuarios, container, false);
 
-        // Referencia al contenedor de usuarios
         tabla = view.findViewById(R.id.tabla_usuarios);
 
-        // Configurar botones
         Button btnAnadir = view.findViewById(R.id.btnanausua);
         Button btnEliminar = view.findViewById(R.id.btneliminarusu);
         Button btnCambiar = view.findViewById(R.id.btnmodiusu);
 
-        btnAnadir.setOnClickListener(v -> {
-            // Lógica para añadir nuevo usuario
-            Toast.makeText(getContext(), "Funcionalidad añadir usuario", Toast.LENGTH_SHORT).show();
-        });
+        btnAnadir.setOnClickListener(v -> mostrarDialogoAgregarUsuario());
 
         btnEliminar.setOnClickListener(v -> {
             if (usuarioSeleccionado != null) {
-                // Lógica para eliminar usuario seleccionado
-                Toast.makeText(getContext(), "Eliminar usuario: " + usuarioSeleccionado.getEmail(), Toast.LENGTH_SHORT).show();
+                eliminarUsuarioSeleccionado();
             } else {
                 Toast.makeText(getContext(), "Seleccione un usuario primero", Toast.LENGTH_SHORT).show();
             }
@@ -53,8 +51,7 @@ public class Administrar_usuarios extends Fragment {
 
         btnCambiar.setOnClickListener(v -> {
             if (usuarioSeleccionado != null) {
-                // Lógica para modificar usuario seleccionado
-                Toast.makeText(getContext(), "Modificar usuario: " + usuarioSeleccionado.getEmail(), Toast.LENGTH_SHORT).show();
+                mostrarDialogoEditarUsuario();
             } else {
                 Toast.makeText(getContext(), "Seleccione un usuario primero", Toast.LENGTH_SHORT).show();
             }
@@ -64,11 +61,91 @@ public class Administrar_usuarios extends Fragment {
         return view;
     }
 
+    private void mostrarDialogoAgregarUsuario() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Añadir Nuevo Usuario");
+
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialogo_anadir_user, null);
+        builder.setView(dialogView);
+
+        EditText etNombre = dialogView.findViewById(R.id.et_nombre);
+        EditText etApellido = dialogView.findViewById(R.id.et_apellido);
+        EditText etEmail = dialogView.findViewById(R.id.et_email);
+        EditText etPassword = dialogView.findViewById(R.id.et_password);
+        Spinner spinnerTipo = dialogView.findViewById(R.id.spinner_tipo);
+
+        // Configurar spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.tipos_usuario,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipo.setAdapter(adapter);
+
+        builder.setPositiveButton("Añadir", (dialog, which) -> {
+            String nombre = etNombre.getText().toString().trim();
+            String apellido = etApellido.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+            String tipoTraducido = spinnerTipo.getSelectedItem().toString();
+            String tipoOriginal = traducirTipoUsuarioInverso(tipoTraducido);
+
+            // Validación básica
+            if (nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Crear objeto Usuario (usando el constructor correcto)
+            Usuario nuevoUsuario = new Usuario(nombre, apellido, email, password, tipoOriginal);
+
+            Utilidades.añadirUsuario(nuevoUsuario, new RespuestaCallback() {
+                @Override
+                public void onResultado(boolean exito) {
+                    requireActivity().runOnUiThread(() -> {
+                        if (exito) {
+                            Toast.makeText(getContext(), "Usuario añadido con éxito", Toast.LENGTH_SHORT).show();
+                            cargarUsuariosExistentes();
+                        } else {
+                            Toast.makeText(getContext(), "Error al añadir usuario. Verifica los datos.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error de conexión con el servidor", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+        builder.create().show();
+    }
+
+    private void eliminarUsuarioSeleccionado() {
+        // Implementar lógica de eliminación
+        Toast.makeText(getContext(),
+                "Eliminar usuario ID: " + usuarioSeleccionado.getUser_id() +
+                        " - " + usuarioSeleccionado.getEmail(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void mostrarDialogoEditarUsuario() {
+        // Implementar diálogo de edición similar al de añadir
+        Toast.makeText(getContext(),
+                "Modificar usuario ID: " + usuarioSeleccionado.getUser_id() +
+                        " - " + usuarioSeleccionado.getEmail(),
+                Toast.LENGTH_SHORT).show();
+    }
+
     private void cargarUsuariosExistentes() {
         Utilidades.mostrarUsuarios(new UsuarioListCallback() {
             @Override
             public void onUsuariosObtenidos(List<Usuario> usuarios) {
-                // Limpiar tabla antes de agregar nuevos usuarios
                 tabla.removeAllViews();
 
                 for (Usuario usuario : usuarios) {
@@ -95,49 +172,79 @@ public class Administrar_usuarios extends Fragment {
         fila.setLayoutParams(lpFila);
         fila.setBackgroundResource(R.drawable.background_white_square);
 
-        // Celda para el nombre
-        TextView tvNombre = new TextView(getContext());
+        // Configuración común para las celdas
         LinearLayout.LayoutParams lpCelda = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1f
         );
+        lpCelda.setMargins(4, 4, 4, 4);
+
+        // Celda 1: Nombre completo
+        TextView tvNombre = new TextView(getContext());
         tvNombre.setLayoutParams(lpCelda);
-        tvNombre.setPadding(16, 16, 16, 16);
+        tvNombre.setPadding(8, 16, 8, 16);
         tvNombre.setText(usuario.getFirst_name() + " " + usuario.getLast_name());
 
-        // Celda para el rol
-        TextView tvRol = new TextView(getContext());
-        tvRol.setLayoutParams(lpCelda);
-        tvRol.setPadding(16, 16, 16, 16);
-        tvRol.setText(usuario.getUser_type());
+        // Celda 2: Correo
+        TextView tvCorreo = new TextView(getContext());
+        tvCorreo.setLayoutParams(lpCelda);
+        tvCorreo.setPadding(8, 16, 8, 16);
+        tvCorreo.setText(usuario.getEmail());
 
-        // Celda para el email (oculta, para uso interno)
-        TextView tvEmail = new TextView(getContext());
-        tvEmail.setVisibility(View.GONE);
-        tvEmail.setText(usuario.getEmail());
+        // Celda 3: Tipo de usuario (traducido)
+        TextView tvTipo = new TextView(getContext());
+        tvTipo.setLayoutParams(lpCelda);
+        tvTipo.setPadding(8, 16, 8, 16);
+        tvTipo.setText(traducirTipoUsuario(usuario.getUser_type()));
+
+        // Campo oculto para almacenar el ID del usuario
+        TextView tvId = new TextView(getContext());
+        tvId.setVisibility(View.GONE);
+        tvId.setText(String.valueOf(usuario.getUser_id()));
 
         // Configurar clic para selección
         fila.setOnClickListener(v -> {
-            // Restablecer selección anterior
             if (seleccionar_usuario != null) {
                 seleccionar_usuario.setBackgroundResource(R.drawable.background_white_square);
             }
 
-            // Establecer nueva selección
             v.setBackgroundResource(R.drawable.rounded_indicator);
             seleccionar_usuario = v;
 
-            // Almacenar usuario seleccionado
             usuarioSeleccionado = usuario;
         });
 
         // Añadir elementos a la fila
         fila.addView(tvNombre);
-        fila.addView(tvRol);
-        fila.addView(tvEmail); // Email oculto para referencia
+        fila.addView(tvCorreo);
+        fila.addView(tvTipo);
+        fila.addView(tvId);
 
-        // Añadir fila a la tabla
         tabla.addView(fila);
+    }
+
+    // Para mostrar en la interfaz
+    private String traducirTipoUsuario(String tipo) {
+        if (tipo == null) return "Desconocido";
+
+        switch (tipo.toLowerCase()) {
+            case "teacher": return "Profesor";
+            case "student": return "Usuario";
+            case "admin": return "Administrador";
+            default: return tipo;
+        }
+    }
+
+    // Para enviar al servidor
+    private String traducirTipoUsuarioInverso(String tipoTraducido) {
+        if (tipoTraducido == null) return "student";
+
+        switch (tipoTraducido) {
+            case "Profesor": return "teacher";
+            case "Usuario": return "student";
+            case "Administrador": return "admin";
+            default: return "student";
+        }
     }
 }

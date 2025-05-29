@@ -32,7 +32,7 @@ public class Usuario {
         this.user_type = user_type;
     }
 
-    public Usuario(int user_id, String first_name, String last_name, String email, String password, String user_type) {
+    private Usuario(int user_id, String first_name, String last_name, String email, String password, String user_type) {
         this.user_id = user_id;
         this.first_name = first_name;
         this.last_name = last_name;
