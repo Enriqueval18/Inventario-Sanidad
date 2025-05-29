@@ -127,13 +127,52 @@ public class Administrar_usuarios extends Fragment {
     }
 
     private void eliminarUsuarioSeleccionado() {
-        // Implementar lógica de eliminación
-        Toast.makeText(getContext(),
-                "Eliminar usuario ID: " + usuarioSeleccionado.getUser_id() +
-                        " - " + usuarioSeleccionado.getEmail(),
-                Toast.LENGTH_SHORT).show();
-    }
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmar eliminación")
+                .setMessage("¿Estás seguro de eliminar a " +
+                        usuarioSeleccionado.getFirst_name() + " " +
+                        usuarioSeleccionado.getLast_name() + "?")
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    // Llamar al método de utilidades para eliminar
+                    Utilidades.eliminarUsuario(usuarioSeleccionado, new RespuestaCallback() {
+                        @Override
+                        public void onResultado(boolean exito) {
+                            requireActivity().runOnUiThread(() -> {
+                                if (exito) {
+                                    Toast.makeText(
+                                            getContext(),
+                                            "Usuario eliminado",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
 
+                                    // Resetear selección
+                                    usuarioSeleccionado = null;
+                                    if (seleccionar_usuario != null) {
+                                        seleccionar_usuario.setBackgroundResource(R.drawable.background_white_square);
+                                        seleccionar_usuario = null;
+                                    }
+
+                                    // Actualizar lista
+                                    cargarUsuariosExistentes();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(boolean error) {
+                            requireActivity().runOnUiThread(() -> {
+                                Toast.makeText(
+                                        getContext(),
+                                        "Error de conexión",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            });
+                        }
+                    });
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
     private void mostrarDialogoEditarUsuario() {
         // Implementar diálogo de edición similar al de añadir
         Toast.makeText(getContext(),

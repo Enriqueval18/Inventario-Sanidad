@@ -241,56 +241,55 @@ public class Utilidades {
         });
 
     }
-//    public static void eliminarUsuario(Usuario usuario, RespuestaCallback callback) {
-//
-//        // Paso 1: Crear la instancia de Retrofit con configuración básica
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
-//                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
-//                .build(); // Creamos la instancia final de Retrofit
-//
-//        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
-//
-//        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
-//        ApiService api = retrofit.create(ApiService.class);
-//
-//        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
-//
-//// Llamar a la función para eliminar el usuario de la base de datos
-//        Call<Respuesta> call = api.eliminarUsuario(usuario.getEmail());
-//        Log.d("EliminarUsuario", "URL de la solicitud: " + call.request().url().toString());
-//
-//        call.enqueue(new Callback<Respuesta>() {
-//            @Override
-//            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
-//                Log.d("EliminarUsuario", "Código de respuesta: " + response.code());
-//                Log.d("EliminarUsuario", "Cuerpo de la respuesta: " + response.body());
-//
-//
-//                if (response.isSuccessful() && response.body() != null) {
-//                    Respuesta recibido = response.body();
-//                    if (recibido.isRespuesta()) {
-//                        Log.d("respuestaEliminar", "Eliminación exitosa");
-//                        callback.onResultado(true);
-//                    } else {
-//                        Log.d("respuestaEliminar", "Error desde el servidor: " + recibido.isRespuesta()+recibido.getError());
-//                        callback.onResultado(false);
-//                    }
-//                } else {
-//                    Log.d("EliminarUsuario", "Error en la respuesta HTTP: " + response.message());
-//                    callback.onResultado(false);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Respuesta> call, Throwable t) {
-//                Log.e("EliminarUsuario", "Error al eliminar: " + t.getMessage());
-//                callback.onFailure(true);
-//            }
-//        });
-//
-//    }
+    public static void eliminarUsuario(Usuario usuario, RespuestaCallback callback) {
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getEmail() + "nombre: " + usuario.getFirst_name());
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.eliminarUsuario(usuario.getEmail());
+        Log.d("EliminarUsuario", "URL de la solicitud: " + call.request().url().toString());
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                Log.d("EliminarUsuario", "Código de respuesta: " + response.code());
+                Log.d("EliminarUsuario", "Cuerpo de la respuesta: " + response.body());
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    if (recibido.isRespuesta()) {
+                        Log.d("respuestaEliminar", "Eliminación exitosa");
+                        callback.onResultado(true);
+                    } else {
+                        callback.onResultado(false);
+                    }
+                } else {
+                    Log.d("EliminarUsuario", "Error en la respuesta HTTP: " + response.message());
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("EliminarUsuario", "Error al eliminar: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
     public static void mostrarUsuarios(final UsuarioListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
