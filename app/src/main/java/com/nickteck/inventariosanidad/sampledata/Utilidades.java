@@ -206,8 +206,6 @@ public class Utilidades {
         // Usa reflexión para analizar las anotaciones @GET y @Query, y genera el código necesario internamente.
         ApiService api = retrofit.create(ApiService.class);
 
-
-
         // Paso 3: Usamos ese objeto para llamar al método definido en la interfaz.
         // Esto crea una solicitud HTTP de tipo GET a la URL: api/usuario.php?nombre=juan123 (por ejemplo).
         // Este objeto "call" representa la solicitud, pero todavía no la envía.
@@ -437,7 +435,7 @@ public class Utilidades {
         @GET("usuario/ObtenerMateriales.php")
         Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
-        @POST("admin.php")
+        @POST("/admin/AccionesSobreUsuario.php")
         Call<Respuesta>añadirUsuario(@Body Usuario nuevoUsuario);
 
         // Usamos DELETE y pasamos el 'nombre' como parte del path
