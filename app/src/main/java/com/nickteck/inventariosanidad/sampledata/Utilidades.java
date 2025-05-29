@@ -308,40 +308,35 @@ public class Utilidades {
         });
 
     }
-    public static void mostrarUsuarios(final UsuarioCallback2 callback) {
-
+    public static void mostrarUsuarios(final UsuarioListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ApiService api = retrofit.create(ApiService.class);
-        Call<List<Usuario>> call = api.obtenerUsuarios();  // Devuelve una lista de materiales
+        Call<List<Usuario>> call = api.obtenerUsuarios();
+
         Log.d("Respuesta", "Solicitud creada. Llamando a la API...");
 
         call.enqueue(new Callback<List<Usuario>>() {
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
                 Log.d("Respuesta", "Código de respuesta: " + response.code());
-                Log.d("Respuesta", "Cuerpo de la respuesta: " + response.body());
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Usuario> listaUsuarios = response.body();
                     Log.d("Usuarios", "Cantidad de usuarios obtenidos: " + listaUsuarios.size());
-                    for (Usuario usuario : listaUsuarios) {
-                        Log.d("Usuarios", "usuario recibido: " + usuario.getFirst_name());
-                        callback.onUsuarioObtenido(usuario);  // Este es el callback para cada material
-                    }
+                    callback.onUsuariosObtenidos(listaUsuarios);
                 } else {
-                    Log.w("Materiales", "Respuesta no exitosa o vacía. Código de respuesta: " + response.code());
+                    Log.w("Usuarios", "Respuesta no exitosa o vacía");
                     callback.onFailure(true);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                // Si hay un error de comunicación, lo muestra en los logs
-                Log.e("MaterialesError", "Error en la comunicación: " + t.getMessage());
+                Log.e("UsuariosError", "Error en la comunicación: " + t.getMessage());
                 callback.onFailure(true);
             }
         });

@@ -1,293 +1,143 @@
 package com.nickteck.inventariosanidad.Administrador;
 
-import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.fragment.app.Fragment;
 
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
-import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
+import com.nickteck.inventariosanidad.sampledata.UsuarioListCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
+import java.util.List;
+
 public class Administrar_usuarios extends Fragment {
-    private Button ananirusuario, borrarusuario, modificarusu;
-    private LinearLayout tabla;
+
+    private LinearLayout tabla; // Contenedor de filas de usuarios
     private View seleccionar_usuario = null;
+    private Usuario usuarioSeleccionado; // Para almacenar el usuario seleccionado
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agregar_usuarios, container, false);
 
-        ananirusuario = view.findViewById(R.id.btnanausua);
-        borrarusuario = view.findViewById(R.id.btneliminarusu);
-        modificarusu = view.findViewById(R.id.btnmodiusu);
+        // Referencia al contenedor de usuarios
         tabla = view.findViewById(R.id.tabla_usuarios);
 
-        ananirusuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        // Configurar botones
+        Button btnAnadir = view.findViewById(R.id.btnanausua);
+        Button btnEliminar = view.findViewById(R.id.btneliminarusu);
+        Button btnCambiar = view.findViewById(R.id.btnmodiusu);
 
-                View dialogView = inflater.inflate(R.layout.dialogo_anadir_user, container, false);
-                final EditText etUsername = dialogView.findViewById(R.id.Nombreusuario);
-                final EditText etPassword = dialogView.findViewById(R.id.Contrasena);
-                final Spinner spinnerRole = dialogView.findViewById(R.id.Seleccionarrol);
+        btnAnadir.setOnClickListener(v -> {
+            // Lógica para añadir nuevo usuario
+            Toast.makeText(getContext(), "Funcionalidad añadir usuario", Toast.LENGTH_SHORT).show();
+        });
 
-                String[] roles = {"Profesor", "Administrador", "Usuario"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_spinner_item, roles);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerRole.setAdapter(adapter);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Añadir Usuario")
-                        .setView(dialogView)
-                        .setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String username = etUsername.getText().toString().trim();
-                                String password = etPassword.getText().toString().trim();
-                                String role = spinnerRole.getSelectedItem().toString();
-
-                                if (!username.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
-
-                                    if(role.equals("Profesor")){
-                                        role = "teacher";
-                                    } else if (role.equals("Administrador")) {
-                                        role = "admin";
-                                    }
-                                    else{
-                                        role = "student";
-                                    }
-
-                                    String finalRole = role;
-                                    Utilidades.añadirUsuario(new Usuario(username, password, role), new RespuestaCallback() {
-                                        @Override
-                                        public void onResultado(boolean correcto) {
-                                            if(correcto){
-                                                ananir_usuario_item(username, finalRole);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(boolean error) {
-
-                                        }
-                                    });
-
-
-                                } else {
-                                    Toast.makeText(getContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null)
-                        .show();
+        btnEliminar.setOnClickListener(v -> {
+            if (usuarioSeleccionado != null) {
+                // Lógica para eliminar usuario seleccionado
+                Toast.makeText(getContext(), "Eliminar usuario: " + usuarioSeleccionado.getEmail(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Seleccione un usuario primero", Toast.LENGTH_SHORT).show();
             }
         });
 
-        borrarusuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (seleccionar_usuario != null) {
-                    Log.e("Eliminar","antes de seleccionar el view");
-                    // Asegurarse de que el 'seleccionar_usuario' es un TextView
-                    TextView textViewUsuario = (TextView) seleccionar_usuario;
-
-                    Log.e("Eliminar","luego de seleccionar");
-                    // Extraer el texto del TextView seleccionado
-                    String usuarioSeleccionado = textViewUsuario.getText().toString();
-
-                    // Obtener solo el nombre del usuario. Aquí asumimos que el nombre está antes del " - "
-                    String[] partes = usuarioSeleccionado.split(" - ");
-                    String nombreUsuario = partes[0]; // El nombre del usuario es la primera parte
-
-                    Log.e("Eliminar",nombreUsuario);
-                    // Llamar a la función para eliminar el usuario de la base de datos
-                    Utilidades.eliminarUsuario(new Usuario(nombreUsuario), new RespuestaCallback() {
-                        @Override
-                        public void onResultado(boolean correcto) {
-                            if(correcto){
-                                // Eliminar el usuario de la interfaz (Vista)
-                                tabla.removeView(seleccionar_usuario);
-                                seleccionar_usuario = null; // Resetear la selección
-                                // Mostrar un mensaje de confirmación
-                                Toast.makeText(getContext(), "Usuario eliminado: " + nombreUsuario, Toast.LENGTH_SHORT).show();
-                            }
-                            }
-
-                        @Override
-                        public void onFailure(boolean error) {
-
-                        }
-                    });
-
-                } else {
-                    Toast.makeText(getContext(), "Selecciona un usuario para quitar", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        modificarusu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (seleccionar_usuario == null) {
-                    Toast.makeText(getContext(), "Selecciona un usuario para modificar", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                View dialogView = inflater.inflate(R.layout.dialogo_anadir_user, container, false);
-                final EditText etUsername = dialogView.findViewById(R.id.Nombreusuario);
-                final EditText etPassword = dialogView.findViewById(R.id.Contrasena);
-                final Spinner spinnerRole = dialogView.findViewById(R.id.Seleccionarrol);
-                TextView textViewUsuario = (TextView) seleccionar_usuario;
-                String usuarioSeleccionado = textViewUsuario.getText().toString();
-
-                // Obtener solo el nombre del usuario. Aquí asumimos que el nombre está antes del " - "
-                String[] partes = usuarioSeleccionado.split(" - ");
-                String nombreUsuario = partes[0]; // El nombre del usuario es la primera parte
-
-                String[] roles = {"Profesor", "Administrador", "Usuario"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_spinner_item, roles);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerRole.setAdapter(adapter);
-
-                String[] parts = ((TextView) seleccionar_usuario).getText().toString().split(" - ");
-                if (parts.length >= 2) {
-                    etUsername.setText(parts[0].trim());
-
-                    String currentRole = parts[1].trim();
-                    for (int i = 0; i < roles.length; i++) {
-                        if (roles[i].equalsIgnoreCase(currentRole)) {
-                            spinnerRole.setSelection(i);
-                            break;
-                        }
-                    }
-                }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Modificar Usuario")
-                        .setView(dialogView)
-                        .setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String newUsername = etUsername.getText().toString().trim();
-                                String newPassword = etPassword.getText().toString().trim();
-                                String newRole = spinnerRole.getSelectedItem().toString();
-
-                                if (!newUsername.isEmpty() && !newRole.isEmpty()) {
-
-                                    Utilidades.editarUsuarios(new Usuario(newUsername, newPassword, newRole), nombreUsuario, new RespuestaCallback() {
-                                        @Override
-                                        public void onResultado(boolean correcto) {
-                                            Log.i("EditarUsuario","usuario editado");
-                                        }
-
-                                        @Override
-                                        public void onFailure(boolean error) {
-
-                                        }
-                                    });
-                                    ((TextView) seleccionar_usuario).setText(newUsername + " - " + newRole);
-                                    Toast.makeText(getContext(), "Usuario modificado", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getContext(), "Complete los campos obligatorios", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null)
-                        .show();
+        btnCambiar.setOnClickListener(v -> {
+            if (usuarioSeleccionado != null) {
+                // Lógica para modificar usuario seleccionado
+                Toast.makeText(getContext(), "Modificar usuario: " + usuarioSeleccionado.getEmail(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Seleccione un usuario primero", Toast.LENGTH_SHORT).show();
             }
         });
 
         cargarUsuariosExistentes();
-
         return view;
     }
-    private void cargarUsuariosExistentes() {
-        Utilidades.mostrarUsuarios(new UsuarioCallback2() {
-            @Override
-            public void onUsuarioObtenido(Usuario usuario) {
-                Log.d("Usuarios", "correo a mostrar en pantalla "+usuario.getEmail());
 
-                ananir_usuario_item(usuario.getFirst_name(), usuario.getUser_type());
+    private void cargarUsuariosExistentes() {
+        Utilidades.mostrarUsuarios(new UsuarioListCallback() {
+            @Override
+            public void onUsuariosObtenidos(List<Usuario> usuarios) {
+                // Limpiar tabla antes de agregar nuevos usuarios
+                tabla.removeAllViews();
+
+                for (Usuario usuario : usuarios) {
+                    anadir_usuario_item(usuario);
+                }
             }
 
             @Override
             public void onFailure(boolean error) {
-                Log.d("Usuarios", "error obtener usuarios");
-
+                Toast.makeText(getContext(), "Error al cargar usuarios", Toast.LENGTH_SHORT).show();
             }
-        }); // Este método debes tenerlo definido
-
+        });
     }
 
-    /**
-     * Agrega un nuevo ítem de usuario al contenedor 'user_list_container'.
-     * Cada ítem se crea como un TextView y se le asigna un OnClickListener para permitir su selección.
-     * @param username Nombre del usuario.
-     * @param role     Rol asignado al usuario.
-     */
-    private void ananir_usuario_item(String username, String role) {
-        // 1. Contenedor de la fila
+    private void anadir_usuario_item(Usuario usuario) {
+        // Crear contenedor de fila
         LinearLayout fila = new LinearLayout(getContext());
         fila.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lpFila =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lpFila = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
         lpFila.setMargins(0, 8, 0, 8);
         fila.setLayoutParams(lpFila);
         fila.setBackgroundResource(R.drawable.background_white_square);
 
-        // 2. Celda Nombre
+        // Celda para el nombre
         TextView tvNombre = new TextView(getContext());
-        LinearLayout.LayoutParams lpCelda =
-                new LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        LinearLayout.LayoutParams lpCelda = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+        );
         tvNombre.setLayoutParams(lpCelda);
         tvNombre.setPadding(16, 16, 16, 16);
-        tvNombre.setText(username);
+        tvNombre.setText(usuario.getFirst_name() + " " + usuario.getLast_name());
 
-        // 3. Celda Rol
+        // Celda para el rol
         TextView tvRol = new TextView(getContext());
         tvRol.setLayoutParams(lpCelda);
         tvRol.setPadding(16, 16, 16, 16);
-        tvRol.setText(role);
+        tvRol.setText(usuario.getUser_type());
 
-        // 4. Click / selección sobre toda la fila
+        // Celda para el email (oculta, para uso interno)
+        TextView tvEmail = new TextView(getContext());
+        tvEmail.setVisibility(View.GONE);
+        tvEmail.setText(usuario.getEmail());
+
+        // Configurar clic para selección
         fila.setOnClickListener(v -> {
+            // Restablecer selección anterior
             if (seleccionar_usuario != null) {
-                seleccionar_usuario.setBackgroundResource(
-                        R.drawable.background_white_square);
+                seleccionar_usuario.setBackgroundResource(R.drawable.background_white_square);
             }
-            if (seleccionar_usuario == v) {
-                seleccionar_usuario = null;
-            } else {
-                v.setBackgroundResource(R.drawable.rounded_indicator);
-                seleccionar_usuario = v;
-            }
+
+            // Establecer nueva selección
+            v.setBackgroundResource(R.drawable.rounded_indicator);
+            seleccionar_usuario = v;
+
+            // Almacenar usuario seleccionado
+            usuarioSeleccionado = usuario;
         });
 
-        // 5. Añade las dos celdas y la fila al ScrollView
+        // Añadir elementos a la fila
         fila.addView(tvNombre);
         fila.addView(tvRol);
+        fila.addView(tvEmail); // Email oculto para referencia
+
+        // Añadir fila a la tabla
         tabla.addView(fila);
     }
-
-
 }
