@@ -63,11 +63,22 @@ public class Administrar_usuarios extends Fragment {
                                 String role = spinnerRole.getSelectedItem().toString();
 
                                 if (!username.isEmpty() && !password.isEmpty() && !role.isEmpty()) {
+
+                                    if(role.equals("Profesor")){
+                                        role = "teacher";
+                                    } else if (role.equals("Administrador")) {
+                                        role = "admin";
+                                    }
+                                    else{
+                                        role = "student";
+                                    }
+
+                                    String finalRole = role;
                                     Utilidades.añadirUsuario(new Usuario(username, password, role), new RespuestaCallback() {
                                         @Override
                                         public void onResultado(boolean correcto) {
                                             if(correcto){
-                                                ananir_usuario_item(username, role);
+                                                ananir_usuario_item(username, finalRole);
                                             }
                                         }
 
