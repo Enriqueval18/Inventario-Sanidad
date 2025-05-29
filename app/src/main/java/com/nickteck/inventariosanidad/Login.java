@@ -29,6 +29,7 @@ import com.nickteck.inventariosanidad.Profesor.Profesor;
 import com.nickteck.inventariosanidad.Usuario.Usuario_Pantalla;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
 import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 public class Login extends  Fragment{
@@ -71,30 +72,30 @@ public class Login extends  Fragment{
                     v.startAnimation(bounce);
                     String correo = nombre_usuario.getText().toString().trim();
                     String con = contrasena.getText().toString().trim();
-                    Utilidades.verificarUsuario(new Usuario(correo,con),  new UsuarioCallback() {
+                    Utilidades.verificarUsuario(new Usuario(correo, con), new UsuarioCallback2() {
                         @Override
-                        public void onResultado(String tipo) {
-                            if (tipo.equals("admin")) {
+                        public void onUsuarioObtenido(Usuario usuario) {
+                            if (usuario.getUser_type().equals("admin")) {
                                 Administrador fragment = new Administrador();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", correo);
-                                args.putString("rol", tipo);
+                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
+                                args.putString("rol", usuario.getUser_type());
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
-                            } else if (tipo.equals("student")) {
+                            } else if (usuario.getUser_type().equals("user")) {
                                 Usuario_Pantalla fragment = new Usuario_Pantalla();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", correo);
-                                args.putString("rol", tipo);
+                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
+                                args.putString("rol", usuario.getUser_type());
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
-                            } else if (tipo.equals("teacher")) {
+                            } else if (usuario.getUser_type().equals("teacher")) {
                                 Profesor fragment = new Profesor();
                                 Bundle args = new Bundle();
-                                args.putString("nombre", correo);
-                                args.putString("rol", tipo);
+                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
+                                args.putString("rol", usuario.getUser_type());
                                 fragment.setArguments(args);
                                 Cambiarfragmento(fragment);
 
@@ -105,9 +106,7 @@ public class Login extends  Fragment{
 
                         @Override
                         public void onFailure(boolean error) {
-                            if (error) {
-                                Toast.makeText(getActivity(), "NO SE CONECTO A LA API!", Toast.LENGTH_SHORT).show();
-                            }
+
                         }
                     });
                 }

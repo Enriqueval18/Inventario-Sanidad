@@ -28,10 +28,9 @@ public class Utilidades {
     /**
      * Método estático que hace una petición a la API para verificar si un usuario existe.
      * @param usuario El nombre del usuario que queremos buscar en la base de datos.
-     * @param callback Un objeto que recibirá el resultado (true o false) cuando la API responda.
+     * @param callback2 Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
-    public static void verificarUsuario(Usuario usuario, UsuarioCallback callback) {
-
+    public static  void verificarUsuario(Usuario usuario,UsuarioCallback2 callback2){
         // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
@@ -72,22 +71,18 @@ public class Utilidades {
                     try {
                         if ("no existe".equals(tipo)) {
                             Log.w("LoginResultado", "Usuario no encontrado en la base de datos.");
-                            callback.onResultado("false");
+                            callback2.onUsuarioObtenido(usuario);
                         } else {
                             Log.i("LoginResultado", "Usuario encontrado. Tipo: " + tipo);
-                            callback.onResultado(tipo);
+                            callback2.onUsuarioObtenido(usuario);
                         }
 
                     } catch (Exception e) {
                         Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
-                        callback.onResultado("false");
+
                     }
 
-                } else {
-                    Log.w("LoginResultado", "Respuesta no exitosa o cuerpo vacío. Código: " + response.code());
-                    callback.onResultado("false");
                 }
-
             }
 
             @Override
@@ -96,7 +91,7 @@ public class Utilidades {
                 Log.e("falla", "Error en la comunicación: " + t.getMessage());
                 // Avisamos que no se pudo verificar el usuario (asumimos que no existe)
 
-                callback.onFailure(true);
+                callback2.onFailure(true);
             }
         });
     }
