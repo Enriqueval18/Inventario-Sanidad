@@ -266,15 +266,15 @@ public class Utilidades {
                 .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
                 .build(); // Creamos la instancia final de Retrofit
 
-        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getNombre());
+        Log.d("crearConexion", "Usuario a eliminar: " + usuario.getCorreo() + "nombre: " + usuario.getNombre());
 
         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
 
-        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getNombre());
+        Log.d("EliminarUsuario", "Usuario a eliminar: " + usuario.getCorreo() + "nombre: " + usuario.getNombre());
 
 // Llamar a la función para eliminar el usuario de la base de datos
-        Call<Respuesta> call = api.eliminarUsuario(usuario.getNombre());
+        Call<Respuesta> call = api.eliminarUsuario(usuario.getCorreo());
         Log.d("EliminarUsuario", "URL de la solicitud: " + call.request().url().toString());
 
         call.enqueue(new Callback<Respuesta>() {
@@ -435,14 +435,14 @@ public class Utilidades {
         @GET("usuario/ObtenerMateriales.php")
         Call<List<Material>> obtenerMaterial();  // Esta vez esperamos un List<Material> directamente
 
-        @POST("/admin/AccionesSobreUsuario.php")
+        @POST("admin/AccionesSobreUsuario.php")
         Call<Respuesta>añadirUsuario(@Body Usuario nuevoUsuario);
 
-        // Usamos DELETE y pasamos el 'nombre' como parte del path
-        @DELETE("admin/eliminarUsuario.php")
-        Call<Respuesta> eliminarUsuario(@Query("nombre") String nombreUsuario);
+        // Usamos DELETE y pasamos el 'email' como parte del path
+        @DELETE("admin/AccionesSobreUsuario.php")
+        Call<Respuesta> eliminarUsuario(@Query("email") String emailUsuario);
 
-        @GET("admin/mostrarUsuarios.php")
+        @GET("admin/AccionesSobreUsuario.php")
 
         Call<List<Usuario>> obtenerUsuarios();
 
