@@ -1,5 +1,7 @@
 package com.nickteck.inventariosanidad.sampledata;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Usuario {
     private int user_id;
     private String first_name;
@@ -7,6 +9,9 @@ public class Usuario {
     private String email;
     private String password;
     private String user_type;
+
+    @SerializedName("error")
+    private String error;
 
     public int getUser_id() {
         return user_id;
@@ -94,6 +99,10 @@ public class Usuario {
 
     public void setUser_type(String user_type) {
         this.user_type = user_type;
+    }
+
+    public String getError() {
+        return error;
     }
 
 }

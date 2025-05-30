@@ -8,6 +8,8 @@
     <string name="entrar">ENTRAR</string>
     <string name="usuario_incorrecto">Usuario incorrecto</string>
     <string name="usu_con_inco">Usuario o Contraseña Incorrectos</string>
+    <string name="usuario_no_encontrado">Usuario no encontrado</string>
+    <string name="contrasena_incorrecta">Contraseña incorrecta</string>
 
     <!-- Strings para tarjeta de usuario -->
     <string name="nombre_usuario">Nombre usuario</string>

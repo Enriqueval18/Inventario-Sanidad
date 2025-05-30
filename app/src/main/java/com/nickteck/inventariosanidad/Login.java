@@ -76,11 +76,10 @@ public class Login extends  Fragment{
                 public void onUsuarioObtenido(Usuario usuario) {
                     String tipo = usuario == null ? null : usuario.getUser_type();
 
-                    if (tipo == null || tipo.equals("no existe")) {
+                    /*if (tipo == null || tipo.equals("no existe")) {
                         mostrarerror();
                         return;
-                    }
-
+                    }*/
 
                     // 2) En caso contrario, hago el switch normal
                     switch (tipo) {
@@ -119,7 +118,7 @@ public class Login extends  Fragment{
                         Toast.makeText(getActivity(), "Error de red", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
+            }, resId -> mostrarerror(resId));
         });
     }
 
@@ -129,8 +128,8 @@ public class Login extends  Fragment{
     /**
      * Muestra el error si el usuario o contraseña estan incorrectos atravez de una tarjeta
      */
-    private void mostrarerror() {
-        errortexto.setText(R.string.usu_con_inco);
+    private void mostrarerror(int resId) {
+        errortexto.setText(resId);
         tarjeta_error.setVisibility(View.VISIBLE);
         errorAnimation.playAnimation();
 

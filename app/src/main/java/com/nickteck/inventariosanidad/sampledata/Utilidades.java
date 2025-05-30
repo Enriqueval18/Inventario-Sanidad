@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.nickteck.inventariosanidad.R;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class Utilidades {
      * @param usuario El nombre del usuario que queremos buscar en la base de datos.
      * @param callback2 Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
-    public static  void verificarUsuario(Usuario usuario,UsuarioCallback2 callback2){
+    public static  void verificarUsuario(Usuario usuario,UsuarioCallback2 callback2, ErrorDisplayer errorDisplayer){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -39,17 +41,29 @@ public class Utilidades {
         call.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.d("LoginResponse", "no es nulo ");
 
+                if (response.isSuccessful() && response.body() != null) {
                     Usuario usuario = response.body();
+                    Log.i("Error dato desde api: ", usuario.getError());
+
+                    // Comprobar si viene un error desde el servidor
+                    if (usuario.getError() != null) {
+                        switch (usuario.getError()) {
+                            case "usuario no encontrado":
+                                errorDisplayer.mostrarMensaje(R.string.usuario_no_encontrado);
+                                break;
+                            case "contraseña incorrecta":
+                                errorDisplayer.mostrarMensaje(R.string.contrasena_incorrecta);
+                                break;
+                            default:
+                                errorDisplayer.mostrarMensaje(R.string.usu_con_inco);
+                        }
+                        return; // Importante: no continuar si hubo error
+                    }
+
                     String tipo = usuario.getUser_type();
                     String nombre = usuario.getFirst_name();
                     String apellido = usuario.getLast_name();
-
-                    Log.d("LoginResponse", "Tipo recibido: " + tipo);
-                    Log.d("LoginResponse", "Nombre recibido: " + nombre);
-                    Log.d("LoginResponse", "Apellido recibido: " + apellido);
 
                     try {
                         if ("no existe".equals(tipo)) {
@@ -62,8 +76,8 @@ public class Utilidades {
                     } catch (Exception e) {
                         Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
                     }
-
                 }
+
             }
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
