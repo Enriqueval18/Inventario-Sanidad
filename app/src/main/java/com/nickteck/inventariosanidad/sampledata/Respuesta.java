@@ -4,6 +4,9 @@ public class Respuesta {
     private boolean respuesta;
     private String mensaje;
 
+    public Respuesta(String mensaje) {
+        this.mensaje = mensaje;
+    }
 
     public boolean isRespuesta() {
         return respuesta;

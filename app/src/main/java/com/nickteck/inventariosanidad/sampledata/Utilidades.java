@@ -488,7 +488,7 @@ public class Utilidades {
         Call<Respuesta> editarUsuarios(@Body Usuario nuevoUsuario,@Query("nombre_antiguo") String nombreUsuario);
 
 
-        @PUT("general/AccionesSobreUsuario.php")
+        @PUT("admin/AccionesSobreUsuario.php")
         Call<Respuesta> actualizarContra(@Body Usuario usuario);
 
 
