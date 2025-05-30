@@ -66,74 +66,65 @@ public class Login extends  Fragment{
      * @param bounce realiza las transicciones
      */
     private void Boton_login(Animation bounce) {
-            boton_entrar.setOnClickListener(new View.OnClickListener() {
+        boton_entrar.setOnClickListener(v -> {
+            v.startAnimation(bounce);
+            String correo = nombre_usuario.getText().toString().trim();
+            String con    = contrasena.getText().toString().trim();
+
+            Utilidades.verificarUsuario(new Usuario(correo, con), new UsuarioCallback2() {
                 @Override
-                public void onClick(View v) {
-                    v.startAnimation(bounce);
-                    String correo = nombre_usuario.getText().toString().trim();
-                    String con = contrasena.getText().toString().trim();
-                    Utilidades.verificarUsuario(new Usuario(correo, con), new UsuarioCallback2() {
-                        @Override
-                        public void onUsuarioObtenido(Usuario usuario) {
-                            if (usuario.getUser_type().equals("admin")) {
-                                Administrador fragment = new Administrador();
-                                Bundle args = new Bundle();
-                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
-                                args.putString("rol", usuario.getUser_type());
-                                fragment.setArguments(args);
-                                Cambiarfragmento(fragment);
+                public void onUsuarioObtenido(Usuario usuario) {
+                    String tipo = usuario == null ? null : usuario.getUser_type();
 
-                            } else if (usuario.getUser_type().equals("student")) {
-                                Usuario_Pantalla fragment = new Usuario_Pantalla();
-                                Bundle args = new Bundle();
-                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
-                                args.putString("rol", usuario.getUser_type());
-                                fragment.setArguments(args);
-                                Cambiarfragmento(fragment);
+                    if (tipo == null || tipo.equals("no existe")) {
+                        mostrarerror();
+                        return;
+                    }
 
-                            } else if (usuario.getUser_type().equals("teacher")) {
-                                Profesor fragment = new Profesor();
-                                Bundle args = new Bundle();
-                                args.putString("nombre", usuario.getFirst_name() + " "+usuario.getLast_name());
-                                args.putString("rol", usuario.getUser_type());
-                                fragment.setArguments(args);
-                                Cambiarfragmento(fragment);
 
-                            } else {
-                                mostrarerror();
-                            }
-                        }
+                    // 2) En caso contrario, hago el switch normal
+                    switch (tipo) {
+                        case "admin":
+                            Administrador adm = new Administrador();
+                            Bundle a1 = new Bundle();
+                            a1.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
+                            a1.putString("rol", tipo);
+                            adm.setArguments(a1);
+                            Cambiarfragmento(adm);
+                            break;
 
-                        @Override
-                        public void onFailure(boolean error) {
+                        case "student":
+                            Usuario_Pantalla usp = new Usuario_Pantalla();
+                            Bundle a2 = new Bundle();
+                            a2.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
+                            a2.putString("rol", tipo);
+                            usp.setArguments(a2);
+                            Cambiarfragmento(usp);
+                            break;
 
-                        }
-                    });
+                        case "teacher":
+                            Profesor prof = new Profesor();
+                            Bundle a3 = new Bundle();
+                            a3.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
+                            a3.putString("rol", tipo);
+                            prof.setArguments(a3);
+                            Cambiarfragmento(prof);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), "Error de red", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
-        }
-
-
-    /**
-     * Metodo para pasar al fragmento correspondiente despues de la validacion
-     * @param targetFragment Para hacer la transiccion al fragmento correspondiente
-     */
-    private void Cambiarfragmento(Fragment targetFragment) {
-        boton_entrar.setText("✓");
-        boton_entrar.setBackgroundTintList(
-                ContextCompat.getColorStateList(requireContext(), R.color.green)
-        );
-
-        new Handler().postDelayed(() -> {
-            if (isAdded()) {
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .replace(android.R.id.content, targetFragment)
-                        .commit();
-            }
-        }, 2500);
+        });
     }
+
+
+
 
     /**
      * Muestra el error si el usuario o contraseña estan incorrectos atravez de una tarjeta
@@ -159,7 +150,26 @@ public class Login extends  Fragment{
         }, 1500);
     }
 
-    //----------------------MODIFICAR SI ES NECESARIO---------------------------------
+    /**
+     * Metodo para pasar al fragmento correspondiente despues de la validacion
+     * @param targetFragment Para hacer la transiccion al fragmento correspondiente
+     */
+    private void Cambiarfragmento(Fragment targetFragment) {
+        boton_entrar.setText("✓");
+        boton_entrar.setBackgroundTintList(
+                ContextCompat.getColorStateList(requireContext(), R.color.green)
+        );
+
+        new Handler().postDelayed(() -> {
+            if (isAdded()) {
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(android.R.id.content, targetFragment)
+                        .commit();
+            }
+        }, 2800);
+    }
 
     /**
      * Metodo que inicia las variables del layout

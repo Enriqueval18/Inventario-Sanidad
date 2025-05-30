@@ -20,9 +20,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public class Utilidades {
-
-    // Esta es la URL base de tu servidor donde está alojada la API.
-    // Importante: debe terminar con una barra "/" para que Retrofit combine correctamente las rutas.
     private static final String BASE_URL = "https://inventariosan.ifpleonardo.com/web/";
 
     /**
@@ -31,36 +28,17 @@ public class Utilidades {
      * @param callback2 Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
     public static  void verificarUsuario(Usuario usuario,UsuarioCallback2 callback2){
-        // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
-                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
-                .build(); // Creamos la instancia final de Retrofit
-
-
-        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
-        // ⚠️ NO usamos "implements" aquí, Retrofit lo hace por nosotros.
-        // Usa reflexión para analizar las anotaciones @GET y @Query, y genera el código necesario internamente.
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         ApiService api = retrofit.create(ApiService.class);
         Log.e("Verificar usaurio ","coencta apiservidce.clas");
-
-
-
-        // Paso 3: Usamos ese objeto para llamar al método definido en la interfaz.
-        // Esto crea una solicitud HTTP de tipo GET a la URL: api/usuario.php?nombre=juan123 (por ejemplo).
-        // Este objeto "call" representa la solicitud, pero todavía no la envía.
         Call<Usuario> call = api.verificarUsuario(usuario);
         Log.e("nuevo verificar","crea la solicitud ");
-
-        // Paso 4: Ejecutamos la solicitud de forma asíncrona (no bloquea el hilo principal).
-        // Retrofit se encargará de hacer la llamada en segundo plano.
         call.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                // Este método se ejecuta si el servidor respondió, aunque sea con error.
-
-                // Verificamos si la respuesta fue correcta (código 200–299)
-                // Y además que haya datos (el cuerpo no sea null)
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("LoginResponse", "no es nulo ");
 
@@ -70,8 +48,8 @@ public class Utilidades {
                     String apellido = usuario.getLast_name();
 
                     Log.d("LoginResponse", "Tipo recibido: " + tipo);
-                    Log.d("LoginResponse", "Tipo recibido: " + nombre);
-                    Log.d("LoginResponse", "Tipo recibido: " + apellido);
+                    Log.d("LoginResponse", "Nombre recibido: " + nombre);
+                    Log.d("LoginResponse", "Apellido recibido: " + apellido);
 
                     try {
                         if ("no existe".equals(tipo)) {
@@ -81,25 +59,22 @@ public class Utilidades {
                             Log.i("LoginResultado", "Usuario encontrado. Tipo: " + tipo);
                             callback2.onUsuarioObtenido(usuario);
                         }
-
                     } catch (Exception e) {
                         Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
-
                     }
 
                 }
             }
-
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
-                // Este método se ejecuta si la petición no se pudo hacer (fallo de red, sin internet, etc.)
                 Log.e("falla", "Error en la comunicación: " + t.getMessage());
-                // Avisamos que no se pudo verificar el usuario (asumimos que no existe)
-
                 callback2.onFailure(true);
             }
         });
     }
+    //----------------------------------------------------------------------------------------------------------------//
+
+
     public static void obtenerMateriales(final MaterialCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
