@@ -52,6 +52,10 @@ public class Usuario {
         this.user_type = user_type;
     }
 
+    public Usuario(int user_id, String password) {
+        this.user_id = user_id;
+        this.password = password;
+    }
     public String getFirst_name() {
         return first_name;
     }

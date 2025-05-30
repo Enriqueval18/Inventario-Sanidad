@@ -392,6 +392,60 @@ public class Utilidades {
         });
     }
 
+
+    /**
+     * Método que realiza una solicitud PUT para actualizar la contraseña de un usuario.
+     * @param usuario Objeto Usuario que contiene user_id y la nueva contraseña.
+     * @param callback Callback para manejar el resultado de la solicitud.
+     */
+    /**
+     * Método que realiza una solicitud PUT para actualizar la contraseña de un usuario.
+     * @param usuario Objeto Usuario que contiene user_id y la nueva contraseña.
+     * @param callback Callback para manejar el resultado de la solicitud.
+     */
+    public static void actualizarContra(Usuario usuario, UsuarioCallback callback) {
+        // 1. Crear Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // 2. Crear instancia de ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        // 3. Llamar al método definido en la interfaz (PUT)
+        Call<Respuesta> call = api.actualizarContra(usuario); // Asumimos que el PHP devuelve un JSON con campos como "mensaje" o "error"
+
+        // 4. Ejecutar llamada asíncrona
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta respuesta = response.body();
+
+                    if (respuesta.getMensaje() != null) {
+                        Log.i("ActualizarPassword", "Éxito: " + respuesta.getMensaje());
+
+                    } else {
+                        Log.w("ActualizarPassword", "Error reportado: " + respuesta.getMensaje());
+
+                    }
+                } else {
+                    Log.e("ActualizarPassword", "Respuesta no exitosa");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("ActualizarPassword", "Fallo de red: " + t.getMessage());
+            }
+        });
+}
+
+
+
+
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -432,6 +486,10 @@ public class Utilidades {
 
         @PUT("admin/editarUsuario.php")
         Call<Respuesta> editarUsuarios(@Body Usuario nuevoUsuario,@Query("nombre_antiguo") String nombreUsuario);
+
+
+        @PUT("general/AccionesSobreUsuario.php")
+        Call<Respuesta> actualizarContra(@Body Usuario usuario);
 
 
     }

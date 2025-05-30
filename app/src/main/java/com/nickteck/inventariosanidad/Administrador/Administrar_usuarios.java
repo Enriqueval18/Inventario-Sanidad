@@ -2,6 +2,7 @@ package com.nickteck.inventariosanidad.Administrador;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.sampledata.Respuesta;
 import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
+import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
 import com.nickteck.inventariosanidad.sampledata.UsuarioListCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
@@ -172,11 +176,70 @@ public class Administrar_usuarios extends Fragment {
                 .show();
     }
     private void mostrarDialogoEditarUsuario() {
-        // Implementar diálogo de edición similar al de añadir
-        Toast.makeText(getContext(),
-                "Modificar usuario ID: " + usuarioSeleccionado.getUser_id() +
-                        " - " + usuarioSeleccionado.getEmail(),
-                Toast.LENGTH_SHORT).show();
+        // Crear el diseño del diálogo
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(48, 24, 48, 24);
+
+        // Crear los campos de texto
+        final EditText etNuevaContrasena = new EditText(getContext());
+        etNuevaContrasena.setHint("Nueva contraseña");
+        etNuevaContrasena.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        final EditText etConfirmarContrasena = new EditText(getContext());
+        etConfirmarContrasena.setHint("Confirmar contraseña");
+        etConfirmarContrasena.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        // Añadir campos al layout
+        layout.addView(etNuevaContrasena);
+        layout.addView(etConfirmarContrasena);
+
+        // Crear el AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Cambiar contraseña de " + usuarioSeleccionado.getFirst_name());
+        builder.setView(layout);
+
+        builder.setPositiveButton("Cambiar", (dialog, which) -> {
+            String nuevaContrasena = etNuevaContrasena.getText().toString().trim();
+            String confirmarContrasena = etConfirmarContrasena.getText().toString().trim();
+
+            // Validaciones
+            if (nuevaContrasena.isEmpty() || confirmarContrasena.isEmpty()) {
+                Toast.makeText(getContext(), "Ambos campos son obligatorios", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!nuevaContrasena.equals(confirmarContrasena)) {
+                Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Crear objeto Usuario con los datos necesarios
+            Usuario usuarioActualizado = new Usuario(
+                    usuarioSeleccionado.getUser_id(),
+                    nuevaContrasena
+            );
+
+            // Llamar al método para actualizar contraseña
+            Utilidades.actualizarContra(usuarioActualizado, new UsuarioCallback() {
+                @Override
+                public void onResultado(String tipo) {
+                    // Manejar respuesta exitosa en el hilo principal
+                    getActivity().runOnUiThread(() -> {
+                    });
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    // Manejar error en el hilo principal
+                    getActivity().runOnUiThread(() -> {
+                    });
+                }
+            });
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+        builder.create().show();
     }
 
     private void cargarUsuariosExistentes() {
