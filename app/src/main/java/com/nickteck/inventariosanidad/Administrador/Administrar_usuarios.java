@@ -107,8 +107,6 @@ public class Administrar_usuarios extends Fragment {
                         if (exito) {
                             Toast.makeText(getContext(), "Usuario añadido con éxito", Toast.LENGTH_SHORT).show();
                             cargarUsuariosExistentes();
-                        } else {
-                            Toast.makeText(getContext(), "Error al añadir usuario. Verifica los datos.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

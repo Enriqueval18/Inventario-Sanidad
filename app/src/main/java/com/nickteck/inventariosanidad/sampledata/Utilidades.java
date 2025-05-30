@@ -66,7 +66,12 @@ public class Utilidades {
 
                     Usuario usuario = response.body();
                     String tipo = usuario.getUser_type();
+                    String nombre = usuario.getFirst_name();
+                    String apellido = usuario.getLast_name();
+
                     Log.d("LoginResponse", "Tipo recibido: " + tipo);
+                    Log.d("LoginResponse", "Tipo recibido: " + nombre);
+                    Log.d("LoginResponse", "Tipo recibido: " + apellido);
 
                     try {
                         if ("no existe".equals(tipo)) {
