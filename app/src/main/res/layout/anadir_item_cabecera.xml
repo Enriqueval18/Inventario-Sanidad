@@ -1,31 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#001a33"
+    android:padding="24dp"
+    android:layout_gravity="center">
 
+    <!-- Título centrado -->
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Añadir Nueva Actividad"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp"/>
+
+    <!-- Campo Nombre -->
     <EditText
         android:id="@+id/etNombre"
         style="@style/Input"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:hint="Nombre Cabecera:" />
+        android:layout_height="wrap_content"
+        android:hint="Nombre Cabecera Actividad"
+        android:textColorHint="#000000"
+        android:backgroundTint="@android:color/white"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp"/>
 
+    <!-- Botón Seleccionar Material -->
     <Button
         android:id="@+id/btnSelectMaterial"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
-        android:text="Seleccionar Material" />
+        android:layout_height="48dp"
+        android:text="Seleccionar Material"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button_outline_white"
+        android:layout_marginBottom="12dp"/>
 
+    <!-- Campo Cantidad -->
     <EditText
         android:id="@+id/etCantidad"
         style="@style/Input"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
-        android:hint="@string/cantidad_anandir_item"
-        android:inputType="number" />
+        android:layout_height="wrap_content"
+        android:hint="Cantidad"
+        android:textColorHint="#000000"
+        android:backgroundTint="@android:color/white"
+        android:inputType="number"
+        android:padding="8dp"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Botones ACEPTAR / CANCELAR alineados a la derecha -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_marginEnd="8dp"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:text="CANCELAR"
+            android:textColor="@android:color/white"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <Button
+            android:id="@+id/btnAccept"
+            android:layout_width="115dp"
+            android:layout_height="40dp"
+            android:text="ACEPTAR"
+            android:textColor="@android:color/white"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </LinearLayout>
 </LinearLayout>
+
+

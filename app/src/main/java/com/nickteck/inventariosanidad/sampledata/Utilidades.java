@@ -29,63 +29,65 @@ public class Utilidades {
      * @param usuario El nombre del usuario que queremos buscar en la base de datos.
      * @param callback2 Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
-    public static  void verificarUsuario(Usuario usuario,UsuarioCallback2 callback2, ErrorDisplayer errorDisplayer){
+    public static void verificarUsuario(
+            Usuario usuario,
+            UsuarioCallback2 callback2,
+            ErrorDisplayer errorDisplayer) {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         ApiService api = retrofit.create(ApiService.class);
-        Log.e("Verificar usaurio ","coencta apiservidce.clas");
         Call<Usuario> call = api.verificarUsuario(usuario);
-        Log.e("nuevo verificar","crea la solicitud ");
+
         call.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-
-                if (response.isSuccessful() && response.body() != null) {
-                    Usuario usuario = response.body();
-                    Log.i("Error dato desde api: ", usuario.getError());
-
-                    // Comprobar si viene un error desde el servidor
-                    if (usuario.getError() != null) {
-                        switch (usuario.getError()) {
-                            case "usuario no encontrado":
-                                errorDisplayer.mostrarMensaje(R.string.usuario_no_encontrado);
-                                break;
-                            case "contraseña incorrecta":
-                                errorDisplayer.mostrarMensaje(R.string.contrasena_incorrecta);
-                                break;
-                            default:
-                                errorDisplayer.mostrarMensaje(R.string.usu_con_inco);
-                        }
-                        return; // Importante: no continuar si hubo error
-                    }
-
-                    String tipo = usuario.getUser_type();
-                    String nombre = usuario.getFirst_name();
-                    String apellido = usuario.getLast_name();
-
-                    try {
-                        if ("no existe".equals(tipo)) {
-                            Log.w("LoginResultado", "Usuario no encontrado en la base de datos.");
-                            callback2.onUsuarioObtenido(usuario);
-                        } else {
-                            Log.i("LoginResultado", "Usuario encontrado. Tipo: " + tipo);
-                            callback2.onUsuarioObtenido(usuario);
-                        }
-                    } catch (Exception e) {
-                        Log.e("LoginError", "Error al procesar el JSON de la respuesta", e);
-                    }
+                // 1) Si no es 200… informar y fallo
+                if (!response.isSuccessful()) {
+                    errorDisplayer.mostrarMensaje(R.string.error_servidor);
+                    callback2.onFailure(true);
+                    return;
                 }
 
+                Usuario body = response.body();
+                // 2) Si el body es nulo… informar y fallo
+                if (body == null) {
+                    errorDisplayer.mostrarMensaje(R.string.error_respuesta);
+                    callback2.onFailure(true);
+                    return;
+                }
+
+                // 3) Si la API te devuelve un campo “error” no nulo…
+                if (body.getError() != null) {
+                    switch (body.getError()) {
+                        case "usuario no encontrado":
+                            errorDisplayer.mostrarMensaje(R.string.usuario_no_encontrado);
+                            break;
+                        case "contraseña incorrecta":
+                            errorDisplayer.mostrarMensaje(R.string.contrasena_incorrecta);
+                            break;
+                        default:
+                            errorDisplayer.mostrarMensaje(R.string.usu_con_inco);
+                    }
+                    callback2.onFailure(true);
+                    return;
+                }
+
+                // 4) OK: invocamos éxito
+                callback2.onUsuarioObtenido(body);
             }
+
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
-                Log.e("falla", "Error en la comunicación: " + t.getMessage());
+                Log.e("verificarUsuario", "Error en comunicación", t);
                 callback2.onFailure(true);
             }
         });
     }
+
     //----------------------------------------------------------------------------------------------------------------//
 
 

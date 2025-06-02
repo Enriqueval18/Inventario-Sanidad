@@ -2,12 +2,14 @@ package com.nickteck.inventariosanidad.Usuario;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +27,8 @@ public class Inventario extends Fragment {
 
     private TableLayout tablaInventario;
     private SearchView searchView;
-    // Lista para almacenar todos los materiales recibidos
     private List<MaterialItem> materialesList = new ArrayList<>();
 
-    // Clase interna para almacenar los datos de cada material
     private class MaterialItem {
         String nombre;
         int unidades;
@@ -38,7 +38,8 @@ public class Inventario extends Fragment {
         int unidadesMin;
         String descripcion;
 
-        MaterialItem(String nombre, int unidades, String almacen, String armario, String estante, int unidadesMin, String descripcion) {
+        MaterialItem(String nombre, int unidades, String almacen, String armario,
+                     String estante, int unidadesMin, String descripcion) {
             this.nombre = nombre;
             this.unidades = unidades;
             this.almacen = almacen;
@@ -50,14 +51,14 @@ public class Inventario extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Se asume que en fragment_inventario.xml tienes el SearchView con id "searchView"
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inventario, container, false);
 
         tablaInventario = view.findViewById(R.id.TablaInventario);
-        searchView = view.findViewById(R.id.searchView);
+        searchView      = view.findViewById(R.id.searchView);
 
-        // Configuramos el listener del SearchView para filtrar la tabla
+        // Listener para filtrar
         if (searchView != null) {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -65,7 +66,6 @@ public class Inventario extends Fragment {
                     filtrarTabla(query);
                     return false;
                 }
-
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     filtrarTabla(newText);
@@ -75,97 +75,139 @@ public class Inventario extends Fragment {
         }
 
         obtenerDatosInventario();
-
         return view;
     }
 
     private void obtenerDatosInventario() {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
-            public void onMaterialObtenido(String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
-                // Creamos un objeto MaterialItem con los datos recibidos
-                MaterialItem item = new MaterialItem(nombre, unidades, almacen, armario, estante, unidades_min, descripcion);
-                materialesList.add(item);
-                // Actualizamos la tabla con la lista completa (sin filtro)
+            public void onMaterialObtenido(String nombre, int unidades, String almacen,
+                                           String armario, String estante, int unidades_min,
+                                           String descripcion) {
+                materialesList.add(
+                        new MaterialItem(nombre, unidades, almacen, armario,
+                                estante, unidades_min, descripcion)
+                );
+                // Siempre refrescamos con TODO lo cargado
                 refreshTabla(materialesList);
             }
 
             @Override
             public void onFailure(boolean error) {
                 Log.e("Inventario", "Error al obtener inventario");
-                Toast.makeText(getContext(), "Error al obtener inventario", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        "Error al obtener inventario",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    // Método para reconstruir la tabla con la lista de materiales indicada
     private void refreshTabla(List<MaterialItem> lista) {
-        // Suponiendo que el primer TableRow es la cabecera, removemos todos los datos a partir del índice 1.
+        // 1) Limpiamos filas antiguas (dejamos solo la cabecera)
         int childCount = tablaInventario.getChildCount();
         if (childCount > 1) {
             tablaInventario.removeViews(1, childCount - 1);
         }
-        // Recorremos la lista y agregamos un TableRow para cada material
-        for (MaterialItem item : lista) {
+
+        // 2) Recorremos la lista y construimos filas
+        for (int i = 0; i < lista.size(); i++) {
+            MaterialItem item = lista.get(i);
             TableRow fila = crearFila(item);
+
+            // Solo al primer dato (i == 0) le damos margen superior
+            if (i == 0) {
+                // Convertimos 12 dp a pixeles
+                int margenSuperiorPx = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        12,
+                        getResources().getDisplayMetrics()
+                );
+                LayoutParams lp = new LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
+                );
+                lp.setMargins(0, margenSuperiorPx, 0, 0);
+                fila.setLayoutParams(lp);
+            }
+
             tablaInventario.addView(fila);
         }
     }
 
-    // Crea y retorna un TableRow para un MaterialItem dado
     private TableRow crearFila(final MaterialItem item) {
         TableRow fila = new TableRow(getContext());
         fila.setPadding(4, 4, 4, 4);
 
         TextView tvNombre = new TextView(getContext());
-        tvNombre.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+        tvNombre.setLayoutParams(
+                new TableRow.LayoutParams(0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f)
+        );
         tvNombre.setText(item.nombre);
         tvNombre.setPadding(8, 8, 8, 8);
 
         TextView tvUnidades = new TextView(getContext());
-        tvUnidades.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+        tvUnidades.setLayoutParams(
+                new TableRow.LayoutParams(0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f)
+        );
         tvUnidades.setText(String.valueOf(item.unidades));
         tvUnidades.setPadding(8, 8, 8, 8);
         tvUnidades.setGravity(Gravity.CENTER_HORIZONTAL);
 
         TextView tvAlmacen = new TextView(getContext());
-        tvAlmacen.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+        tvAlmacen.setLayoutParams(
+                new TableRow.LayoutParams(0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f)
+        );
         tvAlmacen.setText(item.almacen);
         tvAlmacen.setPadding(8, 8, 8, 8);
 
         TextView tvArmario = new TextView(getContext());
-        tvArmario.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+        tvArmario.setLayoutParams(
+                new TableRow.LayoutParams(0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f)
+        );
         tvArmario.setText(item.armario);
         tvArmario.setPadding(8, 8, 8, 8);
 
-        // Agregamos cada TextView a la fila
         fila.addView(tvNombre);
         fila.addView(tvUnidades);
         fila.addView(tvAlmacen);
         fila.addView(tvArmario);
 
-        // Al presionar la fila se muestra un diálogo con los detalles
-        fila.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        fila.setOnClickListener(v -> {
+            // Opcional: deshabilitamos el click para evitar dobles pulsaciones
+            v.setEnabled(false);
+
+            // Postea un Runnable con un delay (200 ms en este ejemplo)
+            v.postDelayed(() -> {
+                // Construye y muestra el diálogo
                 MostrarInventario dialog = new MostrarInventario();
                 Bundle args = new Bundle();
-                args.putString("nombre", item.nombre);
-                args.putInt("unidades", item.unidades);
-                args.putString("almacen", item.almacen);
-                args.putString("armario", item.armario);
-                args.putString("estante", item.estante);
-                args.putInt("unidadesm", item.unidadesMin);
+                args.putString("nombre",      item.nombre);
+                args.putInt   ("unidades",    item.unidades);
+                args.putString("almacen",     item.almacen);
+                args.putString("armario",     item.armario);
+                args.putString("estante",     item.estante);
+                args.putInt   ("unidadesm",   item.unidadesMin);
                 args.putString("descripcion", item.descripcion);
                 dialog.setArguments(args);
                 dialog.show(getParentFragmentManager(), "MostrarInventario");
-            }
+
+                // Reactivamos el click
+                v.setEnabled(true);
+            }, 200);
         });
+
 
         return fila;
     }
 
-    // Método que filtra la lista de materiales por el nombre y refresca la tabla
     private void filtrarTabla(String query) {
         query = query.toLowerCase();
         List<MaterialItem> listaFiltrada = new ArrayList<>();

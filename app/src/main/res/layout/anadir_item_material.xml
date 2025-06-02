@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#001a33"
+    android:padding="24dp">
 
+    <!-- CABECERA -->
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Añadir Nuevo Material"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Select Material Button -->
     <Button
         android:id="@+id/btnSelectMaterial"
-        style="@style/Input"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
-        android:hint="Materiales:" />
+        android:layout_height="48dp"
+        android:text="Materiales:"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_button_outline_white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Cantidad Input -->
     <EditText
         android:id="@+id/item_Cant"
-        style="@style/Input"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="48dp"
+        android:hint="Cantidad:"
+        android:textColorHint="@android:color/white"
+        android:backgroundTint="@android:color/white"
         android:inputType="number"
-        android:hint="Cantidad:" />
+        android:padding="8dp"
+        android:layout_marginBottom="24dp"/>
+
 </LinearLayout>

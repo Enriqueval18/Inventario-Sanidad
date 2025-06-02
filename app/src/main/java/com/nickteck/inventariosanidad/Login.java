@@ -76,12 +76,6 @@ public class Login extends  Fragment{
                 public void onUsuarioObtenido(Usuario usuario) {
                     String tipo = usuario == null ? null : usuario.getUser_type();
 
-                    /*if (tipo == null || tipo.equals("no existe")) {
-                        mostrarerror();
-                        return;
-                    }*/
-
-                    // 2) En caso contrario, hago el switch normal
                     switch (tipo) {
                         case "admin":
                             Administrador adm = new Administrador();
@@ -260,10 +254,10 @@ public class Login extends  Fragment{
     private void Cambioimagenes() {
         if (estado_contrasena) {
             contrasena.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            ver_contrasena.setImageResource(R.drawable.ojo_cerrado);
+            ver_contrasena.setImageResource(R.drawable.ojo_c);
         } else {
             contrasena.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            ver_contrasena.setImageResource(R.drawable.ojo_abierto);
+            ver_contrasena.setImageResource(R.drawable.ojo_a);
         }
         estado_contrasena = !estado_contrasena;
         contrasena.setSelection(contrasena.getText().length());

@@ -3,13 +3,19 @@
     <!-- Strings para la parte del Login -->
     <string name="bienvenido">¡Bienvenido!</string>ç
     <string name="inicio">Inicia sesión en tu cuenta</string>
-    <string name="usuario">Usuario</string>
+    <string name="correo">Correo Electronico</string>
     <string name="contrasena">Contraseña</string>
     <string name="entrar">ENTRAR</string>
     <string name="usuario_incorrecto">Usuario incorrecto</string>
     <string name="usu_con_inco">Usuario o Contraseña Incorrectos</string>
     <string name="usuario_no_encontrado">Usuario no encontrado</string>
     <string name="contrasena_incorrecta">Contraseña incorrecta</string>
+    <string name="error_red">Error de red</string>
+    <string name="error_respuesta">Error de respuesta</string>
+    <string name="error_servidor">Error de servidor</string>
+
+
+
 
     <!-- Strings para tarjeta de usuario -->
     <string name="nombre_usuario">Nombre usuario</string>

@@ -1,14 +1,21 @@
 package com.nickteck.inventariosanidad.Usuario;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -92,67 +99,61 @@ public class Actividades extends Fragment {
 
         //------------------------Boton de añadir----------------------------------------
         btnananir = view.findViewById(R.id.btnana);
-        btnananir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final View petitionView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
-                final EditText etNombre = petitionView.findViewById(R.id.etNombre);
-                final Button btnSelectMaterial = petitionView.findViewById(R.id.btnSelectMaterial);
-                final EditText etCantidad = petitionView.findViewById(R.id.etCantidad);
-                final String[] selectedMaterial = new String[1];
-                btnSelectMaterial.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showMaterialSelectionDialog(new MaterialSelectionListener() {
-                            @Override
-                            public void onMaterialSelected(String material) {
-                                selectedMaterial[0] = material;
-                                btnSelectMaterial.setText(material);
-                            }
-                        });
-                    }
+        btnananir.setOnClickListener(v -> {
+
+            final Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.anadir_item_cabecera);
+
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawable(
+                        new ColorDrawable(Color.parseColor("#001a33"))
+                );
+            }
+
+            // 3) Referencias a vistas y lógica interna…
+            EditText etNombre    = dialog.findViewById(R.id.etNombre);
+            Button  btnSelectMat = dialog.findViewById(R.id.btnSelectMaterial);
+            EditText etCantidad  = dialog.findViewById(R.id.etCantidad);
+            Button  btnCancel    = dialog.findViewById(R.id.btnCancel);
+            Button  btnAccept    = dialog.findViewById(R.id.btnAccept);
+            final String[] matSel= new String[1];
+
+            btnSelectMat.setOnClickListener(x -> {
+                showMaterialSelectionDialog(material -> {
+                    matSel[0] = material;
+                    btnSelectMat.setText(material);
                 });
+            });
+            btnCancel.setOnClickListener(x -> dialog.dismiss());
+            btnAccept.setOnClickListener(x -> {
+                String nombre   = etNombre.getText().toString().trim();
+                String cantidad = etCantidad.getText().toString().trim();
+                String material = matSel[0];
+                if (nombre.isEmpty() || cantidad.isEmpty()
+                        || material == null || material.isEmpty()) {
+                    Toast.makeText(getContext(),
+                            "Rellena todos los campos y selecciona un material",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                anandir_nueva_tabla(nombre, material, cantidad);
+                dialog.dismiss();
+            });
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Añadir Nueva Petición");
-                builder.setView(petitionView)
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String nombre = etNombre.getText().toString().trim();
-                                String cantidad = etCantidad.getText().toString().trim();
-                                String material = selectedMaterial[0];
+            // 4) Mostramos el diálogo
+            dialog.show();
 
-                                if (nombre.isEmpty() || cantidad.isEmpty() || material == null || material.isEmpty()) {
-                                    Toast.makeText(getContext(), "Rellena todos los campos y selecciona un material", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                anandir_nueva_tabla(nombre, material, cantidad);
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null);
-
-                builder.create().show();
+            // 5) Forzamos el tamaño de la ventana: 90% del ancho, alto WRAP_CONTENT
+            Window window = dialog.getWindow();
+            if (window != null) {
+                // Ancho = 90% del ancho de pantalla
+                DisplayMetrics dm = getResources().getDisplayMetrics();
+                int ancho = (int) (dm.widthPixels * 0.90);
+                // Alto a WRAP_CONTENT (o fija un valor en px/dp si prefieres)
+                window.setLayout(ancho, WindowManager.LayoutParams.WRAP_CONTENT);
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //-----------------Boton de borrar---------------------------------------
         ImageButton btnDeleteSection = view.findViewById(R.id.btnDelete);
@@ -262,9 +263,6 @@ public class Actividades extends Fragment {
                 }
             }
         });
-
-
-
 
         sectionsContainer = view.findViewById(R.id.Contenedor_actividades);
         loadSavedTable();
@@ -477,7 +475,6 @@ public class Actividades extends Fragment {
                 });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Añadir Nuevo Material");
                 builder.setView(cuadroAnadir)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
@@ -630,11 +627,7 @@ public class Actividades extends Fragment {
 
     }
 
-    /**
-     * Metodo que transfoma la primera en Mayuscula y el resto en minisculas
-     * @param str la palabra que se introduce
-     * @return la palabra ya convertida
-     */
+
     public static String capitalizeWords(String str) {
         if (str == null || str.isEmpty()) return str;
         String[] words = str.split(" ");
@@ -710,12 +703,6 @@ public class Actividades extends Fragment {
             }
         });
     }
-
-
-    /**
-     * Recorre cada hijo de la sección y muestra sólo aquellos cuyo texto contiene la consulta.
-     * Si query está vacío, se muestran todos los ítems.
-     */
     private void Filtrar(LinearLayout header, LinearLayout content, String query) {
         String filtro = query.toLowerCase().trim();
         if (header.getChildCount() > 0 && header.getChildAt(0) instanceof TextView) {
@@ -729,7 +716,6 @@ public class Actividades extends Fragment {
             }
         }
     }
-
     private void loadSavedTable() {
         Log.d("LoadSavedTable", "Iniciando loadSavedTable()...");
 

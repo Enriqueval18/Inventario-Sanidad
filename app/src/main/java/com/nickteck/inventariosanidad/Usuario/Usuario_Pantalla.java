@@ -36,7 +36,7 @@ public class Usuario_Pantalla extends Fragment {
             String rol = args.getString("rol");
             //Sirve para poner la primera en mayuscula
             tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
-            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+            tvRolUsuario.setText("Estudiante");
         }
 
         // Referencia al indicador que se movera
