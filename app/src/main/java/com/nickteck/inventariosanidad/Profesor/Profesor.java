@@ -30,10 +30,16 @@ public class Profesor extends Fragment {
         ImageView navInventario = navLayout.findViewById(R.id.btnInventariopro);
         ImageView navActividades = navLayout.findViewById(R.id.btnActividadespro);
         ImageView navMateriales  = navLayout.findViewById(R.id.btnMaterialespro);
+
+        ImageView ftousuario = view.findViewById(R.id.ftouser);
+        ftousuario.setImageResource(R.drawable.user_pro);
+
         indicador = navLayout.findViewById(R.id.indicadorpesadmin);
 
         tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
         tvRolUsuario = view.findViewById(R.id.RolUsuario);
+
+
 
         // Recogemos los argumentos enviados desde el login
         Bundle args = getArguments();
@@ -42,7 +48,7 @@ public class Profesor extends Fragment {
             String rol = args.getString("rol");
             //Sirve para poner la primera en mayuscula
             tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
-            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+            tvRolUsuario.setText("Profesor");
         }
 
         if (savedInstanceState == null) {

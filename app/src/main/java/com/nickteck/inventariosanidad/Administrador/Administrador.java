@@ -29,6 +29,8 @@ public class Administrador extends Fragment {
         ImageView navAgregar = navadmin.findViewById(R.id.btnAgregar);
         ImageView navInventario = navadmin.findViewById(R.id.btnInventarioAdmin);
         ImageView navActividades = navadmin.findViewById(R.id.btnActividadesAdmin);
+        ImageView ftousuario = view.findViewById(R.id.ftouser);
+        ftousuario.setImageResource(R.drawable.user_admin);
 
         tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
         tvRolUsuario = view.findViewById(R.id.RolUsuario);
@@ -40,7 +42,7 @@ public class Administrador extends Fragment {
             String rol = args.getString("rol");
             //Sirve para poner la primera en mayuscula
             tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
-            tvRolUsuario.setText(rol.substring(0, 1).toUpperCase() + rol.substring(1));
+            tvRolUsuario.setText("Administrador");
         }
 
 
