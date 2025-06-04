@@ -83,6 +83,7 @@ public class MostrarInventario extends DialogFragment {
             }
         }
     }
+
 }
 
 

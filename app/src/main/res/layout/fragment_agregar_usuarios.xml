@@ -4,20 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
-
-    <!-- 1. Título arriba -->
-    <TextView
-        android:id="@+id/titulo_admin_usuarios"
+    <EditText
+        android:id="@+id/busqueda_usuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Administrar Usuarios"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_alignParentTop="true"/>
-
-    <!-- 2. Barra de botones en el fondo -->
+        android:layout_marginTop="12dp"
+        android:hint="@string/busqueda_usuarios"
+        android:padding="14dp"
+        android:background="@drawable/bg_usuario_item"
+        android:textSize="14sp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp" />
+    <ScrollView
+        android:id="@+id/scroll_usuarios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/busqueda_usuario"
+        android:layout_above="@id/acciones_usuario"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:padding="4dp">
+        <LinearLayout
+            android:id="@+id/tabla_usuarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="@android:color/darker_gray"
+            android:showDividers="none" />
+    </ScrollView>
     <LinearLayout
         android:id="@+id/acciones_usuario"
         android:layout_width="match_parent"
@@ -34,10 +48,10 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:textSize="12dp"
-            android:text="Añadir"
+            android:text="@string/btnananir"
+            android:textSize="12sp"
             android:backgroundTint="#001A33"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btneliminarusu"
@@ -45,84 +59,19 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:textSize="12dp"
-            android:text="Quitar"
+            android:text="@string/btn_borrar"
+            android:textSize="12sp"
             android:backgroundTint="#001A33"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnmodiusu"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:textSize="12dp"
             android:layout_weight="1"
-            android:text="Cambiar"
+            android:text="@string/btn_cambiar"
+            android:textSize="12sp"
             android:backgroundTint="#001A33"
-            android:textColor="#FFFFFF"/>
+            android:textColor="#FFFFFF" />
     </LinearLayout>
-
-    <!-- 3. ScrollView entre título y botones -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/titulo_admin_usuarios"
-        android:layout_above="@id/acciones_usuario"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:padding="8dp">
-
-        <!-- Contenedor interno para la tabla -->
-        <LinearLayout
-            android:id="@+id/contenedor_tabla"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Fila de encabezado -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/black"
-                android:padding="8dp">
-
-                <!-- Columna 1: Nombre completo -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Nombre"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
-
-                <!-- Columna 2: Correo -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Correo"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
-
-                <!-- Columna 3: Tipo de usuario -->
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dp"
-                    android:text="Tipo"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
-
-            <!-- Contenedor dinámico para usuarios -->
-            <LinearLayout
-                android:id="@+id/tabla_usuarios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </LinearLayout>
-    </ScrollView>
 </RelativeLayout>

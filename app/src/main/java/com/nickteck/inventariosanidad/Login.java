@@ -109,7 +109,7 @@ public class Login extends  Fragment{
                 @Override
                 public void onFailure(boolean error) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Error de red", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }, resId -> mostrarerror(resId));

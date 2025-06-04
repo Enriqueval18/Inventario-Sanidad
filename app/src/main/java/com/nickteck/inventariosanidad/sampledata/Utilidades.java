@@ -135,56 +135,8 @@ public class Utilidades {
             }
         });
     }
-//    public static void editarUsuarios(Usuario usuario, String nombreAntiguo ,RespuestaCallback callback) {
-//
-//        // Paso 1: Crear la instancia de Retrofit con configuración básica
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
-//                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
-//                .build(); // Creamos la instancia final de Retrofit
-//
-//
-//        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
-//        ApiService api = retrofit.create(ApiService.class);
-//
-//        Log.d("EditarUsuario", "Usuario a editar: " + nombreAntiguo);
-//
-//// Llamar a la función para eliminar el usuario de la base de datos
-//        Call<Respuesta> call = api.editarUsuarios(usuario,nombreAntiguo);
-//        Log.d("EditarUsuario", "URL de la solicitud: " + call.request().url().toString());
-//
-//        call.enqueue(new Callback<Respuesta>() {
-//            @Override
-//            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
-//                Log.d("EditarUsuario", "Código de respuesta: " + response.code());
-//                Log.d("EditarUsuario", "Cuerpo de la respuesta: " + response.body());
-//
-//
-//                if (response.isSuccessful() && response.body() != null) {
-//                    Respuesta recibido = response.body();
-//                    if (recibido.isRespuesta()) {
-//                        Log.d("respuestaEditar", "Modificacion exitosa");
-//                        callback.onResultado(true);
-//                    } else {
-//                        Log.d("respuestaEditar", "Error desde el servidor: " + recibido.isRespuesta()+recibido.getError());
-//                        callback.onResultado(false);
-//                    }
-//                } else {
-//                    Log.d("EditarUsuario", "Error en la respuesta HTTP: " + response.message());
-//                    callback.onResultado(false);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Respuesta> call, Throwable t) {
-//                Log.e("EditarUsuario", "Error al editar: " + t.getMessage());
-//                callback.onFailure(true);
-//            }
-//        });
-//
-//    }
     public static void añadirUsuario(Usuario usuario, RespuestaCallback callback) {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

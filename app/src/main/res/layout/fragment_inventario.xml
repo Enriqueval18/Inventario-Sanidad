@@ -5,75 +5,107 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Buscador -->
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Buscar item..." />
 
-    <!-- ScrollView que contiene la tabla -->
-    <ScrollView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        android:padding="16dp">
 
-        <TableLayout
-            android:id="@+id/TablaInventario"
-            android:layout_width="match_parent"
+        <TableRow
+            android:background="@drawable/rounded_indicator"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/in_nombre"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/in_unidades"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/in_almacen"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/in_armario"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:padding="8dp" />
+        </TableRow>
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerInventario"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false" />
+
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:stretchColumns="*">
+            android:text="@string/no_inventario"
+            android:textColor="@color/error"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
 
-            <!-- Fila de encabezado -->
-            <TableRow
-                android:background="@drawable/rounded_indicator"
-                android:padding="4dp">
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/nombre"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:padding="8dp" />
+        <Button
+            android:id="@+id/btnReintentar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/in_reintentar"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#004D99"
+            android:textAllCaps="false"
+            android:elevation="4dp"
+            android:fontFamily="@font/inter2"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
 
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unidades"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:padding="8dp" />
+    </LinearLayout>
 
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/almacen"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:padding="8dp" />
-
-                <TextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/armario"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:padding="8dp" />
-            </TableRow>
-
-            <!-- Fila para los datos dinámicos -->
-            <TableRow
-                android:id="@+id/Tablafilamaterial"
-                android:padding="4dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground">
-                <!-- Aquí van los datos que llegan desde la API -->
-            </TableRow>
-
-        </TableLayout>
-    </ScrollView>
 </LinearLayout>
