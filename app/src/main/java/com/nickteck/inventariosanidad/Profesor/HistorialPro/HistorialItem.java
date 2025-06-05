@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Profesor;
+package com.nickteck.inventariosanidad.Profesor.HistorialPro;
 
 public class HistorialItem {
     private String time;

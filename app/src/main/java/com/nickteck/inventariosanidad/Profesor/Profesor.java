@@ -15,38 +15,43 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.nickteck.inventariosanidad.Login;
+import com.nickteck.inventariosanidad.Profesor.HistorialPro.HistorialFragment;
+import com.nickteck.inventariosanidad.Profesor.MaterialesPro.Materiales;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.Usuario.Inventario;
 
 public class Profesor extends Fragment {
-    private View indicador;
     private TextView tvNombreUsuario, tvRolUsuario;
+
+    private void resaltarBotonActivo(ImageView activo, ImageView... otros) {
+        activo.setAlpha(1f);
+        for (ImageView otro : otros) {
+            otro.setAlpha(0.5f);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_profesor, container, false);
         View navLayout = view.findViewById(R.id.navegacionpro);
-        ImageView navHistorial  = navLayout.findViewById(R.id.btnHistorial);
-        ImageView navInventario = navLayout.findViewById(R.id.btnInventariopro);
-        ImageView navActividades = navLayout.findViewById(R.id.btnActividadespro);
-        ImageView navMateriales  = navLayout.findViewById(R.id.btnMaterialespro);
+
+        ImageView navHistorial    = navLayout.findViewById(R.id.btnHistorial);
+        ImageView navInventario   = navLayout.findViewById(R.id.btnInventariopro);
+        ImageView navActividades  = navLayout.findViewById(R.id.btnActividadespro);
+        ImageView navMateriales   = navLayout.findViewById(R.id.btnMaterialespro);
+
+        ImageView imgEnviar = view.findViewById(R.id.imgEnviar);
+        imgEnviar.setVisibility(View.GONE);
 
         ImageView ftousuario = view.findViewById(R.id.ftouser);
         ftousuario.setImageResource(R.drawable.user_pro);
 
-        indicador = navLayout.findViewById(R.id.indicadorpesadmin);
-
         tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
         tvRolUsuario = view.findViewById(R.id.RolUsuario);
 
-
-
-        // Recogemos los argumentos enviados desde el login
         Bundle args = getArguments();
         if (args != null) {
             String nombre = args.getString("nombre");
-            String rol = args.getString("rol");
-            //Sirve para poner la primera en mayuscula
             tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
             tvRolUsuario.setText("Profesor");
         }
@@ -57,40 +62,44 @@ public class Profesor extends Fragment {
             transaction.replace(R.id.contenedorpro, new HistorialFragment());
             transaction.commit();
 
-            navHistorial.post(() -> {
-                float targetCenterX = navHistorial.getX() + (navHistorial.getWidth() / 2f);
-                float newX = targetCenterX - (indicador.getWidth() / 2f);
-                indicador.setX(newX);
-            });
+            resaltarBotonActivo(navHistorial, navInventario, navActividades, navMateriales);
+            imgEnviar.setVisibility(View.GONE);
         }
 
         navHistorial.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedorpro, new HistorialFragment());
             transaction.commit();
+
+            resaltarBotonActivo(navHistorial, navInventario, navActividades, navMateriales);
+            imgEnviar.setVisibility(View.GONE);
         });
 
         navInventario.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedorpro, new Inventario());
             transaction.commit();
+
+            resaltarBotonActivo(navInventario, navHistorial, navActividades, navMateriales);
+            imgEnviar.setVisibility(View.GONE);
         });
 
-
         navActividades.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedorpro, new Actividades_profesor());
             transaction.commit();
+
+            resaltarBotonActivo(navActividades, navHistorial, navInventario, navMateriales);
+            imgEnviar.setVisibility(View.GONE);
         });
 
         navMateriales.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedorpro, new Materiales());
             transaction.commit();
+
+            resaltarBotonActivo(navMateriales, navHistorial, navInventario, navActividades);
+            imgEnviar.setVisibility(View.VISIBLE);
         });
 
         ImageView btnSalir = view.findViewById(R.id.BtnSalir);
@@ -99,14 +108,12 @@ public class Profesor extends Fragment {
         return view;
     }
 
-    /**
-     * Metodo que hace que aparezca al usuario una tarjeta para decidir si desea cerrar sesión o no
-     */
     private void Tarjeta_salida() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.tarjeta_salir, null);
         Button btnQuedarme = dialogView.findViewById(R.id.btnQuedarme);
         Button btnSalirDialog = dialogView.findViewById(R.id.btnSalir);
+
         AlertDialog logoutDialog = new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .create();
@@ -117,6 +124,7 @@ public class Profesor extends Fragment {
             v.startAnimation(bounce);
             v.postDelayed(() -> logoutDialog.dismiss(), bounce.getDuration());
         });
+
         btnSalirDialog.setOnClickListener(v -> {
             v.startAnimation(bounce);
             v.postDelayed(() -> {
@@ -128,17 +136,7 @@ public class Profesor extends Fragment {
                 logoutDialog.dismiss();
             }, bounce.getDuration());
         });
-        logoutDialog.show();
-    }
 
-    /**
-     * Mueve el indicador con una animación para posicionarlo debajo del icono pulsado.
-     */
-    private void animacion_indicador(View targetView) {
-        targetView.post(() -> {
-            float targetCenterX = targetView.getX() + (targetView.getWidth() / 2f);
-            float newX = targetCenterX - (indicador.getWidth() / 2f);
-            indicador.animate().x(newX).setDuration(150).start();
-        });
+        logoutDialog.show();
     }
 }

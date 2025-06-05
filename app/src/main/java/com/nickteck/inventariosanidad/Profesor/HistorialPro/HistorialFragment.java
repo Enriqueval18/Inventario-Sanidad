@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Profesor;
+package com.nickteck.inventariosanidad.Profesor.HistorialPro;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

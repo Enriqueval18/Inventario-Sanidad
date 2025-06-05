@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#D0EAFF">
 
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/Fondobackgroundpro"
         android:layout_width="match_parent"
@@ -30,11 +29,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <FrameLayout
         android:id="@+id/contenedorpro"
         android:layout_width="0dp"
-        android:layout_height="610dp"
+        android:layout_height="580dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -43,10 +41,8 @@
         android:elevation="5dp"
         app:layout_constraintBottom_toTopOf="@+id/navegacionpro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tarjetaUsuario">
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@id/tarjetaUsuario" />
 
     <include
         android:id="@+id/navegacionpro"
@@ -62,7 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contenedorpro" />
 
-
     <LinearLayout
         android:id="@+id/barrainferior"
         android:layout_width="0dp"
@@ -74,6 +69,25 @@
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Botón enviar centrado sobre la barra inferior -->
+    <ImageView
+        android:id="@+id/imgEnviar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/send"
+        android:padding="12dp"
+        android:background="@drawable/bg_send_circle"
+        android:contentDescription="Enviar"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/contenedorpro"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="-28dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

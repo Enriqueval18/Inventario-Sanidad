@@ -27,7 +27,7 @@ public class Inventario extends Fragment {
     private Button btnReintentar;
     private SearchView searchView;
     private List<MaterialItem> materialesList = new ArrayList<>();
-    class MaterialItem {
+    public class MaterialItem {
         String nombre;
         int unidades;
         String almacen;
