@@ -40,9 +40,6 @@ public class Profesor extends Fragment {
         ImageView navActividades  = navLayout.findViewById(R.id.btnActividadespro);
         ImageView navMateriales   = navLayout.findViewById(R.id.btnMaterialespro);
 
-        ImageView imgEnviar = view.findViewById(R.id.imgEnviar);
-        imgEnviar.setVisibility(View.GONE);
-
         ImageView ftousuario = view.findViewById(R.id.ftouser);
         ftousuario.setImageResource(R.drawable.user_pro);
 
@@ -63,7 +60,6 @@ public class Profesor extends Fragment {
             transaction.commit();
 
             resaltarBotonActivo(navHistorial, navInventario, navActividades, navMateriales);
-            imgEnviar.setVisibility(View.GONE);
         }
 
         navHistorial.setOnClickListener(v -> {
@@ -72,7 +68,6 @@ public class Profesor extends Fragment {
             transaction.commit();
 
             resaltarBotonActivo(navHistorial, navInventario, navActividades, navMateriales);
-            imgEnviar.setVisibility(View.GONE);
         });
 
         navInventario.setOnClickListener(v -> {
@@ -81,7 +76,6 @@ public class Profesor extends Fragment {
             transaction.commit();
 
             resaltarBotonActivo(navInventario, navHistorial, navActividades, navMateriales);
-            imgEnviar.setVisibility(View.GONE);
         });
 
         navActividades.setOnClickListener(v -> {
@@ -90,7 +84,6 @@ public class Profesor extends Fragment {
             transaction.commit();
 
             resaltarBotonActivo(navActividades, navHistorial, navInventario, navMateriales);
-            imgEnviar.setVisibility(View.GONE);
         });
 
         navMateriales.setOnClickListener(v -> {
@@ -99,7 +92,6 @@ public class Profesor extends Fragment {
             transaction.commit();
 
             resaltarBotonActivo(navMateriales, navHistorial, navInventario, navActividades);
-            imgEnviar.setVisibility(View.VISIBLE);
         });
 
         ImageView btnSalir = view.findViewById(R.id.BtnSalir);
