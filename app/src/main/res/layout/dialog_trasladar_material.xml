@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvInventarioActual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Inventario Actual: Principal"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnSeleccionarMateriales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar materiales" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Materiales seleccionados"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
+
+    <ListView
+        android:id="@+id/listaOrigen"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:choiceMode="multipleChoice"
+        android:dividerHeight="1dp" />
+
+    <Button
+        android:id="@+id/btnMoverDerecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="▼ Trasladar ▼" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Materiales trasladados"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+
+    <ListView
+        android:id="@+id/listaDestino"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:dividerHeight="1dp" />
+</LinearLayout>

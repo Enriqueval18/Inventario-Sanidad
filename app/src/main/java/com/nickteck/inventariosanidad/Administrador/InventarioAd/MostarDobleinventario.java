@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Usuario;
+package com.nickteck.inventariosanidad.Administrador.InventarioAd;
 
 import android.os.Bundle;
 import android.text.Spannable;
@@ -17,7 +17,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.nickteck.inventariosanidad.R;
 
-public class MostrarInventario extends DialogFragment {
+
+
+
+
+public class MostarDobleinventario extends DialogFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,15 +32,15 @@ public class MostrarInventario extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.propiedades_tabla_inventario, container, false);
+        View view = inflater.inflate(R.layout.propiedades_inventario_doble, container, false);
 
-        TextView tvNombre = view.findViewById(R.id.tvNombre);
-        TextView tvUnidades = view.findViewById(R.id.tvUnidades);
-        TextView tvAlmacen = view.findViewById(R.id.tvAlmacen);
-        TextView tvArmarios = view.findViewById(R.id.tvArmarios);
-        TextView tvEstante = view.findViewById(R.id.tvEstante);
-        TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas);
-        TextView tvDescripcion = view.findViewById(R.id.tvDescripcion);
+        TextView tvNombre = view.findViewById(R.id.tvNombre1);
+        TextView tvUnidades = view.findViewById(R.id.tvUnidades1);
+        TextView tvAlmacen = view.findViewById(R.id.tvAlmacen1);
+        TextView tvArmarios = view.findViewById(R.id.tvArmarios1);
+        TextView tvEstante = view.findViewById(R.id.tvEstante1);
+        TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas1);
+        TextView tvDescripcion = view.findViewById(R.id.tvDescripcion1);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -48,7 +52,7 @@ public class MostrarInventario extends DialogFragment {
             int unidades = args.getInt("unidades", 0);
             int unidadesMin = args.getInt("unidadesm", 0);
 
-            // Usamos el método auxiliar para cada campo con su label en negrita
+            // Usamos el metodo auxiliar para que esté en negrita
             tvNombre.setText(createBoldLabel("Nombre: ", nombre));
             tvUnidades.setText(createBoldLabel("Unidades: ", String.valueOf(unidades)));
             tvAlmacen.setText(createBoldLabel("Almacén: ", almacen));
@@ -83,7 +87,7 @@ public class MostrarInventario extends DialogFragment {
             }
         }
     }
-
 }
+
 
 

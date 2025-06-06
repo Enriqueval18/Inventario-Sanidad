@@ -1,0 +1,144 @@
+package com.nickteck.inventariosanidad.Usuario.Inventariousu;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.nickteck.inventariosanidad.R;
+import com.nickteck.inventariosanidad.sampledata.Material;
+import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
+import com.nickteck.inventariosanidad.sampledata.Utilidades;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Inventario extends Fragment {
+    private RecyclerView recyclerInventario;
+    private MaterialAdapter adapter;
+    private LinearLayout layoutError;
+    private Button btnReintentar;
+    private SearchView busqueda;
+    private List<Material> materialesList = new ArrayList<>();
+
+
+    /**
+     * Define todo lo del xml , el cuadro de busqueda, los recycleview de las listas, el mensaje de error, el boton de error
+     * El boton de reintentar, tambien se hace el filtro de la busqueda y para obtener los materiales
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_inventario, container, false);
+
+        busqueda = view.findViewById(R.id.searchView);
+        recyclerInventario = view.findViewById(R.id.recyclerInventario);
+        recyclerInventario.setLayoutManager(new LinearLayoutManager(getContext()));
+        layoutError = view.findViewById(R.id.layoutError);
+        btnReintentar = view.findViewById(R.id.btnReintentar);
+
+        btnReintentar.setOnClickListener(v -> {
+            layoutError.setVisibility(View.GONE);
+            obtenerDatosInventario();
+        });
+
+        if (busqueda != null) {
+            busqueda.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    filtrarTabla(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filtrarTabla(newText);
+                    return false;
+                }
+            });
+        }
+
+        obtenerDatosInventario();
+        return view;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Metodo que obtiene los datos del inventario, primero lo que hace es limpiar la lista, llama desde la api, y lo añade, da un pequeño delay
+     * Si es correcto lo muestra, si es incorrecto sale un boton de reintentar hasta que se muestre la tabla
+     * Prueba = desconectar el intenet, y volver a conectar
+     */
+    private void obtenerDatosInventario() {
+        layoutError.setVisibility(View.GONE);
+        materialesList.clear();
+
+        Utilidades.obtenerMateriales(new MaterialCallback() {
+            @Override
+            public void onMaterialObtenido(String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
+                materialesList.add(new Material(nombre, descripcion, unidades, unidades_min, almacen, armario, estante));
+            }
+
+            @Override
+            public void onFailure(boolean error) {
+                requireActivity().runOnUiThread(() -> layoutError.setVisibility(View.VISIBLE));
+            }
+        });
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> actualizarTabla(materialesList), 800);
+    }
+
+    //--------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Metodo que actualiza la tabla y pasa los datos de los materiales a MostrarInventario para que sean visto por el usuario
+     * @param lista hace referencia a la lista de materiales que se le va a pasar
+     */
+    private void actualizarTabla(List<Material> lista) {
+        adapter = new MaterialAdapter(lista, getContext(), item -> {
+            MostrarInventario dialog = new MostrarInventario();
+            Bundle args = new Bundle();
+            args.putString("nombre", item.getNombre());
+            args.putInt("unidades", item.getUnidades());
+            args.putString("almacen", item.getAlmacen());
+            args.putString("armario", item.getArmario());
+            args.putString("estante", item.getEstante());
+            args.putInt("unidadesm", item.getUnidades_min());
+            args.putString("descripcion", item.getDescripcion());
+            dialog.setArguments(args);
+            dialog.show(getParentFragmentManager(), "MostrarInventario");
+        });
+        recyclerInventario.setAdapter(adapter);
+    }
+
+    //--------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Metodo que filtra la busqueda de la tabla por el nombre, ademas hace una actualizacion a la tabla
+     * @param nombre hace referencia al nombre del material
+     */
+    private void filtrarTabla(String nombre) {
+        nombre = nombre.toLowerCase();
+        List<Material> listaFiltrada = new ArrayList<>();
+        for (Material item : materialesList) {
+            if (item.getNombre().toLowerCase().contains(nombre)) {
+                listaFiltrada.add(item);
+            }
+        }
+        actualizarTabla(listaFiltrada);
+    }
+}

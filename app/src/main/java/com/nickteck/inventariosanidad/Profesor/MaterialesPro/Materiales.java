@@ -3,6 +3,7 @@ package com.nickteck.inventariosanidad.Profesor.MaterialesPro;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class Materiales extends Fragment {
     private List<MaterialItem> listaMateriales = new ArrayList<>();
     private Button bntAnanir;
     private LinearLayout contenedorg;
+    private String nombreArchivoMateriales;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,6 +130,9 @@ public class Materiales extends Fragment {
                 Toast.makeText(getContext(), "Debes seleccionar al menos un material", Toast.LENGTH_SHORT).show();
             }
         });
+        SharedPreferences prefs = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        String nombreProfesor = prefs.getString("nombreProfesor", "profesor"); // Usa un valor real
+        nombreArchivoMateriales = "materiales_" + nombreProfesor + ".txt";
 
         cargarMaterialesDesdeArchivo();
         return view;
@@ -283,7 +288,7 @@ public class Materiales extends Fragment {
         try {
             Gson gson = new Gson();
             String json = gson.toJson(listaMateriales); // Convertimos lista a JSON
-            FileOutputStream fos = getContext().openFileOutput(ARCHIVO_MATERIALES, Context.MODE_PRIVATE);
+            FileOutputStream fos = getContext().openFileOutput(nombreArchivoMateriales, Context.MODE_PRIVATE);
             fos.write(json.getBytes()); // Escribimos el JSON como texto
             fos.close();
         } catch (IOException e) {
@@ -293,7 +298,7 @@ public class Materiales extends Fragment {
 
     private void cargarMaterialesDesdeArchivo() {
         try {
-            FileInputStream fis = getContext().openFileInput(ARCHIVO_MATERIALES);
+            FileInputStream fis = getContext().openFileInput(nombreArchivoMateriales);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
             StringBuilder sb = new StringBuilder();
             String line;

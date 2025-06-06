@@ -1,73 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayoutCerrars"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dobleInventarioContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:stretchColumns="*">
-    <SearchView
-        android:id="@+id/searchView2"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Buscar item..." />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
 
+        <SearchView
+            android:id="@+id/searchView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:queryHint="Buscar item..."
+            android:iconifiedByDefault="false" />
 
+        <ImageView
+            android:id="@+id/btnAgregarMaterial"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/plus_solid"
+            android:background="?attr/selectableItemBackgroundBorderless"
+             android:padding="6dp" />
+    </LinearLayout>
 
-    <TableLayout
-        android:id="@+id/tableRowMaterial001"
+    <!-- Encabezado -->
+    <LinearLayout
+        android:id="@+id/headerRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:stretchColumns="*">
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_indicator"
+        android:padding="8dp"
+        android:elevation="2dp">
 
-        <TableRow
-            android:background="@drawable/rounded_indicator"
-            android:padding="4dp">
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/nombre"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nombre"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center" />
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/unidades"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/unidades"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center" />
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/almacen"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/almacen"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center" />
 
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/armario"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:padding="8dp" />
-        </TableRow>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/armario"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center" />
+    </LinearLayout>
 
-        <TableRow
-            android:id="@+id/Tablafilamaterial"
-            android:padding="4dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground">
-            <!-- Aquí van los datos que nos llegan desde la API -->
-        </TableRow>
+    <!-- Contenedor de tarjetas con Scroll -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"
+        android:overScrollMode="ifContentScrolls">
 
-    </TableLayout>
+        <LinearLayout
+            android:id="@+id/tableRowMaterial001"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="@android:color/transparent"
+            android:showDividers="middle"
+            android:layout_marginTop="4dp">
+            <!-- Aquí se insertan las filas dinámicamente desde Java -->
+        </LinearLayout>
+    </ScrollView>
 
-</TableLayout>
+</LinearLayout>

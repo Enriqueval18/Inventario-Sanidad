@@ -14,11 +14,11 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.nickteck.inventariosanidad.Administrador.InventarioAd.Dobleinventario;
 import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.R;
 
 public class Administrador extends Fragment {
-    private View indicador;
     private TextView tvNombreUsuario, tvRolUsuario;
 
     @Override
@@ -46,9 +46,9 @@ public class Administrador extends Fragment {
         }
 
 
-        indicador = navadmin.findViewById(R.id.indicadorpesadmin);
 
         if (savedInstanceState == null) {
+            resaltarBotonActivo(navAgregar, navInventario, navActividades);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             transaction.replace(R.id.contenedoradmin, new Administrar_usuarios());
@@ -56,33 +56,31 @@ public class Administrador extends Fragment {
 
             navAgregar.post(() -> {
                 float targetCenterX = navAgregar.getX() + (navAgregar.getWidth() / 2f);
-                float newX = targetCenterX - (indicador.getWidth() / 2f);
-                indicador.setX(newX);
             });
         }
 
         navAgregar.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedoradmin, new Administrar_usuarios());
             transaction.commit();
+            resaltarBotonActivo(navAgregar, navInventario, navActividades);
         });
 
         navInventario.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedoradmin, new Peticionesusuario());
             transaction.commit();
+            resaltarBotonActivo(navInventario, navAgregar, navActividades);
+
         });
 
 
         navActividades.setOnClickListener(v -> {
-            animacion_indicador(v);
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedoradmin, new Dobleinventario());
             transaction.commit();
+            resaltarBotonActivo(navActividades, navAgregar, navInventario);
         });
-
         ImageView btnSalir = view.findViewById(R.id.BtnSalir);
         btnSalir.setOnClickListener(v -> Tarjeta_salida());
 
@@ -122,15 +120,11 @@ public class Administrador extends Fragment {
         });
         logoutDialog.show();
     }
-
-    /**
-     * Mueve el indicador con una animación para posicionarlo debajo del icono pulsado.
-     */
-    private void animacion_indicador(View targetView) {
-        targetView.post(() -> {
-            float targetCenterX = targetView.getX() + (targetView.getWidth() / 2f);
-            float newX = targetCenterX - (indicador.getWidth() / 2f);
-            indicador.animate().x(newX).setDuration(150).start();
-        });
+    private void resaltarBotonActivo(ImageView activo, ImageView... otros) {
+        activo.setAlpha(1f);
+        for (ImageView otro : otros) {
+            otro.setAlpha(0.5f);
+        }
     }
+
 }

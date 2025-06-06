@@ -1,4 +1,4 @@
-package com.nickteck.inventariosanidad.Administrador;
+package com.nickteck.inventariosanidad.Usuario.Inventariousu;
 
 import android.os.Bundle;
 import android.text.Spannable;
@@ -17,12 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.nickteck.inventariosanidad.R;
 
-
-
-
-
-public class MostarDobleinventario extends DialogFragment {
-
+public class MostrarInventario extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,15 +27,15 @@ public class MostarDobleinventario extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.propiedades_inventario_doble, container, false);
+        View view = inflater.inflate(R.layout.propiedades_tabla_inventario, container, false);
 
-        TextView tvNombre = view.findViewById(R.id.tvNombre1);
-        TextView tvUnidades = view.findViewById(R.id.tvUnidades1);
-        TextView tvAlmacen = view.findViewById(R.id.tvAlmacen1);
-        TextView tvArmarios = view.findViewById(R.id.tvArmarios1);
-        TextView tvEstante = view.findViewById(R.id.tvEstante1);
-        TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas1);
-        TextView tvDescripcion = view.findViewById(R.id.tvDescripcion1);
+        TextView tvNombre = view.findViewById(R.id.tvNombre);
+        TextView tvUnidades = view.findViewById(R.id.tvUnidades);
+        TextView tvAlmacen = view.findViewById(R.id.tvAlmacen);
+        TextView tvArmarios = view.findViewById(R.id.tvArmarios);
+        TextView tvEstante = view.findViewById(R.id.tvEstante);
+        TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas);
+        TextView tvDescripcion = view.findViewById(R.id.tvDescripcion);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -52,25 +47,29 @@ public class MostarDobleinventario extends DialogFragment {
             int unidades = args.getInt("unidades", 0);
             int unidadesMin = args.getInt("unidadesm", 0);
 
-            // Usamos el metodo auxiliar para que esté en negrita
-            tvNombre.setText(createBoldLabel("Nombre: ", nombre));
-            tvUnidades.setText(createBoldLabel("Unidades: ", String.valueOf(unidades)));
-            tvAlmacen.setText(createBoldLabel("Almacén: ", almacen));
-            tvArmarios.setText(createBoldLabel("Armario: ", armario));
-            tvEstante.setText(createBoldLabel("Estante: ", balda));
-            tvUnidadesMinimas.setText(createBoldLabel("Unidades mínimas: ", String.valueOf(unidadesMin)));
-            tvDescripcion.setText(createBoldLabel("Descripción: ", descripcion));
+            // Usamos el método auxiliar para cada campo con su label en negrita
+            tvNombre.setText(crearcuadro("Nombre: ", nombre));
+            tvUnidades.setText(crearcuadro("Unidades: ", String.valueOf(unidades)));
+            tvAlmacen.setText(crearcuadro("Almacén: ", almacen));
+            tvArmarios.setText(crearcuadro("Armario: ", armario));
+            tvEstante.setText(crearcuadro("Estante: ", balda));
+            tvUnidadesMinimas.setText(crearcuadro("Unidades mínimas: ", String.valueOf(unidadesMin)));
+            tvDescripcion.setText(crearcuadro("Descripción: ", descripcion));
         }
 
         return view;
     }
 
-    private SpannableStringBuilder createBoldLabel(String label, String value) {
+    /**
+     * Crea el cuadro de color negro
+     * @param label hace referencia al cuadro
+     * @param value los valores que contiene
+     * @return el cuadro hecho
+     */
+    private SpannableStringBuilder crearcuadro(String label, String value) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append(label);
-        builder.setSpan(new StyleSpan(Typeface.BOLD),
-                0, label.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.append(value);
         return builder;
     }
@@ -87,7 +86,7 @@ public class MostarDobleinventario extends DialogFragment {
             }
         }
     }
-}
 
+}
 
 

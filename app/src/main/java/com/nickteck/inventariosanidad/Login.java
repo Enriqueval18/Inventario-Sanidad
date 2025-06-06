@@ -1,5 +1,7 @@
 package com.nickteck.inventariosanidad;
 
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
@@ -18,8 +20,6 @@ import android.widget.Button;
 import android.os.Vibrator;
 import android.content.Context;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -75,6 +75,13 @@ public class Login extends  Fragment{
                 @Override
                 public void onUsuarioObtenido(Usuario usuario) {
                     String tipo = usuario == null ? null : usuario.getUser_type();
+
+
+                    SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("nombreProfesor", usuario.getFirst_name());
+                    editor.apply();
+
 
                     switch (tipo) {
                         case "admin":

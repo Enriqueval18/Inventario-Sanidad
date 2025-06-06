@@ -1,6 +1,8 @@
 package com.nickteck.inventariosanidad.Profesor;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,11 @@ import com.nickteck.inventariosanidad.Login;
 import com.nickteck.inventariosanidad.Profesor.HistorialPro.HistorialFragment;
 import com.nickteck.inventariosanidad.Profesor.MaterialesPro.Materiales;
 import com.nickteck.inventariosanidad.R;
-import com.nickteck.inventariosanidad.Usuario.Inventario;
+import com.nickteck.inventariosanidad.Usuario.Inventariousu.Inventario;
 
 public class Profesor extends Fragment {
     private TextView tvNombreUsuario, tvRolUsuario;
+
 
     private void resaltarBotonActivo(ImageView activo, ImageView... otros) {
         activo.setAlpha(1f);
@@ -96,6 +99,8 @@ public class Profesor extends Fragment {
 
         ImageView btnSalir = view.findViewById(R.id.BtnSalir);
         btnSalir.setOnClickListener(v -> Tarjeta_salida());
+
+
 
         return view;
     }
