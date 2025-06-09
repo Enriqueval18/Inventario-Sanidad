@@ -70,6 +70,7 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
+        android:autofillHints=""
         android:background="@null"
         android:drawableStart="@drawable/correo"
         android:drawablePadding="8dp"
@@ -77,13 +78,13 @@
         android:hint="@string/correo"
         android:alpha="0"
         android:inputType="textEmailAddress"
-        android:paddingStart="12dp"
         android:textColor="#000"
         android:textColorHint="#555"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textodeinicio"
-        app:layout_constraintWidth_percent="0.85" />
+        app:layout_constraintWidth_percent="0.85"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <View
         android:layout_width="0dp"
@@ -99,12 +100,12 @@
         style="@style/Input.login"
         android:layout_width="0dp"
         android:layout_height="48dp"
+        android:autofillHints=""
         android:hint="@string/contrasena"
         android:fontFamily="@font/kameron"
         android:drawableStart="@drawable/can"
         android:drawablePadding="8dp"
         android:alpha="0"
-        android:paddingStart="12dp"
         android:background="@null"
         android:textColorHint="#555"
         android:textColor="#000"
@@ -114,14 +115,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintWidth_percent="0.85" />
-
-
+        app:layout_constraintWidth_percent="0.85"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <ImageView
         android:id="@+id/vistacontrena"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:contentDescription="@string/descripcion"
         android:src="@drawable/ojo_c"
         app:layout_constraintTop_toTopOf="@id/casillacontrasena"
         app:layout_constraintBottom_toBottomOf="@id/casillacontrasena"
@@ -148,7 +149,8 @@
         app:layout_constraintTop_toBottomOf="@id/casillacontrasena"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="0.5"
+        tools:ignore="VisualLintButtonSize" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

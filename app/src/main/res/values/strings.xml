@@ -14,6 +14,10 @@
     <string name="error_red">Error de red</string>
     <string name="error_respuesta">Error de respuesta</string>
     <string name="error_servidor">Error de servidor</string>
+    <string name="descripcion">Pulsar para mostrar la contraseña</string>
+
+    <!-- Strings para usuario -->
+    <string name="estudiante_usua">Estudiante</string>
 
     <!-- Strings para Inventario usuario -->
     <string name="no_inventario">No se pudo cargar inventario</string>
@@ -22,11 +26,7 @@
     <string name="in_almacen">Almacén</string>
     <string name="in_armario">Armario</string>
     <string name="in_reintentar">Reintentar</string>
-
-
-
-
-
+    <string name="lista_de_materiales_del_inventario">Lista de materiales del inventario</string>
     <!-- Strings para tarjeta de usuario -->
     <string name="nombre_usuario">Nombre usuario</string>
     <string name="rol">Rol</string>
@@ -35,6 +35,7 @@
     <string name="est_s_apunto_de_cerrar_sesi_n">ESTÁS APUNTO DE CERRAR SESIÓN</string>
     <string name="quedarme">Quedarme</string>
     <string name="salir">Salir</string>
+
 
     <!-- Strings para la tabla de cada material -->
     <string name="nombre">Nombre</string>
@@ -60,15 +61,31 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Strings para administrar usuarios -->
     <string name="busqueda_usuarios">Buscar por nombre, correo o tipo...</string>
     <string name="btnananir">Añadir</string>
     <string name="btn_borrar">Quitar</string>
     <string name="btn_cambiar">Cambiar</string>
-
-
-
-
 
 
 </resources>

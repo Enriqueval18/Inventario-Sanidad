@@ -30,7 +30,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Aquí es donde se cargara el contenido de los fragmentos -->
     <FrameLayout
         android:id="@+id/contenedorFragmento"
         android:layout_width="0dp"
@@ -39,7 +38,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_frame_background"
-        android:clipToOutline="true"
         android:elevation="5dp"
         app:layout_constraintBottom_toTopOf="@+id/BotonesNavegacion_Usuario"
         app:layout_constraintEnd_toEndOf="parent"

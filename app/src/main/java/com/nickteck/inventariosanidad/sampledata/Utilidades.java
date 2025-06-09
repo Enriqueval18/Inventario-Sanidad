@@ -3,12 +3,9 @@ package com.nickteck.inventariosanidad.sampledata;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.nickteck.inventariosanidad.R;
-
 import java.io.IOException;
 import java.util.List;
-
 import retrofit2.Call;                             // Representa una solicitud HTTP (GET, POST, etc.)
 import retrofit2.Callback;                         // Interfaz para manejar respuestas asíncronas
 import retrofit2.Response;                         // Contiene la respuesta del servidor (JSON, código, etc.)
@@ -29,19 +26,13 @@ public class Utilidades {
      * @param usuario El nombre del usuario que queremos buscar en la base de datos.
      * @param callback2 Un objeto que recibirá el resultado (true o false) cuando la API responda.
      */
-    public static void verificarUsuario(
-            Usuario usuario,
-            UsuarioCallback2 callback2,
-            ErrorDisplayer errorDisplayer) {
-
+    public static void verificarUsuario(Usuario usuario, UsuarioCallback2 callback2, ErrorDisplayer errorDisplayer) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         ApiService api = retrofit.create(ApiService.class);
         Call<Usuario> call = api.verificarUsuario(usuario);
-
         call.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
@@ -89,8 +80,6 @@ public class Utilidades {
     }
 
     //----------------------------------------------------------------------------------------------------------------//
-
-
     public static void obtenerMateriales(final MaterialCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -135,6 +124,12 @@ public class Utilidades {
             }
         });
     }
+
+    //----------------------------------------------------------------------------------------------------------------//
+
+
+
+
     public static void añadirUsuario(Usuario usuario, RespuestaCallback callback) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -385,10 +380,6 @@ public class Utilidades {
         });
 }
 
-
-
-
-
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -436,7 +427,6 @@ public class Utilidades {
 
 
     }
-
     public static void getMaterialList(final MaterialListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)  // Asegúrate de que BASE_URL esté definido correctamente
@@ -459,8 +449,5 @@ public class Utilidades {
             }
         });
     }
-
-
-
 
 }

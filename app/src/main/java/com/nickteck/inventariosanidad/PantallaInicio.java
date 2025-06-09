@@ -19,17 +19,12 @@ public class PantallaInicio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.pantalla_inicio);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);  //Animacion a la hora de pasar al siguiente Fragmento
-                transaction.replace(android.R.id.content, new Login());
-                transaction.commit();
-            }
+        new Handler().postDelayed(() -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);  //Animacion a la hora de pasar al siguiente Fragmento
+            transaction.replace(android.R.id.content, new Login());
+            transaction.commit();
         }, 3500);
     }
-
-
 }

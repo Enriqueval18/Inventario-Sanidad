@@ -1,6 +1,5 @@
 package com.nickteck.inventariosanidad;
 
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +27,6 @@ import com.nickteck.inventariosanidad.Administrador.Administrador;
 import com.nickteck.inventariosanidad.Profesor.Profesor;
 import com.nickteck.inventariosanidad.Usuario.Usuario_Pantalla;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
-import com.nickteck.inventariosanidad.sampledata.UsuarioCallback;
 import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
@@ -76,9 +74,10 @@ public class Login extends  Fragment{
                 public void onUsuarioObtenido(Usuario usuario) {
                     String tipo = usuario == null ? null : usuario.getUser_type();
 
-
                     SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
+
+                    assert usuario != null;
                     editor.putString("nombreProfesor", usuario.getFirst_name());
                     editor.apply();
 
@@ -114,17 +113,10 @@ public class Login extends  Fragment{
                 }
 
                 @Override
-                public void onFailure(boolean error) {
-                    if (getActivity() != null) {
-
-                    }
-                }
-            }, resId -> mostrarerror(resId));
+                public void onFailure(boolean error) {}
+            }, this::mostrarerror);
         });
     }
-
-
-
 
     /**
      * Muestra el error si el usuario o contraseña estan incorrectos atravez de una tarjeta
@@ -142,12 +134,7 @@ public class Login extends  Fragment{
             }
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tarjeta_error.setVisibility(View.GONE);
-            }
-        }, 1500);
+        new Handler().postDelayed(() -> tarjeta_error.setVisibility(View.GONE), 1500);
     }
 
     /**
@@ -247,12 +234,7 @@ public class Login extends  Fragment{
      * Alterna la visibilidad de la contraseña y actualiza el icono correspondiente hace llamada
      */
     private void MostrarContra() {
-        ver_contrasena.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cambioimagenes();
-            }
-        });
+        ver_contrasena.setOnClickListener(v -> Cambioimagenes());
     }
 
     /**

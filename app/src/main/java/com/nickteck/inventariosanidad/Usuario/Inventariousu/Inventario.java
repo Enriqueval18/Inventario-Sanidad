@@ -21,11 +21,8 @@ import java.util.List;
 
 public class Inventario extends Fragment {
     private RecyclerView recyclerInventario;
-    private MaterialAdapter adapter;
     private LinearLayout layoutError;
-    private Button btnReintentar;
-    private SearchView busqueda;
-    private List<Material> materialesList = new ArrayList<>();
+    private final List<Material> listamateriales = new ArrayList<>();
 
 
     /**
@@ -45,11 +42,11 @@ public class Inventario extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inventario, container, false);
 
-        busqueda = view.findViewById(R.id.searchView);
+        SearchView busqueda = view.findViewById(R.id.searchView);
         recyclerInventario = view.findViewById(R.id.recyclerInventario);
         recyclerInventario.setLayoutManager(new LinearLayoutManager(getContext()));
         layoutError = view.findViewById(R.id.layoutError);
-        btnReintentar = view.findViewById(R.id.btnReintentar);
+        Button btnReintentar = view.findViewById(R.id.btnReintentar);
 
         btnReintentar.setOnClickListener(v -> {
             layoutError.setVisibility(View.GONE);
@@ -85,12 +82,12 @@ public class Inventario extends Fragment {
      */
     private void obtenerDatosInventario() {
         layoutError.setVisibility(View.GONE);
-        materialesList.clear();
+        listamateriales.clear();
 
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
             public void onMaterialObtenido(String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
-                materialesList.add(new Material(nombre, descripcion, unidades, unidades_min, almacen, armario, estante));
+                listamateriales.add(new Material(nombre, descripcion, unidades, unidades_min, almacen, armario, estante));
             }
 
             @Override
@@ -99,7 +96,7 @@ public class Inventario extends Fragment {
             }
         });
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> actualizarTabla(materialesList), 800);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> actualizarTabla(listamateriales), 800);
     }
 
     //--------------------------------------------------------------------------------------------------------------//
@@ -109,7 +106,7 @@ public class Inventario extends Fragment {
      * @param lista hace referencia a la lista de materiales que se le va a pasar
      */
     private void actualizarTabla(List<Material> lista) {
-        adapter = new MaterialAdapter(lista, getContext(), item -> {
+        MaterialAdapter adapter = new MaterialAdapter(lista, getContext(), item -> {
             MostrarInventario dialog = new MostrarInventario();
             Bundle args = new Bundle();
             args.putString("nombre", item.getNombre());
@@ -134,7 +131,7 @@ public class Inventario extends Fragment {
     private void filtrarTabla(String nombre) {
         nombre = nombre.toLowerCase();
         List<Material> listaFiltrada = new ArrayList<>();
-        for (Material item : materialesList) {
+        for (Material item : listamateriales) {
             if (item.getNombre().toLowerCase().contains(nombre)) {
                 listaFiltrada.add(item);
             }
