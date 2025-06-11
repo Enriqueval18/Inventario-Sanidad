@@ -26,9 +26,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
-            android:src="@drawable/plus_solid"
             android:background="?attr/selectableItemBackgroundBorderless"
-             android:padding="6dp" />
+            android:padding="6dp"
+            android:src="@drawable/iconoplusminus" />
     </LinearLayout>
 
     <!-- Encabezado -->
