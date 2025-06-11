@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -201,6 +203,7 @@ public class Inventario extends Fragment {
                 tvNombre.setText(mat.getNombre());
                 tvCantidad.setText("Cantidad actual: " + mat.getUnidades());
                 filaViews.put(mat.getNombre(), fila);
+                Log.d("MATERIALOG", "Seleccionado antes del fila seton: " + mat.getNombre());  // TEMPORAL
 
                 fila.setOnClickListener(f -> {
                     // Marcar este como seleccionado visualmente
@@ -210,6 +213,9 @@ public class Inventario extends Fragment {
                     fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_100));
 
                     materialActivo[0] = mat;
+                    Log.d("MATERIALOG", "Seleccionado dentro del fila,set: " + materialActivo[0].getNombre());  // TEMPORAL
+
+
                 });
 
                 contenedorSeleccionados.addView(fila);
@@ -251,10 +257,28 @@ public class Inventario extends Fragment {
                         int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
                         int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
+
+                Utilidades.usarMaterialesProfesor(25, 1, resta, new RespuestaCallback() {
+                    @Override
+                    public void onResultado(boolean correcto) {
+                       if(correcto){
+                           Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                           actualizarTabla(listamateriales);
+
+                       }
+                        else{
+                           Toast.makeText(getContext(), "material no encontrado o la cantidad solicitada dejaría el stock por debajo del mínimo ", Toast.LENGTH_SHORT).show();
+
+                       }
                     }
-                    actualizarTabla(listamateriales);
-                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                })
+
+                    @Override
+                    public void onFailure(boolean error) {
+
+                    }
+                });
+                    }
+                        })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }

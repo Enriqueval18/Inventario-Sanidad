@@ -2,6 +2,7 @@ package com.nickteck.inventariosanidad.sampledata;
 
 public class Material {
     String nombre;
+    int id;
     String descripcion;
     int unidades;
     int unidades_min;
@@ -21,6 +22,14 @@ public class Material {
         this.cajon = cajon;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Material(String nombre, String descripcion, int unidades, int unidades_min, String almacen, String armario, String estante) {
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -29,6 +38,18 @@ public class Material {
         this.almacen = almacen;
         this.armario = armario;
         this.estante = estante;
+    }
+
+    public Material(String nombre, int id, String descripcion, int unidades, int unidades_min, String almacen, String armario, String estante, String cajon) {
+        this.nombre = nombre;
+        this.id = id;
+        this.descripcion = descripcion;
+        this.unidades = unidades;
+        this.unidades_min = unidades_min;
+        this.almacen = almacen;
+        this.armario = armario;
+        this.estante = estante;
+        this.cajon = cajon;
     }
 
     public int getUnidades() {

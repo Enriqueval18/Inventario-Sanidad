@@ -331,11 +331,7 @@ public class Utilidades {
     }
 
 
-    /**
-     * Método que realiza una solicitud PUT para actualizar la contraseña de un usuario.
-     * @param usuario Objeto Usuario que contiene user_id y la nueva contraseña.
-     * @param callback Callback para manejar el resultado de la solicitud.
-     */
+
     /**
      * Método que realiza una solicitud PUT para actualizar la contraseña de un usuario.
      * @param usuario Objeto Usuario que contiene user_id y la nueva contraseña.
@@ -380,6 +376,57 @@ public class Utilidades {
         });
 }
 
+
+
+
+    public static void usarMaterialesProfesor(int user_id,int material_id, int units, RespuestaCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Material a usar " + material_id + " usuario id: " + user_id);
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.usarMaterial_Profesor(user_id,material_id,units);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("MATERIALOG", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("MATERIALOG", "se uso correctamente");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("MATERIALOG", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                     callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("MOverMaterial", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -389,17 +436,13 @@ public class Utilidades {
          */
     private interface ApiService {
 
-        // Anotación que indica que queremos hacer una petición GET a esta ruta: api/usuario.php
-        // El parámetro "nombre" se agregará a la URL como un parámetro de consulta (?nombre=...)
-        // Retrofit se encargará de formar correctamente la URL final.
-        // @GET("api/usuario.php")
-        // Call<Usuario> obtenerUsuario(@Query("nombre") String nombre);
+      /*
+      LO QUE ESTA EN < > ES LA FORMA A LA QUE SERA CONVERTIDA LA RESPUESTA ENVIADA DE LA API
 
-        // Esta anotación indica que vamos a hacer una solicitud POST
-        // y enviar un objeto 'Usuario' en el cuerpo de la solicitud
-        // @POST("api/usuario.php")
-        //Call<Usuario> verificarUsuario(@Field("nombre") String nombre); // El parámetro "nombre" que se enviará
-        @POST("general/Login.php")
+      LO QUE ESTA ENTRE PARENTESIS SERA LOS DATOS A ENVIAR A LA API
+
+       */
+          @POST("general/Login.php")
         Call<Usuario> verificarUsuario(@Body Usuario usuario);
 
         @GET("usuario/ObtenerMateriales.php")
@@ -409,7 +452,7 @@ public class Utilidades {
         Call<Respuesta>añadirUsuario(@Body Usuario nuevoUsuario);
 
 
-        // Usamos DELETE y pasamos el 'email' como parte del path
+        // Usamos DELETE y pasamos el 'email' como parte de la url
         @DELETE("admin/AccionesSobreUsuario.php")
         Call<Respuesta> eliminarUsuario(@Query("email") String emailUsuario);
 
@@ -425,7 +468,8 @@ public class Utilidades {
         @PUT("admin/AccionesSobreUsuario.php")
         Call<Respuesta> actualizarContra(@Body Usuario usuario);
 
-
+        @GET("profesor/UsarMateriales.php")
+        Call<Respuesta>usarMaterial_Profesor(@Query("user_id")int user_id, @Query("material_id") int material_id,@Query("units")int unidades);
     }
     public static void getMaterialList(final MaterialListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()

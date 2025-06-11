@@ -8,6 +8,15 @@ public class Respuesta {
         this.mensaje = mensaje;
     }
 
+    public Respuesta(boolean respuesta) {
+        this.respuesta = respuesta;
+    }
+
+    public Respuesta(boolean respuesta, String mensaje) {
+        this.respuesta = respuesta;
+        this.mensaje = mensaje;
+    }
+
     public boolean isRespuesta() {
         return respuesta;
     }
