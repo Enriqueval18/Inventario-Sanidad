@@ -1,23 +1,36 @@
 package com.nickteck.inventariosanidad.Usuario.Inventariousu;
 
+import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Inventario extends Fragment {
     private RecyclerView recyclerInventario;
@@ -68,10 +81,13 @@ public class Inventario extends Fragment {
                 }
             });
         }
+        ImageView btnDialogo = view.findViewById(R.id.btnRestarMateriales);
+        btnDialogo.setOnClickListener(v -> mostrarDialogoRestarCantidad());
 
         obtenerDatosInventario();
         return view;
     }
+
 
     //--------------------------------------------------------------------------------------------------------------//
 
@@ -137,5 +153,109 @@ public class Inventario extends Fragment {
             }
         }
         actualizarTabla(listaFiltrada);
+    }
+
+    //--------------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Esto es para actualizar la tabla al hacer cambios
+     */
+    public abstract class TextWatcherAdapter implements TextWatcher {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    }
+
+    /**
+     * esto es la llamada al dialogo para restar
+     */
+    private void mostrarDialogoRestarCantidad() {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_restar_material, null);
+        Button btnSeleccionar = dialogView.findViewById(R.id.btnSeleccionarMateriales);
+        LinearLayout contenedorSeleccionados = dialogView.findViewById(R.id.contenedorSeleccionados);
+
+        EditText etRestar = dialogView.findViewById(R.id.etRestar);
+
+        List<Material> seleccionados = new ArrayList<>();
+        Map<String, View> filaViews = new HashMap<>();
+        final Material[] materialActivo = {null}; // Solo uno activo
+
+        btnSeleccionar.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Elige un material");
+
+            String[] nombres = new String[listamateriales.size()];
+            for (int i = 0; i < listamateriales.size(); i++) {
+                nombres[i] = listamateriales.get(i).getNombre();
+            }
+
+            builder.setItems(nombres, (dialog, which) -> {
+                Material mat = listamateriales.get(which);
+                if (filaViews.containsKey(mat.getNombre())) return;
+
+                seleccionados.add(mat);
+
+                View fila = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, null);
+                TextView tvNombre = fila.findViewById(android.R.id.text1);
+                TextView tvCantidad = fila.findViewById(android.R.id.text2);
+
+                tvNombre.setText(mat.getNombre());
+                tvCantidad.setText("Cantidad actual: " + mat.getUnidades());
+                filaViews.put(mat.getNombre(), fila);
+
+                fila.setOnClickListener(f -> {
+                    // Marcar este como seleccionado visualmente
+                    for (View otraFila : filaViews.values()) {
+                        otraFila.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_100));
+
+                    materialActivo[0] = mat;
+                });
+
+                contenedorSeleccionados.addView(fila);
+            });
+
+            builder.show();
+            // Cambio en tiempo real
+            TextWatcher watcher = new TextWatcherAdapter() {
+                public void afterTextChanged(Editable s) {
+                    if (materialActivo[0] == null) return;
+
+
+                    int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
+
+                    int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
+                    nuevaCantidad = Math.max(0, nuevaCantidad);
+
+                    View fila = filaViews.get(materialActivo[0].getNombre());
+                    if (fila != null) {
+                        TextView tvCantidad = fila.findViewById(android.R.id.text2);
+                        tvCantidad.setText("Cantidad nueva: " + nuevaCantidad);
+                    }
+                }
+            };
+
+
+            etRestar.addTextChangedListener(watcher);
+        });
+
+
+
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Modificar cantidades")
+                .setView(dialogView)
+                .setPositiveButton("Aceptar", (d, w) -> {
+                    if (materialActivo[0] != null) {
+
+                        int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
+                        int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
+                        materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
+                    }
+                    actualizarTabla(listamateriales);
+                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }
