@@ -487,7 +487,7 @@ public class Actividades extends Fragment {
                                     // Validamos que el material exista llamando a la API
                                     Utilidades.validarMaterial(getContext(), material, new MaterialCallback() {
                                         @Override
-                                        public void onMaterialObtenido(String nombreMaterial, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
+                                        public void onMaterialObtenido(int material_id,String nombreMaterial, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
                                             // Verificamos si el material ya ha sido añadido en contentLayout.
                                             // Se recorre contentLayout y se compara el nombre del material.
                                             boolean existe = false;
