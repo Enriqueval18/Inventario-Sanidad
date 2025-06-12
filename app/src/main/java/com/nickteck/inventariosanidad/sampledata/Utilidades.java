@@ -103,6 +103,7 @@ public class Utilidades {
                         Log.d("Material", "Material recibido: " + material.getNombre() + " - " + material.getAlmacen() + " - " + material.getArmario() + " - " + material.getUnidades());
 
                         callback.onMaterialObtenido(
+                                material.getId(),
                                 material.getNombre(),
                                 material.getUnidades(),
                                 material.getAlmacen(),
@@ -298,6 +299,7 @@ public class Utilidades {
                             encontrado = true;
                             // Material encontrado; se invoca el callback con los datos
                             callback.onMaterialObtenido(
+                                    material.getId(),
                                     material.getNombre(),
                                     material.getUnidades(),
                                     material.getAlmacen(),
