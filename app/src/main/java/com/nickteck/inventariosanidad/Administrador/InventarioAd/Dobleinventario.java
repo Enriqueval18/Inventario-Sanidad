@@ -75,7 +75,7 @@ public class Dobleinventario extends Fragment {
     private void obtenerDatosInventario() {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
-            public void onMaterialObtenido(String nombre, int unidades, String almacen, String armario, String estante, int unidadesMin, String descripcion) {
+            public void onMaterialObtenido(int material_id,String nombre, int unidades, String almacen, String armario, String estante, int unidadesMin, String descripcion) {
                 Material material = new Material(nombre, descripcion, unidades, unidadesMin, almacen, armario, descripcion);
                 listaMateriales.add(material);
                 refreshTabla(listaMateriales);

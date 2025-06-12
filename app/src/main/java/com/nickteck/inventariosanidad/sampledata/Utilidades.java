@@ -473,6 +473,8 @@ public class Utilidades {
         @GET("profesor/UsarMateriales.php")
         Call<Respuesta>usarMaterial_Profesor(@Query("user_id")int user_id, @Query("material_id") int material_id,@Query("units")int unidades);
     }
+
+
     public static void getMaterialList(final MaterialListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)  // Asegúrate de que BASE_URL esté definido correctamente
