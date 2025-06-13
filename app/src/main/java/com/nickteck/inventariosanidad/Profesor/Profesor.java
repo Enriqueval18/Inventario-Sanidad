@@ -16,7 +16,6 @@ import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.Usuario.Inventariousu.Inventario;
 
 public class Profesor extends Fragment {
-    private TextView tvNombreUsuario, tvRolUsuario;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profesor, container, false);
@@ -30,14 +29,15 @@ public class Profesor extends Fragment {
         ImageView ftousuario = view.findViewById(R.id.ftouser);
         ftousuario.setImageResource(R.drawable.user_pro);
 
-        tvNombreUsuario = view.findViewById(R.id.NombreUsuario);
-        tvRolUsuario = view.findViewById(R.id.RolUsuario);
+        TextView nombreusuario = view.findViewById(R.id.NombreUsuario);
+        TextView rolusuarios = view.findViewById(R.id.RolUsuario);
 
         Bundle args = getArguments();
         if (args != null) {
             String nombre = args.getString("nombre");
-            tvNombreUsuario.setText(nombre.substring(0, 1).toUpperCase() + nombre.substring(1));
-            tvRolUsuario.setText("Profesor");
+            assert nombre != null;
+            nombreusuario.setText(String.format("%s%s", nombre.substring(0, 1).toUpperCase(), nombre.substring(1)));
+            rolusuarios.setText(R.string.profesor);
         }
 
         if (savedInstanceState == null) {

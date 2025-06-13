@@ -56,6 +56,15 @@
         <color name="info">#3b82f6</color>
 
 
+    <!-- COLORES DE DIALOGOS -->
+
+        <color name="inputBackground">#F0F0F0</color>
+        <color name="textPrimary">#222222</color>
+        <color name="buttonPrimary">#155B8A</color>
+
+
+
+
 
 
 </resources>

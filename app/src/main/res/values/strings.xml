@@ -62,8 +62,8 @@
 
 
 
-
-
+    <!-- Strings para la parte del profesor-->
+    <string name="profesor">Profesor</string>
 
 
 
@@ -86,6 +86,7 @@
     <string name="btnananir">Añadir</string>
     <string name="btn_borrar">Quitar</string>
     <string name="btn_cambiar">Cambiar</string>
+
 
 
 </resources>

@@ -210,7 +210,7 @@ public class Inventario extends Fragment {
                     for (View otraFila : filaViews.values()) {
                         otraFila.setBackgroundColor(Color.TRANSPARENT);
                     }
-                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_100));
+                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_400 ));
 
                     materialActivo[0] = mat;
                     Log.d("MATERIALOG", "Seleccionado dentro del fila,set: " + materialActivo[0].getNombre());  // TEMPORAL
@@ -249,7 +249,6 @@ public class Inventario extends Fragment {
 
 
         new AlertDialog.Builder(getContext())
-                .setTitle("Modificar cantidades")
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
                     if (materialActivo[0] != null) {

@@ -1,0 +1,5 @@
+<resources>
+    <color name="inputBackground">#2C2C2C</color>
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="buttonPrimary">#505050</color>
+</resources>
