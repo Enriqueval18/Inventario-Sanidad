@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.nickteck.inventariosanidad.R;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;                             // Representa una solicitud HTTP (GET, POST, etc.)
 import retrofit2.Callback;                         // Interfaz para manejar respuestas asíncronas
@@ -429,6 +430,57 @@ public class Utilidades {
         });
 
     }
+
+
+    public static void crearActividadUsuarios(int user_id, String descripcion, ArrayList<Integer> units,ArrayList<Integer>material_ids, RespuestaCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Cantidad de materiales " + material_ids.size());
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.crearActividadProfesor(user_id,descripcion,units,material_ids);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("ActividadUsuario", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("ActividadUsuario", recibido.getMensaje());
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("ActividadUsuario", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("ActividadUsuario", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
+
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -472,6 +524,11 @@ public class Utilidades {
 
         @GET("profesor/UsarMateriales.php")
         Call<Respuesta>usarMaterial_Profesor(@Query("user_id")int user_id, @Query("material_id") int material_id,@Query("units")int unidades);
+
+        @GET("usuario/Crear_Actividades.php")
+        Call<Respuesta>crearActividadProfesor(@Query("user_id")int user_id, @Query("description") String descripcion,@Query("units")ArrayList<Integer> unidades, @Query("material_ids") ArrayList<Integer>materiales_ids );
+
+
     }
 
 
