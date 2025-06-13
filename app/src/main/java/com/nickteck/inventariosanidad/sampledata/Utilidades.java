@@ -481,6 +481,52 @@ public class Utilidades {
     }
 
 
+
+
+    public static void verActiviadadesUsuario(int user_id , RespuestaFinalCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.Ver_Actividades(user_id);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("Ver_Actividades", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("Ver_Actividades", recibido.getMensaje());
+                        callback.onResultado(recibido);
+                    } else {
+                        Log.d("Ver_Actividades", recibido.getMensaje());
+
+                        callback.onResultado(recibido);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("ActividadUsuario", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -528,6 +574,8 @@ public class Utilidades {
         @GET("usuario/Crear_Actividades.php")
         Call<Respuesta>crearActividadProfesor(@Query("user_id")int user_id, @Query("description") String descripcion,@Query("units")ArrayList<Integer> unidades, @Query("material_ids") ArrayList<Integer>materiales_ids );
 
+        @GET("usuario/Ver_Actividades.php")
+        Call<Respuesta>Ver_Actividades(@Query("user_id")int user_id );
 
     }
 
