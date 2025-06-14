@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.nickteck.inventariosanidad.Profesor.ActividadesProfesor.Actividades_profesor;
 import com.nickteck.inventariosanidad.Profesor.HistorialPro.HistorialFragment;
 import com.nickteck.inventariosanidad.Profesor.MaterialesPro.Materiales;
 import com.nickteck.inventariosanidad.R;

@@ -38,37 +38,9 @@ public class Actividades_profesor extends Fragment {
             }
         });
 
-        botonan = view.findViewById(R.id.btnananir);
-        botonan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Añadir Nuevo Item");
-                builder.setView(dialogView)
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                EditText etNombre = dialogView.findViewById(R.id.etNombre);
-                                EditText etMateriales = dialogView.findViewById(R.id.etMateriales);
-                                EditText etCantidad = dialogView.findViewById(R.id.etCantidad);
-
-                                String nombre = etNombre.getText().toString().trim();
-                                String materiales = etMateriales.getText().toString().trim();
-                                String cantidad = etCantidad.getText().toString().trim();
-
-                                if (!nombre.isEmpty() && !materiales.isEmpty() && !cantidad.isEmpty()) {
-                                    ananirnuevarama(nombre, materiales, cantidad);
-                                }
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null);
-                builder.create().show();
-            }
-        });
 
 
-        contenedorgeneral = view.findViewById(R.id.contenedorgeneral);
+        //contenedorgeneral = view.findViewById(R.id.contenedorgeneral);
         return view;
     }
 
