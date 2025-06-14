@@ -1,44 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#001a33"
-    android:padding="24dp">
+    android:background="@drawable/bg_dialog"
+    android:padding="24dp"
+    android:layout_gravity="center"
+    android:elevation="4dp">
 
-    <!-- CABECERA -->
     <TextView
         android:id="@+id/tvDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir Nuevo Material"
-        android:textColor="@android:color/white"
+        android:text="Añadir Material"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/textPrimary"
         android:gravity="center"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="20dp" />
 
-    <!-- Select Material Button -->
     <Button
-        android:id="@+id/btnSelectMaterial"
+        android:id="@+id/btnSelectMaterial2"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="Materiales:"
+        android:text="Seleccionar material"
+        android:backgroundTint="@color/buttonPrimary"
         android:textColor="@android:color/white"
-        android:background="@drawable/bg_button_outline_white"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
-    <!-- Cantidad Input -->
     <EditText
         android:id="@+id/item_Cant"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="Cantidad:"
-        android:textColorHint="@android:color/white"
-        android:backgroundTint="@android:color/white"
+        android:hint="Cantidad"
+        android:textColor="#000000"
+        android:textColorHint="#666666"
         android:inputType="number"
-        android:padding="8dp"
-        android:layout_marginBottom="24dp"/>
-
+        android:padding="12dp"
+        android:background="@drawable/bg_edittext"
+        android:layout_marginBottom="16dp" />
 </LinearLayout>

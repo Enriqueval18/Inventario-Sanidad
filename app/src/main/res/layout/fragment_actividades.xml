@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,12 +21,12 @@
             android:id="@+id/busquedatabla"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:queryHint="Buscar Cabecera..." />
+            android:queryHint="Buscar actividad..." />
     </LinearLayout>
 
-    <!-- ScrollView, que se extiende entre el buscador y el contenedor inferior -->
-    <ScrollView
-        android:id="@+id/scrollViewContent"
+    <!-- RecyclerView entre buscador y parte inferior -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewActividades"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -33,62 +34,30 @@
         app:layout_constraintTop_toBottomOf="@id/searchContainer"
         app:layout_constraintBottom_toTopOf="@id/bottomContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipToPadding="false" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/Contenedor_actividades"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- Aquí se agregará dinámicamente el contenido -->
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Contenedor de iconos fijado al fondo de la pantalla -->
+    <!-- Contenedor inferior con solo el botón de añadir -->
     <LinearLayout
         android:id="@+id/bottomContainer"
-        android:layout_width="371dp"
-        android:layout_height="65dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Icono de Añadir -->
         <ImageButton
             android:id="@+id/btnana"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_add" />
-
-        <!-- Icono de Borrar -->
-        <ImageButton
-            android:id="@+id/btnDelete"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_margin="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_delete" />
-
-        <!-- Icono de Enviar -->
-        <ImageButton
-            android:id="@+id/btnSend"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_margin="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_send" />
+            android:src="@android:drawable/ic_menu_add"
+            android:tint="#0D47A1"
+            android:contentDescription="Añadir actividad" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
