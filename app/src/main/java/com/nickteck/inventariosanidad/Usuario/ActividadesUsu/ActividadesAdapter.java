@@ -65,6 +65,15 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
 
         holder.estado.setText(item.isEnviado() ? "Enviado" : "No enviado");
         holder.estado.setTextColor(Color.parseColor(item.isEnviado() ? "#388E3C" : "#D32F2F"));
+        if (item.isEnviado()) {
+            holder.btnEnviar.setVisibility(View.GONE);
+            holder.btnAgregarMaterial.setVisibility(View.GONE);
+        } else {
+            holder.btnEnviar.setVisibility(View.VISIBLE);
+            holder.btnAgregarMaterial.setVisibility(View.VISIBLE);
+        }
+
+
 
         holder.btnEnviar.setOnClickListener(v -> {
             if (!item.isEnviado()) {
@@ -72,12 +81,18 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
             }
         });
 
+
         holder.btnEliminar.setOnClickListener(v -> {
             int index = originalList.indexOf(item);
             originalList.remove(item);
             filtrar("");  // Reinicia lista filtrada
             notifyItemRemoved(index);
         });
+
+
+
+
+
 
         holder.btnAgregarMaterial.setOnClickListener(v -> mostrarDialogoAgregarMaterial(holder, item));
     }
