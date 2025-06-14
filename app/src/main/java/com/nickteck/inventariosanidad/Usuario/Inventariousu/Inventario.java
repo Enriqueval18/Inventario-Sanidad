@@ -68,6 +68,7 @@ public class Inventario extends Fragment {
             obtenerDatosInventario();
         });
 
+
         if (busqueda != null) {
             busqueda.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -84,12 +85,16 @@ public class Inventario extends Fragment {
             });
         }
         ImageView btnDialogo = view.findViewById(R.id.btnRestarMateriales);
+
         btnDialogo.setOnClickListener(v -> mostrarDialogoRestarCantidad());
+
+
+
+
         Bundle args = getArguments();
         if (args != null) {
             idUsuario = args.getInt("idUsuario", -1);  // -1 si no está
             Log.d("InventarioFragment", "ID recibido: " + idUsuario);
-            // Usá el ID donde lo necesites
         }
         Log.e("usuarioinicio", ""+idUsuario);
         obtenerDatosInventario();
@@ -180,12 +185,13 @@ public class Inventario extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_restar_material, null);
         Button btnSeleccionar = dialogView.findViewById(R.id.btnSeleccionarMateriales);
         LinearLayout contenedorSeleccionados = dialogView.findViewById(R.id.contenedorSeleccionados);
-
         EditText etRestar = dialogView.findViewById(R.id.etRestar);
 
         List<Material> seleccionados = new ArrayList<>();
         Map<String, View> filaViews = new HashMap<>();
         final Material[] materialActivo = {null}; // Solo uno activo
+
+        String tipo = getArguments() != null ? getArguments().getString("tipo_usuario") : "";
 
         btnSeleccionar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -209,34 +215,28 @@ public class Inventario extends Fragment {
                 tvNombre.setText(mat.getNombre());
                 tvCantidad.setText("Cantidad actual: " + mat.getUnidades());
                 filaViews.put(mat.getNombre(), fila);
-                Log.d("MATERIALOG", "Seleccionado antes del fila seton: " + mat.getNombre());  // TEMPORAL
 
                 fila.setOnClickListener(f -> {
-                    // Marcar este como seleccionado visualmente
                     for (View otraFila : filaViews.values()) {
                         otraFila.setBackgroundColor(Color.TRANSPARENT);
                     }
-                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_400 ));
+                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_400));
 
                     materialActivo[0] = mat;
-                    Log.d("MATERIALOG", "Seleccionado dentro del fila,set: " + materialActivo[0].getNombre());  // TEMPORAL
-
-
                 });
 
                 contenedorSeleccionados.addView(fila);
             });
 
             builder.show();
+
             // Cambio en tiempo real
             TextWatcher watcher = new TextWatcherAdapter() {
                 public void afterTextChanged(Editable s) {
                     if (materialActivo[0] == null) return;
 
-
                     int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-
-                    int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
+                    int nuevaCantidad = materialActivo[0].getUnidades() - resta;
                     nuevaCantidad = Math.max(0, nuevaCantidad);
 
                     View fila = filaViews.get(materialActivo[0].getNombre());
@@ -247,44 +247,61 @@ public class Inventario extends Fragment {
                 }
             };
 
-
             etRestar.addTextChangedListener(watcher);
         });
-
-
-
 
         new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
                     if (materialActivo[0] != null) {
-
                         int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-                        int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
+                        int nuevaCantidad = materialActivo[0].getUnidades() - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
 
-                Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
-                    @Override
-                    public void onResultado(boolean correcto) {
-                       if(correcto){
-                           Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                           actualizarTabla(listamateriales);
+                        if (tipo.equalsIgnoreCase("usuario")) {
+                            Utilidades.quitarMaterialesUsuarios(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
+                                @Override
+                                public void onResultado(boolean correcto) {
+                                    if (correcto) {
+                                        Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                        actualizarTabla(listamateriales);
+                                    } else {
+                                        Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                       }
-                        else{
-                           Toast.makeText(getContext(), "material no encontrado o la cantidad solicitada dejaría el stock por debajo del mínimo ", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onFailure(boolean error) {
+                                    Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                       }
+                        } else if (tipo.equalsIgnoreCase("profesor")) {
+                            Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
+                                @Override
+                                public void onResultado(boolean correcto) {
+                                    if (correcto) {
+                                        Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                        actualizarTabla(listamateriales);
+                                    } else {
+                                        Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(boolean error) {
+                                    Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
-
-                    @Override
-                    public void onFailure(boolean error) {
-
-                    }
-                });
-                    }
-                        })
+                })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
+
+
+
+
 }

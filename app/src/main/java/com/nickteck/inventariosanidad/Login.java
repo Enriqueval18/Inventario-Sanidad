@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import com.airbnb.lottie.LottieAnimationView;
 import com.nickteck.inventariosanidad.Administrador.Administrador;
 import com.nickteck.inventariosanidad.Profesor.Profesor;
+import com.nickteck.inventariosanidad.Usuario.Inventariousu.Inventario;
 import com.nickteck.inventariosanidad.Usuario.Usuario_Pantalla;
 import com.nickteck.inventariosanidad.sampledata.Usuario;
 import com.nickteck.inventariosanidad.sampledata.UsuarioCallback2;
@@ -75,6 +76,12 @@ public class Login extends  Fragment{
                 public void onUsuarioObtenido(Usuario usuario) {
 
                     String tipo = usuario == null ? null : usuario.getUser_type();
+                    Bundle args = new Bundle();
+                    args.putString("tipo_usuario", tipo);
+                    Fragment destino = new Inventario();
+                    destino.setArguments(args);
+
+
                     Log.e("usuarioinicio", "" + usuario.getUser_id());
 
                     SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
