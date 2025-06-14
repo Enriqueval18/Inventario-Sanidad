@@ -1,14 +1,24 @@
 package com.nickteck.inventariosanidad.sampledata;
 
-import java.util.ArrayList;
-
 public class Respuesta {
     private boolean respuesta;
     private String mensaje;
     private int usuario_id;
-    private String  descripcion;
-    private ArrayList<Integer> unidades;
-    private ArrayList<Integer> material_ids;
+    private String descripciones;
+    private String unidades;
+    private String materiales;
+    private String enviados;
+
+
+    public String getEnviados() {
+        return enviados;
+    }
+
+    public void setEnviados(String enviados) {
+        this.enviados = enviados;
+    }
+
+
     public Respuesta(String mensaje) {
         this.mensaje = mensaje;
     }
@@ -22,11 +32,20 @@ public class Respuesta {
         this.mensaje = mensaje;
     }
 
-    public Respuesta(int usuario_id, String descripcion, ArrayList<Integer> unidades, ArrayList<Integer> material_ids) {
-        this.usuario_id = usuario_id;
-        this.descripcion = descripcion;
+    public Respuesta(String descripciones, String unidades, String materiales, String enviados) {
+        this.descripciones = descripciones;
         this.unidades = unidades;
-        this.material_ids = material_ids;
+        this.materiales = materiales;
+        this.enviados = enviados;
+    }
+
+    public Respuesta(boolean respuesta, String mensaje, String descripciones, String unidades, String materiales, String enviados) {
+        this.respuesta = respuesta;
+        this.mensaje = mensaje;
+        this.descripciones = descripciones;
+        this.unidades = unidades;
+        this.materiales = materiales;
+        this.enviados = enviados;
     }
 
     public int getUsuario_id() {
@@ -37,28 +56,28 @@ public class Respuesta {
         this.usuario_id = usuario_id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getDescripciones() {
+        return descripciones;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescripciones(String descripciones) {
+        this.descripciones = descripciones;
     }
 
-    public ArrayList<Integer> getUnidades() {
+    public String getUnidades() {
         return unidades;
     }
 
-    public void setUnidades(ArrayList<Integer> unidades) {
+    public void setUnidades(String unidades) {
         this.unidades = unidades;
     }
 
-    public ArrayList<Integer> getMaterial_ids() {
-        return material_ids;
+    public String getMateriales() {
+        return materiales;
     }
 
-    public void setMaterial_ids(ArrayList<Integer> material_ids) {
-        this.material_ids = material_ids;
+    public void setMateriales(String materiales) {
+        this.materiales = materiales;
     }
 
     public boolean isRespuesta() {

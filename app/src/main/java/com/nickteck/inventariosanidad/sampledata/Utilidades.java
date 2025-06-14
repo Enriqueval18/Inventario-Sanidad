@@ -503,8 +503,9 @@ public class Utilidades {
 
                 if (response.isSuccessful() && response.body() != null) {
                     Respuesta recibido = response.body();
-                    Log.d("Ver_Actividades", recibido.getMensaje());
+                    Log.d("Ver_Actividades", recibido.getDescripciones());
 
+                    Log.d("Ver_Actividades", recibido.getUnidades());
                     if (recibido.isRespuesta()) {
                         Log.d("Ver_Actividades", recibido.getMensaje());
                         callback.onResultado(recibido);

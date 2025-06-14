@@ -4,12 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,15 +32,13 @@ import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialSelectionListener;
+import com.nickteck.inventariosanidad.sampledata.Respuesta;
+import com.nickteck.inventariosanidad.sampledata.RespuestaFinalCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Actividades extends Fragment {
@@ -717,7 +713,73 @@ public class Actividades extends Fragment {
         }
     }
     private void loadSavedTable() {
-        Log.d("LoadSavedTable", "Iniciando loadSavedTable()...");
+
+
+        Utilidades.verActiviadadesUsuario(25, new RespuestaFinalCallback() {
+            @Override
+            public void onResultado(Respuesta respuesta) {
+                Log.d("Ver_Actividades", respuesta.getDescripciones());
+
+                String descripcion = respuesta.getDescripciones();
+                String material_ids=respuesta.getMateriales();
+                String unidades=respuesta.getUnidades();
+                String enviado=respuesta.getEnviados();
+
+                List<String> lista_descripcion = new ArrayList<>(Arrays.asList(descripcion.split(",")));
+                List<String> lista_material_id = Arrays.asList(material_ids.split(",")); // ✅ separa por actividad
+                List<String> lista_unidades = Arrays.asList(unidades.split(","));       // ✅ separa por actividad
+                List<String> lista_enviado = new ArrayList<>(Arrays.asList(enviado.split(",")));
+
+                int cantidad = lista_descripcion.size();
+                 for (int i = 0; i < cantidad; i++) {
+                     String titulo = lista_descripcion.get(i);
+
+                     // ✅ materiales y unidades por actividad
+                     String materiales_por_actividad = lista_material_id.get(i); // Ej: "Madera|Clavos"
+                     String unidades_por_actividad = lista_unidades.get(i);      // Ej: "10|20"
+
+                     // ✅ dividir internamente por '|'
+                     List<String> materiales = Arrays.asList(materiales_por_actividad.split("\\|"));
+                     List<String> cantidades = Arrays.asList(unidades_por_actividad.split("\\|"));
+
+                     // ✅ unir con saltos de línea para mostrar limpio
+                     String materialesCombined = android.text.TextUtils.join("\n", materiales);
+                     String cantidadesCombined = android.text.TextUtils.join("\n", cantidades);
+
+                     // ✅ añadir a la UI
+                     anandir_nueva_tabla(titulo, materialesCombined, cantidadesCombined);
+
+                    // Deshabilitar la sección recién creada
+                    int count = sectionsContainer.getChildCount();
+                    if (count > 0) {
+                        View lastSection = sectionsContainer.getChildAt(count - 1);
+                        lastSection.setClickable(false);
+                        lastSection.setEnabled(false);
+
+                        if (lastSection instanceof LinearLayout) {
+                            LinearLayout sec = (LinearLayout) lastSection;
+                            if (sec.getChildCount() > 0) {
+                                View headerView = sec.getChildAt(0);
+                                if (headerView instanceof LinearLayout) {
+                                    ((LinearLayout) headerView).setBackgroundColor(getResources().getColor(R.color.green));
+                                }
+                            }
+                        }
+                    }
+
+                    Log.d("LoadSavedTable", "Tabla '" + titulo + "' cargada desde base de datos y deshabilitada.");
+                }
+            }
+
+            @Override
+            public void onFailure(boolean error) {
+
+            }
+        });
+
+
+
+     /*   Log.d("LoadSavedTable", "Iniciando loadSavedTable()...");
 
         // Verificar si el archivo existe en el almacenamiento interno
         File file = getContext().getFileStreamPath("tabla_guardada.txt");
@@ -805,7 +867,9 @@ public class Actividades extends Fragment {
             Log.e("LoadSavedTable", "Error de lectura: " + e.getMessage());
             Toast.makeText(getContext(), "Error al cargar la tabla", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        }
+        }*/
+
+
     }
 
 
