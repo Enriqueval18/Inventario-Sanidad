@@ -619,6 +619,9 @@ public class Utilidades {
             }
         });
 
+
+
+
     }
 
 
@@ -714,6 +717,106 @@ public class Utilidades {
             }
         });
     }
+
+
+    public static void RestarMaterialAdmin(int user_id,int material_id, String storage_type, int units, RespuestaCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Material a restar unidades " + material_id + " usuario id: " + user_id + "unidades restadas: " + units + "en: " + storage_type);
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        // Llamar a la función de la api para restar undidades al material
+        Call<Respuesta> call = api.Restar_material_admin(user_id, material_id, storage_type, units);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("MATERIALOG", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("MATERIALOG", "se uso correctamente");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("MATERIALOG", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("RestarMaterial", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
+
+
+    public static void SumarMaterialAdmin(int user_id,int material_id, String storage_type, int units, RespuestaCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Material a sumar unidades " + material_id + " usuario id: " + user_id + "unidades sumadas: " + units + "en: " + storage_type);
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        // Llamar a la función de la api para sumar unidades al material
+        Call<Respuesta> call = api.Sumar_material_admin(user_id, material_id, storage_type, units);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("Restar material: ", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("Restar material:", "se uso correctamente");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("Restar material:", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("restarMaterial", "Fallo en la solicitud: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
+
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -776,6 +879,13 @@ public class Utilidades {
 
         @GET("profesor/Ver_actividades_Profesor.php")
         Call<Respuesta>Ver_Actividades_Profesor();
+
+
+        @GET("admin/Restar_material_admin.php")
+        Call<Respuesta>Restar_material_admin(@Query("user_id")int user_id, @Query("material_id")int material_id, @Query("storage_type") String storage_type, @Query("units")int units);
+
+        @GET("admin/Sumar_material_admin.php")
+        Call<Respuesta>Sumar_material_admin(@Query("user_id")int user_id, @Query("material_id")int material_id, @Query("storage_type") String storage_type, @Query("units")int units);
     }
 
     public static void getMaterialList(final MaterialListCallback callback) {
