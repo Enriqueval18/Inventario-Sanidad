@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,7 @@ public class Login extends  Fragment{
                 @Override
                 public void onUsuarioObtenido(Usuario usuario) {
                     String tipo = usuario == null ? null : usuario.getUser_type();
-
+                    Log.e("usuarioinicio", ""+usuario.getUser_id());
                     SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
 
@@ -88,6 +89,7 @@ public class Login extends  Fragment{
                             Bundle a1 = new Bundle();
                             a1.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
                             a1.putString("rol", tipo);
+                            a1.putInt("id", usuario.getUser_id());
                             adm.setArguments(a1);
                             Cambiarfragmento(adm);
                             break;
@@ -97,6 +99,7 @@ public class Login extends  Fragment{
                             Bundle a2 = new Bundle();
                             a2.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
                             a2.putString("rol", tipo);
+                            a2.putInt("id", usuario.getUser_id());
                             usp.setArguments(a2);
                             Cambiarfragmento(usp);
                             break;
@@ -106,6 +109,7 @@ public class Login extends  Fragment{
                             Bundle a3 = new Bundle();
                             a3.putString("nombre", usuario.getFirst_name() + " " + usuario.getLast_name());
                             a3.putString("rol", tipo);
+                            a3.putInt("id", usuario.getUser_id());
                             prof.setArguments(a3);
                             Cambiarfragmento(prof);
                             break;

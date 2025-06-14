@@ -3,6 +3,7 @@ package com.nickteck.inventariosanidad.Usuario;
 import static com.nickteck.inventariosanidad.General.mostrarTarjetaSalida;
 import static com.nickteck.inventariosanidad.General.resaltarBotonActivo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.Usuario.Inventariousu.Inventario;
 
 public class Usuario_Pantalla extends Fragment {
-
+    int id;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_usuario, container, false);
@@ -30,8 +31,10 @@ public class Usuario_Pantalla extends Fragment {
             String nombre = args.getString("nombre");
             assert nombre != null;
             nombreusuario.setText(String.format("%s%s", nombre.substring(0, 1).toUpperCase(), nombre.substring(1)));
+            id = args.getInt("id");
             rolusuario.setText(R.string.estudiante_usua);
         }
+        Log.e("usuarioinicio", ""+id);
         if (savedInstanceState == null) {
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -41,11 +44,22 @@ public class Usuario_Pantalla extends Fragment {
 
         }
         navInventario.setOnClickListener(v -> {
+
+            Inventario inventarioFragment = new Inventario();
+
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("idUsuario", id);
+            inventarioFragment.setArguments(bundle);
+
+            // Reemplazar el fragmento
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.contenedorFragmento, new Inventario());
+            transaction.replace(R.id.contenedorFragmento, inventarioFragment);
             transaction.commit();
+
             resaltarBotonActivo(navInventario, navActividades);
         });
+
 
         navActividades.setOnClickListener(v -> {
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();

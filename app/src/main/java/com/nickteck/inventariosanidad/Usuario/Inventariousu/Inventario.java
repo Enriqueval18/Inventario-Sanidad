@@ -38,7 +38,7 @@ public class Inventario extends Fragment {
     private RecyclerView recyclerInventario;
     private LinearLayout layoutError;
     private final List<Material> listamateriales = new ArrayList<>();
-
+    int idUsuario;
 
     /**
      * Define todo lo del xml , el cuadro de busqueda, los recycleview de las listas, el mensaje de error, el boton de error
@@ -85,7 +85,13 @@ public class Inventario extends Fragment {
         }
         ImageView btnDialogo = view.findViewById(R.id.btnRestarMateriales);
         btnDialogo.setOnClickListener(v -> mostrarDialogoRestarCantidad());
-
+        Bundle args = getArguments();
+        if (args != null) {
+            idUsuario = args.getInt("idUsuario", -1);  // -1 si no está
+            Log.d("InventarioFragment", "ID recibido: " + idUsuario);
+            // Usá el ID donde lo necesites
+        }
+        Log.e("usuarioinicio", ""+idUsuario);
         obtenerDatosInventario();
         return view;
     }
@@ -257,7 +263,7 @@ public class Inventario extends Fragment {
                         int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
 
-                Utilidades.usarMaterialesProfesor(25, 1, resta, new RespuestaCallback() {
+                Utilidades.usarMaterialesProfesor(idUsuario, 1, resta, new RespuestaCallback() {
                     @Override
                     public void onResultado(boolean correcto) {
                        if(correcto){
