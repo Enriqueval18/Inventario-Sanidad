@@ -623,49 +623,53 @@ public class Utilidades {
 
 
 
-    public static void MostrarHistorial(RespuestaFinalCallback callback){
-
+    public static void MostrarHistorial(RespuestaFinalCallback callback) {
         // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
                 .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
                 .build(); // Creamos la instancia final de Retrofit
 
-
         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
 
-// Llamar a la función para eliminar el usuario de la base de datos
-        Call<Respuesta> call = api.mostrarHistorial();
+        // Llamar a la función para obtener el historial
+        Log.d("MOSTRAR_HISTORIAL", "Realizando solicitud...");
+        Call<List<Respuesta>> call = api.mostrarHistorial(); // Cambiar a List<Respuesta>
 
-        call.enqueue(new Callback<Respuesta>() {
+        call.enqueue(new Callback<List<Respuesta>>() {
             @Override
-            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
-
-
+            public void onResponse(Call<List<Respuesta>> call, Response<List<Respuesta>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Respuesta recibido = response.body();
-                    Log.d("MOSTRAR_HISTORIAL", recibido.getMensaje());
+                    // Obtener la lista de respuestas
+                    List<Respuesta> recibido = response.body();
+                    Log.d("MOSTRAR_HISTORIAL", "Respuesta exitosa con " + recibido.size() + " elementos.");
 
-                    if (recibido.isRespuesta()) {
-                        Log.d("MOSTRAR_HISTORIAL", "se uso correctamente");
-                        callback.onResultado(recibido);
-                    } else {
-                        Log.d("MOSTRAR_HISTORIAL", recibido.getMensaje());
-
-                        callback.onResultado(recibido);
+                    // Recorrer la lista de respuestas y procesarlas una por una
+                    for (Respuesta r : recibido) {
+                        if (r.isRespuesta()) {
+                            // Si la respuesta es exitosa, logueamos el mensaje de éxito
+                            Log.d("MOSTRAR_HISTORIAL", "Éxito: " + r.getMensaje());
+                            callback.onResultado(r); // Pasamos la respuesta exitosa al callback
+                        } else {
+                            // Si la respuesta es falsa, logueamos el mensaje de error
+                            Log.e("MOSTRAR_HISTORIAL", "Error: " + r.getMensaje());
+                            callback.onResultado(r); // Pasamos la respuesta con error al callback
+                        }
                     }
+                } else {
+                    // Si la respuesta no fue exitosa
+                    Log.e("MOSTRAR_HISTORIAL", "Respuesta no exitosa: " + response.message());
+                    callback.onFailure(true); // Se envía el error al callback
                 }
-
             }
 
             @Override
-            public void onFailure(Call<Respuesta> call, Throwable t) {
-                Log.e("MOSTRAR_HISTORIAL", "no se logro enviar la solicitud" + t.getMessage());
-                callback.onFailure(true);
+            public void onFailure(Call<List<Respuesta>> call, Throwable t) {
+                Log.e("MOSTRAR_HISTORIAL", "Error al enviar la solicitud: " + t.getMessage());
+                callback.onFailure(true); // Error en la conexión o la solicitud
             }
         });
-
     }
 
 
@@ -726,7 +730,7 @@ public class Utilidades {
         Call<Respuesta>eliminarActividadUsuario(@Query("user_id")int user_id, @Query("activity_id") int activity_id);
 
         @GET("profesor/Ver_Historial.php")
-        Call<Respuesta>mostrarHistorial();
+        Call<List<Respuesta>>mostrarHistorial();
 
     }
 
