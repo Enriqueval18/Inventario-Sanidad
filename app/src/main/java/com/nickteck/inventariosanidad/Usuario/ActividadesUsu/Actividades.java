@@ -128,7 +128,7 @@ public class Actividades extends Fragment {
 
 
     private void cargarActividadesDesdeBD() {
-        Utilidades.verActiviadadesUsuario(25, new RespuestaFinalCallback() {
+        Utilidades.verActiviadadesUsuario(31, new RespuestaFinalCallback() {
             @Override
             public void onResultado(Respuesta respuesta) {
                 List<String> descripciones = Arrays.asList(respuesta.getDescripciones().split(","));
