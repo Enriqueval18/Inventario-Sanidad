@@ -3,6 +3,7 @@ package com.nickteck.inventariosanidad.Usuario.ActividadesUsu;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,11 +84,52 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
 
 
         holder.btnEliminar.setOnClickListener(v -> {
-            int index = originalList.indexOf(item);
-            originalList.remove(item);
-            filtrar("");  // Reinicia lista filtrada
-            notifyItemRemoved(index);
+            Log.d("DEBUG", "Eliminando actividad con ID: " + item.getActivityId());
+            int userId = context.getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("user_id", -1);
+            if (userId == -1) {
+                Toast.makeText(context, "ID de usuario no encontrado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            new AlertDialog.Builder(context)
+                    .setTitle("Eliminar actividad")
+                    .setMessage("¿Deseas eliminar esta actividad?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        if (item.getActivityId() == -1) {
+                            // Solo está en memoria
+                            int index = originalList.indexOf(item);
+                            originalList.remove(item);
+                            filtrar("");
+                            notifyItemRemoved(index);
+                            Toast.makeText(context, "Actividad eliminada localmente", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Utilidades.eliminarActividadUsuario(userId, item.getActivityId(), new RespuestaCallback() {
+                                @Override
+                                public void onResultado(boolean correcto) {
+                                    if (correcto) {
+                                        int index = originalList.indexOf(item);
+                                        originalList.remove(item);
+                                        filtrar("");
+                                        notifyItemRemoved(index);
+                                        Toast.makeText(context, "Actividad eliminada", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "No se pudo eliminar la actividad", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(boolean error) {
+                                    Toast.makeText(context, "Fallo de red", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
         });
+
+
+
 
 
 

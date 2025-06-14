@@ -76,10 +76,9 @@ public class Login extends  Fragment{
                 public void onUsuarioObtenido(Usuario usuario) {
 
                     String tipo = usuario == null ? null : usuario.getUser_type();
-                    Bundle args = new Bundle();
-                    args.putString("tipo_usuario", tipo);
-                    Fragment destino = new Inventario();
-                    destino.setArguments(args);
+                    SharedPreferences prefs2 = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                    prefs2.edit().putString("tipo_usuario", usuario.getUser_type()).apply();
+
 
 
                     Log.e("usuarioinicio", "" + usuario.getUser_id());

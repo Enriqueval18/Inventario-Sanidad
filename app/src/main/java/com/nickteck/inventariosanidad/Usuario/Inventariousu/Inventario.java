@@ -1,6 +1,8 @@
 package com.nickteck.inventariosanidad.Usuario.Inventariousu;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -191,7 +193,9 @@ public class Inventario extends Fragment {
         Map<String, View> filaViews = new HashMap<>();
         final Material[] materialActivo = {null}; // Solo uno activo
 
-        String tipo = getArguments() != null ? getArguments().getString("tipo_usuario") : "";
+        SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        String tipo = prefs.getString("tipo_usuario", "");
+        int idUsuario = prefs.getInt("user_id", -1); // Asegúrate de que está bien guardado también
 
         btnSeleccionar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -221,7 +225,6 @@ public class Inventario extends Fragment {
                         otraFila.setBackgroundColor(Color.TRANSPARENT);
                     }
                     fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_400));
-
                     materialActivo[0] = mat;
                 });
 
@@ -253,7 +256,7 @@ public class Inventario extends Fragment {
         new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
-                    if (materialActivo[0] != null) {
+                    if (materialActivo[0] != null && idUsuario != -1) {
                         int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
                         int nuevaCantidad = materialActivo[0].getUnidades() - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
@@ -293,6 +296,8 @@ public class Inventario extends Fragment {
                                     Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        } else {
+                            Toast.makeText(getContext(), "Tipo de usuario no válido", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

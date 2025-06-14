@@ -93,6 +93,7 @@ public class Actividades extends Fragment {
             try {
                 int cantidadInt = Integer.parseInt(cantidad);
                 ActividadItem nuevoItem = new ActividadItem(
+                        -1,
                         nombre,
                         Arrays.asList(material),
                         Arrays.asList(cantidadInt),
@@ -131,7 +132,7 @@ public class Actividades extends Fragment {
                     adapter.actualizarListaCompleta(new ArrayList<>());
                     return;
                 }
-
+                List<String> idsString = Arrays.asList(respuesta.getActivity_ids().split(","));
                 List<String> descripciones = Arrays.asList(respuesta.getDescripciones().split(","));
                 List<String> materialesTodos = Arrays.asList(respuesta.getMateriales().split(","));
                 List<String> unidadesTodos = Arrays.asList(respuesta.getUnidades().split(","));
@@ -154,7 +155,9 @@ public class Actividades extends Fragment {
                     }
 
                     boolean enviado = enviados.get(i).equals("1");
-                    ActividadItem item = new ActividadItem(descripciones.get(i), mats, cants, enviado);
+                    int activityId = Integer.parseInt(idsString.get(i));
+                    ActividadItem item = new ActividadItem(activityId, descripciones.get(i), mats, cants, enviado);
+
                     nuevasActividades.add(item);
                 }
 

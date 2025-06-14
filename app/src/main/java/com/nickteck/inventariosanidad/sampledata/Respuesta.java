@@ -96,4 +96,12 @@ public class Respuesta {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
+    public String getActivity_ids() {
+        return activity_ids;
+    }
+
+    public void setActivity_ids(String activity_ids) {
+        this.activity_ids = activity_ids;
+    }
 }
