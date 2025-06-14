@@ -33,8 +33,8 @@ import java.util.List;
 
 public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.ActividadViewHolder> {
 
-    private final List<ActividadItem> originalList = new ArrayList<>();
-    private final List<ActividadItem> listaFiltrada = new ArrayList<>();
+    private List<ActividadItem> originalList = new ArrayList<>();
+    private List<ActividadItem> listaFiltrada = new ArrayList<>();
     private final Context context;
 
     public ActividadesAdapter(List<ActividadItem> lista, Context context) {
@@ -252,11 +252,10 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
         });
     }
 
-    public void actualizarListaCompleta(List<ActividadItem> nuevasActividades) {
-        originalList.clear();
-        originalList.addAll(nuevasActividades);
-        listaFiltrada.clear();
-        listaFiltrada.addAll(nuevasActividades);
+    public void actualizarListaCompleta(List<ActividadItem> nuevaLista) {
+        this.originalList = new ArrayList<>(nuevaLista);
+        this.listaFiltrada = new ArrayList<>(nuevaLista);
         notifyDataSetChanged();
     }
+
 }
