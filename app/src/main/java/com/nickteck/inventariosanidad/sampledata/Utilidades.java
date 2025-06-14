@@ -526,10 +526,6 @@ public class Utilidades {
         });
 
     }
-
-
-
-
     public static void verActiviadadesUsuario(int user_id, RespuestaFinalCallback callback) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -685,7 +681,6 @@ public class Utilidades {
         Call<Respuesta>eliminarActividadUsuario(@Query("user_id")int user_id, @Query("activity_id") int activity_id);
 
     }
-
 
     public static void getMaterialList(final MaterialListCallback callback) {
         Retrofit retrofit = new Retrofit.Builder()

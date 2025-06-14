@@ -258,7 +258,7 @@ public class Inventario extends Fragment {
                         int nuevaCantidad = materialActivo[0].getUnidades() - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
 
-                        if (tipo.equalsIgnoreCase("usuario")) {
+                        if (tipo.equalsIgnoreCase("student")) {
                             Utilidades.quitarMaterialesUsuarios(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
                                 @Override
                                 public void onResultado(boolean correcto) {
@@ -276,7 +276,7 @@ public class Inventario extends Fragment {
                                 }
                             });
 
-                        } else if (tipo.equalsIgnoreCase("profesor")) {
+                        } else if (tipo.equalsIgnoreCase("teacher")) {
                             Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
                                 @Override
                                 public void onResultado(boolean correcto) {
