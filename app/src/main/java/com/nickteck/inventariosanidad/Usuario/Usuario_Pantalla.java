@@ -48,12 +48,10 @@ public class Usuario_Pantalla extends Fragment {
 
             Inventario inventarioFragment = new Inventario();
 
-
             Bundle bundle = new Bundle();
             bundle.putInt("idUsuario", id);
             inventarioFragment.setArguments(bundle);
 
-            // Reemplazar el fragmento
             FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.contenedorFragmento, inventarioFragment);
             transaction.commit();

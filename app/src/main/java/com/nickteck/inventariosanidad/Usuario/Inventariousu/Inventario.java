@@ -20,12 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
@@ -103,7 +101,6 @@ public class Inventario extends Fragment {
         return view;
     }
 
-
     //--------------------------------------------------------------------------------------------------------------//
 
     /**
@@ -180,8 +177,12 @@ public class Inventario extends Fragment {
         @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
     }
 
+    //--------------------------------------------------------------------------------------------------------------//
+
+
     /**
-     * esto es la llamada al dialogo para restar
+     * Metodo que dependiendo que si es profesor o alumno, permite cambiar en el inventario o no
+     * Cogemos el tipo de usuario del login , atravez de preferencias y todo se modifica en el mismo inventario
      */
     private void mostrarDialogoRestarCantidad() {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_restar_material, null);
@@ -243,7 +244,6 @@ public class Inventario extends Fragment {
 
             builder.show();
 
-            // Cambio en tiempo real
             TextWatcher watcher = new TextWatcherAdapter() {
                 public void afterTextChanged(Editable s) {
                     if (materialActivo[0] == null) return;
@@ -257,9 +257,7 @@ public class Inventario extends Fragment {
                             TextView tvCantidad = fila.findViewById(android.R.id.text2);
                             tvCantidad.setText("Cantidad nueva: " + nuevaCantidad);
                         }
-                    } catch (NumberFormatException ignored) {
-                        // No actualiza si el número no es válido
-                    }
+                    } catch (NumberFormatException ignored) {}
                 }
             };
 
@@ -331,9 +329,6 @@ public class Inventario extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
-
-
-
 
 
 
