@@ -649,7 +649,7 @@ public class Utilidades {
                     for (Respuesta r : recibido) {
                         if (r.isRespuesta()) {
                             // Si la respuesta es exitosa, logueamos el mensaje de éxito
-                            Log.d("MOSTRAR_HISTORIAL", "Éxito: " + r.getMensaje());
+                            Log.d("MOSTRAR_HISTORIAL", "Éxito: " + r.getNombre_usuario());
                             callback.onResultado(r); // Pasamos la respuesta exitosa al callback
                         } else {
                             // Si la respuesta es falsa, logueamos el mensaje de error
