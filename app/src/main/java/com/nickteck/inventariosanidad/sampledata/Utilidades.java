@@ -672,7 +672,48 @@ public class Utilidades {
         });
     }
 
+    public static void verActiviadadesProfesor( RespuestaFinalCallback callback) {
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<Respuesta> call = api.Ver_Actividades_Profesor();
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("Ver_Actividades_Profesor", "nombre: " + (recibido.getNombre_usuario() != null ? recibido.getNombre_usuario() : "null"));
+                    Log.d("Ver_Actividades_Profesor", "Descripciones: " + (recibido.getDescripciones() != null ? recibido.getDescripciones() : "null"));
+                    Log.d("Ver_Actividades_Profesor", "Unidades: " + (recibido.getUnidades() != null ? recibido.getUnidades() : "null"));
+                    Log.d("Ver_Actividades_Profesor", "Materiales: " + (recibido.getMateriales() != null ? recibido.getMateriales() : "null"));
+                    Log.d("Ver_Actividades_Profesor", "Enviados: " + (recibido.getEnviados() != null ? recibido.getEnviados() : "null"));
+                    Log.d("Ver_Actividades_Profesor", "Mensaje: " + recibido.getMensaje());
+
+
+                    callback.onResultado(recibido);
+                } else {
+                    Log.d("Ver_Actividades_Profesor", "Respuesta no válida o cuerpo nulo");
+                    callback.onFailure(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("Ver_Actividades", "Error en solicitud: " + t.getMessage());
+                callback.onFailure(true);
+            }
+
+            // Método auxiliar para evitar nulls en Log.d()
+            private String safe(String s) {
+                return s != null ? s : "null";
+            }
+        });
+    }
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -732,6 +773,9 @@ public class Utilidades {
         @GET("profesor/Ver_Historial.php")
         Call<List<Respuesta>>mostrarHistorial();
 
+
+        @GET("profesor/Ver_actividades_Profesor.php")
+        Call<Respuesta>Ver_Actividades_Profesor();
     }
 
     public static void getMaterialList(final MaterialListCallback callback) {
