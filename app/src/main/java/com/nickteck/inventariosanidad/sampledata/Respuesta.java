@@ -9,6 +9,10 @@ public class Respuesta {
     private String materiales;
     private String enviados;
     private String activity_ids;
+    private  String nombre_usuario;
+    private  String tipo_usuario;
+    private int unidades_modificacion;
+    private String fecha_modificacion;
 
     public String getEnviados() {
         return enviados;
@@ -47,6 +51,50 @@ public class Respuesta {
         this.unidades = unidades;
         this.materiales = materiales;
         this.enviados = enviados;
+    }
+
+    public Respuesta(boolean respuesta, String mensaje,  String materiales,  String nombre_usuario, String tipo_usuario, int unidades_modificacion, String fecha_modificacion) {
+        this.respuesta = respuesta;
+        this.mensaje = mensaje;
+        this.materiales = materiales;
+        this.nombre_usuario = nombre_usuario;
+        this.tipo_usuario = tipo_usuario;
+        this.unidades_modificacion = unidades_modificacion;
+        this.fecha_modificacion = fecha_modificacion;
+    }
+
+
+
+    public String getNombre_usuario() {
+        return nombre_usuario;
+    }
+
+    public void setNombre_usuario(String nombre_usuario) {
+        this.nombre_usuario = nombre_usuario;
+    }
+
+    public String getTipo_usuario() {
+        return tipo_usuario;
+    }
+
+    public void setTipo_usuario(String tipo_usuario) {
+        this.tipo_usuario = tipo_usuario;
+    }
+
+    public int getUnidades_modificacion() {
+        return unidades_modificacion;
+    }
+
+    public void setUnidades_modificacion(int unidades_modificacion) {
+        this.unidades_modificacion = unidades_modificacion;
+    }
+
+    public String getFecha_modificacion() {
+        return fecha_modificacion;
+    }
+
+    public void setFecha_modificacion(String fecha_modificacion) {
+        this.fecha_modificacion = fecha_modificacion;
     }
 
     public int getUsuario_id() {

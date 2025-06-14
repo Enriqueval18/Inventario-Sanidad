@@ -623,6 +623,51 @@ public class Utilidades {
 
 
 
+    public static void MostrarHistorial(RespuestaFinalCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.mostrarHistorial();
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("MOSTRAR_HISTORIAL", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("MOSTRAR_HISTORIAL", "se uso correctamente");
+                        callback.onResultado(recibido);
+                    } else {
+                        Log.d("MOSTRAR_HISTORIAL", recibido.getMensaje());
+
+                        callback.onResultado(recibido);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("MOSTRAR_HISTORIAL", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
+
 
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
@@ -679,6 +724,9 @@ public class Utilidades {
 
         @DELETE("usuario/EliminarActividades.php")
         Call<Respuesta>eliminarActividadUsuario(@Query("user_id")int user_id, @Query("activity_id") int activity_id);
+
+        @GET("profesor/Ver_Historial.php")
+        Call<Respuesta>mostrarHistorial();
 
     }
 
