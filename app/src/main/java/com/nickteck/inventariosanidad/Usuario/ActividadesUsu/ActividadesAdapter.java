@@ -22,6 +22,7 @@ import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialSelectionListener;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 import java.util.ArrayList;
@@ -73,11 +74,52 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
 
         holder.btnEnviar.setOnClickListener(v -> {
             if (!item.isEnviado()) {
-                item.setEnviado(true);
-                notifyItemChanged(position);
-                Toast.makeText(context, "Actividad enviada: " + item.getTitulo(), Toast.LENGTH_SHORT).show();
+                String titulo = item.getTitulo();
+                List<String> materiales = item.getMateriales();
+                List<Integer> cantidades = item.getCantidades();
+
+                // Convertir listas a formato compatible con la API
+                String materialesStr = String.join(",", materiales); // <-- antes era "|"
+                StringBuilder unidadesStr = new StringBuilder();
+
+                for (int i = 0; i < cantidades.size(); i++) {
+                    unidadesStr.append(cantidades.get(i));
+                    if (i < cantidades.size() - 1) unidadesStr.append(",");
+                }
+
+                // Obtener el user_id desde SharedPreferences
+                int userId = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+                        .getInt("user_id", -1);
+
+                if (userId == -1) {
+                    Toast.makeText(context, "ID de usuario no encontrado", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Utilidades.crearActividadUsuarios(userId, titulo, String.valueOf(unidadesStr), materialesStr, new RespuestaCallback() {
+                    @Override
+                    public void onResultado(boolean exito) {
+                        if (exito) {
+                            item.setEnviado(true);
+                            int currentPosition = holder.getAdapterPosition();
+                            if (currentPosition != RecyclerView.NO_POSITION) {
+                                notifyItemChanged(currentPosition);
+                            }
+
+                            Toast.makeText(context, "Actividad enviada: " + titulo, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error al enviar la actividad", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(boolean error) {
+                        Toast.makeText(context, "Fallo de red al enviar la actividad", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+
 
         holder.btnEliminar.setOnClickListener(v -> {
             int index = originalList.indexOf(item);

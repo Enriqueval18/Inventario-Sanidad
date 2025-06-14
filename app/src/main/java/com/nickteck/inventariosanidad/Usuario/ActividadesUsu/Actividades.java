@@ -82,14 +82,10 @@ public class Actividades extends Fragment {
 
 
     private void mostrarDialogoNuevaTabla() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.anadir_item_cabecera);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#001a33")));
-
-        EditText etNombre = dialog.findViewById(R.id.etNombre);
-        EditText etCantidad = dialog.findViewById(R.id.etCantidad);
-        Button btnSelectMat = dialog.findViewById(R.id.btnSelectMaterial);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.anadir_item_cabecera, null);
+        EditText etNombre = dialogView.findViewById(R.id.etNombre);
+        EditText etCantidad = dialogView.findViewById(R.id.etCantidad);
+        Button btnSelectMat = dialogView.findViewById(R.id.btnSelectMaterial);
         final String[] matSel = new String[1];
 
         btnSelectMat.setOnClickListener(x -> {
@@ -99,9 +95,12 @@ public class Actividades extends Fragment {
             });
         });
 
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(x -> dialog.dismiss());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+        builder.setCancelable(true);
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
 
-        dialog.findViewById(R.id.btnAccept).setOnClickListener(x -> {
+        builder.setPositiveButton("Aceptar", (dialog, which) -> {
             String nombre = etNombre.getText().toString().trim();
             String cantidad = etCantidad.getText().toString().trim();
             String material = matSel[0];
@@ -121,21 +120,16 @@ public class Actividades extends Fragment {
                 );
 
                 adapter.añadirActividad(nuevoItem);
-                dialog.dismiss();
 
             } catch (NumberFormatException e) {
                 Toast.makeText(getContext(), "La cantidad debe ser un número", Toast.LENGTH_SHORT).show();
             }
         });
 
-        Window window = dialog.getWindow();
-        if (window != null) {
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            window.setLayout((int) (dm.widthPixels * 0.90), WindowManager.LayoutParams.WRAP_CONTENT);
-        }
-
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 
     private void cargarActividadesDesdeBD() {
@@ -172,9 +166,9 @@ public class Actividades extends Fragment {
                 List<String> enviados = Arrays.asList(respuesta.getEnviados().split(","));
 
                 for (int i = 0; i < descripciones.size(); i++) {
-                    List<String> mats = Arrays.asList(materiales.get(i).split("\\|"));
+                    List<String> mats = Arrays.asList(materiales.get(i).split(","));
                     List<Integer> cants = new ArrayList<>();
-                    for (String u : unidades.get(i).split("\\|")) {
+                    for (String u : unidades.get(i).split(",")) {
                         try {
                             cants.add(Integer.parseInt(u));
                         } catch (NumberFormatException e) {
