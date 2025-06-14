@@ -574,6 +574,60 @@ public class Utilidades {
     }
 
 
+
+
+    public static void eliminarActividadUsuario(int user_id,int activity_id, RespuestaCallback callback){
+
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Actividad id a eliminar " + activity_id + " usuario id: " + user_id);
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.eliminarActividadUsuario(user_id,activity_id);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("ELIMINAR_ACTIVIDAD", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("ELIMINAR_ACTIVIDAD", "se uso correctamente");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("ELIMINAR_ACTIVIDAD", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("ELIMINAR_ACTIVIDAD", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
+
+
+
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -627,6 +681,8 @@ public class Utilidades {
         @GET("usuario/Quitar_Materiales.php")
         Call<Respuesta>quitar_Material_Usuario(@Query("user_id")int user_id, @Query("material_id") int material_id,@Query("units")int unidades);
 
+        @DELETE("usuario/EliminarActividades.php")
+        Call<Respuesta>eliminarActividadUsuario(@Query("user_id")int user_id, @Query("activity_id") int activity_id);
 
     }
 
