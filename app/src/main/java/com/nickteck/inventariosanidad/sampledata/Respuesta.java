@@ -8,7 +8,7 @@ public class Respuesta {
     private String unidades;
     private String materiales;
     private String enviados;
-
+    private String activity_ids;
 
     public String getEnviados() {
         return enviados;
@@ -32,11 +32,12 @@ public class Respuesta {
         this.mensaje = mensaje;
     }
 
-    public Respuesta(String descripciones, String unidades, String materiales, String enviados) {
+    public Respuesta(String descripciones, String unidades, String materiales, String enviados,String activity_ids) {
         this.descripciones = descripciones;
         this.unidades = unidades;
         this.materiales = materiales;
         this.enviados = enviados;
+        this.activity_ids=activity_ids;
     }
 
     public Respuesta(boolean respuesta, String mensaje, String descripciones, String unidades, String materiales, String enviados) {
