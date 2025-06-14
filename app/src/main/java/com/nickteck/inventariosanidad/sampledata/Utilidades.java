@@ -483,50 +483,49 @@ public class Utilidades {
 
 
 
-    public static void verActiviadadesUsuario(int user_id , RespuestaFinalCallback callback){
+    public static void verActiviadadesUsuario(int user_id, RespuestaFinalCallback callback) {
 
-        // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
-                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
-                .build(); // Creamos la instancia final de Retrofit
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
-
-// Llamar a la función para eliminar el usuario de la base de datos
         Call<Respuesta> call = api.Ver_Actividades(user_id);
 
         call.enqueue(new Callback<Respuesta>() {
             @Override
             public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
-
                 if (response.isSuccessful() && response.body() != null) {
                     Respuesta recibido = response.body();
-                    Log.d("Ver_Actividades", recibido.getDescripciones());
 
-                    Log.d("Ver_Actividades", recibido.getUnidades());
-                    if (recibido.isRespuesta()) {
-                        Log.d("Ver_Actividades", recibido.getMensaje());
-                        callback.onResultado(recibido);
-                    } else {
-                        Log.d("Ver_Actividades", recibido.getMensaje());
+                    Log.d("Ver_Actividades", "Descripciones: " + (recibido.getDescripciones() != null ? recibido.getDescripciones() : "null"));
+                    Log.d("Ver_Actividades", "Unidades: " + (recibido.getUnidades() != null ? recibido.getUnidades() : "null"));
+                    Log.d("Ver_Actividades", "Materiales: " + (recibido.getMateriales() != null ? recibido.getMateriales() : "null"));
+                    Log.d("Ver_Actividades", "Enviados: " + (recibido.getEnviados() != null ? recibido.getEnviados() : "null"));
+                    Log.d("Ver_Actividades", "Mensaje: " + recibido.getMensaje());
 
-                        callback.onResultado(recibido);
-                    }
+
+                    callback.onResultado(recibido);
+                } else {
+                    Log.d("Ver_Actividades", "Respuesta no válida o cuerpo nulo");
+                    callback.onFailure(true);
                 }
-
-
             }
 
             @Override
             public void onFailure(Call<Respuesta> call, Throwable t) {
-                Log.e("Ver_Actividades", "no se logro enviar la solicitud" + t.getMessage());
+                Log.e("Ver_Actividades", "Error en solicitud: " + t.getMessage());
                 callback.onFailure(true);
             }
-        });
 
+            // Método auxiliar para evitar nulls en Log.d()
+            private String safe(String s) {
+                return s != null ? s : "null";
+            }
+        });
     }
+
 
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.

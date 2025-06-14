@@ -2,10 +2,13 @@ package com.nickteck.inventariosanidad.Usuario.ActividadesUsu;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,9 +69,17 @@ public class Actividades extends Fragment {
         adapter = new ActividadesAdapter(listaActividades, getContext());
         recyclerView.setAdapter(adapter);
 
-        cargarActividadesDesdeBD();
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (listaActividades != null) {
+            listaActividades.clear();
+        }
+        cargarActividadesDesdeBD();
+    }
+
 
     private void mostrarDialogoNuevaTabla() {
         Dialog dialog = new Dialog(getContext());
@@ -128,9 +139,33 @@ public class Actividades extends Fragment {
 
 
     private void cargarActividadesDesdeBD() {
-        Utilidades.verActiviadadesUsuario(31, new RespuestaFinalCallback() {
+        Context context = getContext();
+        if (context == null) return;
+
+        SharedPreferences prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("user_id", -1);
+
+        if (userId == -1) {
+            Toast.makeText(context, "No se encontró el ID del usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Utilidades.verActiviadadesUsuario(userId, new RespuestaFinalCallback() {
             @Override
             public void onResultado(Respuesta respuesta) {
+                listaActividades.clear(); // Limpia lista
+
+                // Validamos que haya datos reales
+                if (respuesta.getDescripciones() == null ||
+                        respuesta.getMateriales() == null ||
+                        respuesta.getUnidades() == null ||
+                        respuesta.getEnviados() == null) {
+
+                    Toast.makeText(getContext(), "No tienes actividades aún", Toast.LENGTH_SHORT).show();
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
+
                 List<String> descripciones = Arrays.asList(respuesta.getDescripciones().split(","));
                 List<String> materiales = Arrays.asList(respuesta.getMateriales().split(","));
                 List<String> unidades = Arrays.asList(respuesta.getUnidades().split(","));
@@ -150,14 +185,21 @@ public class Actividades extends Fragment {
                     ActividadItem item = new ActividadItem(descripciones.get(i), mats, cants, enviado);
                     listaActividades.add(item);
                 }
+
                 adapter.notifyDataSetChanged();
             }
+
+
+
             @Override
             public void onFailure(boolean error) {
-                Toast.makeText(getContext(), "No se pudieron cargar actividades", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "No se pudieron cargar actividades", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+
     private void showMaterialSelectionDialog(MaterialSelectionListener listener) {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_select_material, null);
         SearchView searchView = dialogView.findViewById(R.id.searchView);

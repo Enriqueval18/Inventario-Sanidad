@@ -73,14 +73,18 @@ public class Login extends  Fragment{
             Utilidades.verificarUsuario(new Usuario(correo, con), new UsuarioCallback2() {
                 @Override
                 public void onUsuarioObtenido(Usuario usuario) {
+
                     String tipo = usuario == null ? null : usuario.getUser_type();
-                    Log.e("usuarioinicio", ""+usuario.getUser_id());
+                    Log.e("usuarioinicio", "" + usuario.getUser_id());
+
                     SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
 
                     assert usuario != null;
                     editor.putString("nombreProfesor", usuario.getFirst_name());
+                    editor.putInt("user_id", usuario.getUser_id());
                     editor.apply();
+
 
 
                     switch (tipo) {

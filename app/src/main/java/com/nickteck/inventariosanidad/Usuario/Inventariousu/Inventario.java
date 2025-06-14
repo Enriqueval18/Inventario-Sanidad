@@ -111,7 +111,7 @@ public class Inventario extends Fragment {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
             public void onMaterialObtenido(int material_id,String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
-                listamateriales.add(new Material(nombre, descripcion, unidades, unidades_min, almacen, armario, estante));
+                listamateriales.add(new Material( nombre,  material_id,  descripcion,  unidades,  unidades_min,  almacen,  armario,  estante,  ""));
             }
 
             @Override
@@ -263,7 +263,7 @@ public class Inventario extends Fragment {
                         int nuevaCantidad = materialActivo[0].getUnidades()  - resta;
                         materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
 
-                Utilidades.usarMaterialesProfesor(idUsuario, 1, resta, new RespuestaCallback() {
+                Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
                     @Override
                     public void onResultado(boolean correcto) {
                        if(correcto){
