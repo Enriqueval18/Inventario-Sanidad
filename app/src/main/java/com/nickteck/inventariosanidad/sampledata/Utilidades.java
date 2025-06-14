@@ -432,7 +432,7 @@ public class Utilidades {
     }
 
 
-    public static void crearActividadUsuarios(int user_id, String descripcion, ArrayList<Integer> units,ArrayList<Integer>material_ids, RespuestaCallback callback){
+    public static void crearActividadUsuarios(int user_id, String descripcion, ArrayList<Integer> units,ArrayList<String>materiales, RespuestaCallback callback){
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
         Retrofit retrofit = new Retrofit.Builder()
@@ -440,13 +440,13 @@ public class Utilidades {
                 .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
                 .build(); // Creamos la instancia final de Retrofit
 
-        Log.d("crearConexion", "Cantidad de materiales " + material_ids.size());
+        Log.d("crearConexion", "Cantidad de materiales " + materiales.size());
 
         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
 
 // Llamar a la función para eliminar el usuario de la base de datos
-        Call<Respuesta> call = api.crearActividadProfesor(user_id,descripcion,units,material_ids);
+        Call<Respuesta> call = api.crearActividadProfesor(user_id,descripcion,units,materiales);
 
         call.enqueue(new Callback<Respuesta>() {
             @Override
@@ -454,7 +454,6 @@ public class Utilidades {
 
                 if (response.isSuccessful() && response.body() != null) {
                     Respuesta recibido = response.body();
-                    Log.d("ActividadUsuario", recibido.getMensaje());
 
                     if (recibido.isRespuesta()) {
                         Log.d("ActividadUsuario", recibido.getMensaje());
@@ -573,7 +572,7 @@ public class Utilidades {
         Call<Respuesta>usarMaterial_Profesor(@Query("user_id")int user_id, @Query("material_id") int material_id,@Query("units")int unidades);
 
         @GET("usuario/Crear_Actividades.php")
-        Call<Respuesta>crearActividadProfesor(@Query("user_id")int user_id, @Query("description") String descripcion,@Query("units")ArrayList<Integer> unidades, @Query("material_ids") ArrayList<Integer>materiales_ids );
+        Call<Respuesta>crearActividadProfesor(@Query("user_id")int user_id, @Query("description") String descripcion,@Query("units")ArrayList<Integer> unidades, @Query("materiales") ArrayList<String>materiales );
 
         @GET("usuario/Ver_Actividades.php")
         Call<Respuesta>Ver_Actividades(@Query("user_id")int user_id );

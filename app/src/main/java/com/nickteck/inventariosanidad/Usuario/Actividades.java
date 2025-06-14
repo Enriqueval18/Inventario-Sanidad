@@ -33,6 +33,7 @@ import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
 import com.nickteck.inventariosanidad.sampledata.MaterialSelectionListener;
 import com.nickteck.inventariosanidad.sampledata.Respuesta;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.RespuestaFinalCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
@@ -197,7 +198,7 @@ public class Actividades extends Fragment {
                         int childCount = contentLayout.getChildCount();
 
                         ArrayList<String> materiales = new ArrayList<>();
-                        ArrayList<String> cantidades = new ArrayList<>();
+                        ArrayList<Integer> cantidades = new ArrayList<>();
 
                         // Recorremos todas las filas del content
                         for (int j = 0; j < childCount; j++) {
@@ -212,7 +213,18 @@ public class Actividades extends Fragment {
                                         TextView tvMaterial = (TextView) viewMaterial;
                                         TextView tvCantidad = (TextView) viewCantidad;
                                         materiales.add(tvMaterial.getText().toString());
-                                        cantidades.add(tvCantidad.getText().toString());
+
+
+                                        String cantidadStr = tvCantidad.getText().toString().trim();
+                                        try {
+                                            int cantidadInt = Integer.parseInt(cantidadStr);
+                                            cantidades.add(cantidadInt);
+                                        } catch (NumberFormatException e) {
+                                            Log.e("btnSend", "Cantidad no es número válido: " + cantidadStr);
+                                            cantidades.add(0); // o decide qué hacer en este caso
+                                        }
+
+
                                     } else {
                                         Log.e("btnSend", "Fila " + j + ": elemento 0 o 1 no es TextView");
                                     }
@@ -245,12 +257,33 @@ public class Actividades extends Fragment {
                             rowView.setClickable(false);
                             rowView.setEnabled(false);
                         }
+                        Log.d("ActividadUsuario", "antes de usar la fucnion");
 
-                        // Actualizamos el header para indicar visualmente que la tabla ha sido enviada
-                        headerLayout.setBackgroundColor(getResources().getColor(R.color.green));
+                        Utilidades.crearActividadUsuarios(25, titulo, cantidades, materiales, new RespuestaCallback() {
 
-                        Toast.makeText(getContext(), "Datos enviados de la tabla: " + titulo, Toast.LENGTH_LONG).show();
-                    } else {
+                            @Override
+                            public void onResultado(boolean correcto) {
+                                if(correcto){
+                                    Log.d("ActividadUsuario", "devuelve true");
+
+                                    // Actualizamos el header para indicar visualmente que la tabla ha sido enviada
+                                    headerLayout.setBackgroundColor(getResources().getColor(R.color.green));
+                                    Toast.makeText(getContext(), "Datos enviados de la tabla: " + titulo, Toast.LENGTH_LONG).show();
+
+                                }
+                                Toast.makeText(getContext(), "No se logro enviar la actividad", Toast.LENGTH_LONG).show();
+
+                            }
+
+                            @Override
+                            public void onFailure(boolean error) {
+
+                            }
+                        });
+
+
+
+                          } else {
                         Toast.makeText(getContext(), "No se ha seleccionado ninguna tabla", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
