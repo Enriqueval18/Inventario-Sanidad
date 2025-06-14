@@ -187,15 +187,25 @@ public class Inventario extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_restar_material, null);
         Button btnSeleccionar = dialogView.findViewById(R.id.btnSeleccionarMateriales);
         LinearLayout contenedorSeleccionados = dialogView.findViewById(R.id.contenedorSeleccionados);
-        EditText etRestar = dialogView.findViewById(R.id.etRestar);
+        EditText etRestar = dialogView.findViewById(R.id.etRestar1);
 
         List<Material> seleccionados = new ArrayList<>();
         Map<String, View> filaViews = new HashMap<>();
-        final Material[] materialActivo = {null}; // Solo uno activo
+        final Material[] materialActivo = {null};
 
         SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
         String tipo = prefs.getString("tipo_usuario", "");
-        int idUsuario = prefs.getInt("user_id", -1); // Asegúrate de que está bien guardado también
+        int idUsuario = prefs.getInt("user_id", -1);
+
+        if (idUsuario == -1 || tipo.isEmpty()) {
+            Toast.makeText(getContext(), "Error al obtener usuario o tipo", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (listamateriales == null || listamateriales.isEmpty()) {
+            Toast.makeText(getContext(), "No hay materiales cargados", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         btnSeleccionar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -238,14 +248,17 @@ public class Inventario extends Fragment {
                 public void afterTextChanged(Editable s) {
                     if (materialActivo[0] == null) return;
 
-                    int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-                    int nuevaCantidad = materialActivo[0].getUnidades() - resta;
-                    nuevaCantidad = Math.max(0, nuevaCantidad);
+                    try {
+                        int resta = Integer.parseInt(s.toString());
+                        int nuevaCantidad = Math.max(0, materialActivo[0].getUnidades() - resta);
 
-                    View fila = filaViews.get(materialActivo[0].getNombre());
-                    if (fila != null) {
-                        TextView tvCantidad = fila.findViewById(android.R.id.text2);
-                        tvCantidad.setText("Cantidad nueva: " + nuevaCantidad);
+                        View fila = filaViews.get(materialActivo[0].getNombre());
+                        if (fila != null) {
+                            TextView tvCantidad = fila.findViewById(android.R.id.text2);
+                            tvCantidad.setText("Cantidad nueva: " + nuevaCantidad);
+                        }
+                    } catch (NumberFormatException ignored) {
+                        // No actualiza si el número no es válido
                     }
                 }
             };
@@ -256,54 +269,69 @@ public class Inventario extends Fragment {
         new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
-                    if (materialActivo[0] != null && idUsuario != -1) {
-                        int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-                        int nuevaCantidad = materialActivo[0].getUnidades() - resta;
-                        materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
+                    if (materialActivo[0] == null) {
+                        Toast.makeText(getContext(), "Debes seleccionar un material", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        if (tipo.equalsIgnoreCase("student")) {
-                            Utilidades.quitarMaterialesUsuarios(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
-                                @Override
-                                public void onResultado(boolean correcto) {
-                                    if (correcto) {
-                                        Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                                        actualizarTabla(listamateriales);
-                                    } else {
-                                        Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                    int resta;
+                    try {
+                        resta = Integer.parseInt(etRestar.getText().toString());
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Introduce un número válido", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                                @Override
-                                public void onFailure(boolean error) {
-                                    Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    if (resta < 0) {
+                        Toast.makeText(getContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        } else if (tipo.equalsIgnoreCase("teacher")) {
-                            Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
-                                @Override
-                                public void onResultado(boolean correcto) {
-                                    if (correcto) {
-                                        Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                                        actualizarTabla(listamateriales);
-                                    } else {
-                                        Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                    int nuevaCantidad = Math.max(0, materialActivo[0].getUnidades() - resta);
+                    materialActivo[0].setUnidades(nuevaCantidad);
 
-                                @Override
-                                public void onFailure(boolean error) {
-                                    Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
+                    if (tipo.equalsIgnoreCase("student")) {
+                        Utilidades.quitarMaterialesUsuarios(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
+                            @Override
+                            public void onResultado(boolean correcto) {
+                                if (correcto) {
+                                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                    actualizarTabla(listamateriales);
+                                } else {
+                                    Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "Tipo de usuario no válido", Toast.LENGTH_SHORT).show();
-                        }
+                            }
+
+                            @Override
+                            public void onFailure(boolean error) {
+                                Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else if (tipo.equalsIgnoreCase("teacher")) {
+                        Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
+                            @Override
+                            public void onResultado(boolean correcto) {
+                                if (correcto) {
+                                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                    actualizarTabla(listamateriales);
+                                } else {
+                                    Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(boolean error) {
+                                Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Tipo de usuario no válido", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
 
 
 

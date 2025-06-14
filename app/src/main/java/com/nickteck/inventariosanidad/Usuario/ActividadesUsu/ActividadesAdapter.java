@@ -18,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
@@ -37,8 +39,8 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
 
     public ActividadesAdapter(List<ActividadItem> lista, Context context) {
         this.context = context;
-        originalList.addAll(lista);     // Copiamos contenido
-        listaFiltrada.addAll(lista);    // Inicialmente igual
+        originalList.addAll(lista);
+        listaFiltrada.addAll(lista);
     }
 
     @NonNull
@@ -65,15 +67,13 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
         }
 
         holder.estado.setText(item.isEnviado() ? "Enviado" : "No enviado");
-        holder.estado.setTextColor(Color.parseColor(item.isEnviado() ? "#388E3C" : "#D32F2F"));
-        if (item.isEnviado()) {
-            holder.btnEnviar.setVisibility(View.GONE);
-            holder.btnAgregarMaterial.setVisibility(View.GONE);
-        } else {
-            holder.btnEnviar.setVisibility(View.VISIBLE);
-            holder.btnAgregarMaterial.setVisibility(View.VISIBLE);
-        }
+        holder.estado.setTextColor(ContextCompat.getColor(context, item.isEnviado() ? R.color.success : R.color.error));
 
+        // Oculta o muestra botones según si fue enviado
+        holder.btnEnviar.setEnabled(!item.isEnviado());
+        holder.btnAgregarMaterial.setEnabled(!item.isEnviado());
+        holder.btnEnviar.setAlpha(item.isEnviado() ? 0.4f : 1.0f); // Visual feedback
+        holder.btnAgregarMaterial.setAlpha(item.isEnviado() ? 0.4f : 1.0f);
 
 
         holder.btnEnviar.setOnClickListener(v -> {
@@ -81,7 +81,6 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
                 enviarActividad(item, holder.getAdapterPosition());
             }
         });
-
 
         holder.btnEliminar.setOnClickListener(v -> {
             Log.d("DEBUG", "Eliminando actividad con ID: " + item.getActivityId());
@@ -96,7 +95,6 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
                     .setMessage("¿Deseas eliminar esta actividad?")
                     .setPositiveButton("Sí", (dialog, which) -> {
                         if (item.getActivityId() == -1) {
-                            // Solo está en memoria
                             int index = originalList.indexOf(item);
                             originalList.remove(item);
                             filtrar("");
@@ -128,14 +126,6 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
                     .show();
         });
 
-
-
-
-
-
-
-
-
         holder.btnAgregarMaterial.setOnClickListener(v -> mostrarDialogoAgregarMaterial(holder, item));
     }
 
@@ -146,7 +136,7 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
 
     public void añadirActividad(ActividadItem item) {
         originalList.add(item);
-        filtrar("");  // Actualiza la lista mostrada
+        filtrar("");
     }
 
     public void filtrar(String query) {
@@ -240,6 +230,7 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
             public void onResultado(boolean exito) {
                 if (exito) {
                     item.setEnviado(true);
+                    originalList.get(position).setEnviado(true); // 🔥 Reflejar en la lista principal
                     notifyItemChanged(position);
                     Toast.makeText(context, "Actividad enviada: " + item.getTitulo(), Toast.LENGTH_SHORT).show();
                 } else {
@@ -299,16 +290,12 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
             }
         });
     }
+
     public void actualizarListaCompleta(List<ActividadItem> nuevasActividades) {
         originalList.clear();
         originalList.addAll(nuevasActividades);
-
         listaFiltrada.clear();
         listaFiltrada.addAll(nuevasActividades);
-
         notifyDataSetChanged();
     }
-
-
 }
-
