@@ -921,9 +921,9 @@ public class Utilidades {
                 if (response.isSuccessful() && response.body() != null) {
                     Respuesta recibido = response.body();
                     Log.d("VerPeticiones", "nombre usuario: " + (recibido.getNombre_usuario() != null ? recibido.getNombre_usuario() : "null"));
-                    Log.d("VerPeticiones", "materiales : " + (recibido.getDescripciones() != null ? recibido.getDescripciones() : "null"));
+                    Log.d("VerPeticiones", "materiales : " + (recibido.getMateriales() != null ? recibido.getMateriales() : "null"));
                     Log.d("VerPeticiones", "Unidades: " + (recibido.getUnidades() != null ? recibido.getUnidades() : "null"));
-                    Log.d("VerPeticiones", "fechas " + (recibido.getMateriales() != null ? recibido.getMateriales() : "null"));
+                    Log.d("VerPeticiones", "fechas " + (recibido.getFecha_modificacion() != null ? recibido.getFecha_modificacion() : "null"));
 
 
                     callback.onResultado(recibido);
@@ -960,7 +960,7 @@ public class Utilidades {
         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
         ApiService api = retrofit.create(ApiService.class);
 
-// Llamar a la función para eliminar el usuario de la base de datos
+        // Llamar a la función para eliminar el usuario de la base de datos
         Call<Respuesta> call = api.eliminarPeticion(peticion_id);
 
         call.enqueue(new Callback<Respuesta>() {
@@ -993,9 +993,6 @@ public class Utilidades {
                 callback.onFailure(true);
             }
         });
-
-
-
 
     }
 

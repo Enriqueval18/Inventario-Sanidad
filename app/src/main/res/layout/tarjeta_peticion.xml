@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/Tarjeta_peticiones"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -16,43 +14,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <ImageButton
+                android:id="@+id/btnEliminarPeticion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar"
+                android:src="@android:drawable/ic_delete"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/Usuario_peticion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Usuario: Pepe"
-            android:textSize="16sp"
-            android:fontFamily="@font/inter2"
-            android:textColor="@android:color/black" />
+            android:text="Usuario: Pepe" />
 
         <TextView
             android:id="@+id/peticion_material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Material: Detergente"
-            android:textSize="14sp"
-            android:fontFamily="@font/inter2"
-            android:layout_marginTop="4dp"
-            android:textColor="@android:color/black" />
+            android:text="Material: Detergente" />
 
         <TextView
             android:id="@+id/peticion_cantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cantidad: 10"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/inter2"
-            android:textColor="@android:color/black" />
+            android:text="Cantidad: 10" />
+
         <TextView
             android:id="@+id/peticion_fecha"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fecha: 2025-06-15"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/inter2"
-            android:layout_marginTop="4dp"/>
-
+            android:text="Fecha: 2025-06-15" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
+
