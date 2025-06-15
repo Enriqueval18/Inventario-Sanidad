@@ -169,6 +169,7 @@ public class Dobleinventario extends Fragment {
         }
         refreshTabla(filtrada);
     }
+
     private void mostrarDialogoAgregarMaterial() {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_nuevo_material, null);
 
