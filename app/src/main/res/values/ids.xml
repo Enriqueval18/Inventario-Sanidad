@@ -1,0 +1,5 @@
+<resources>
+    <item name="tag_name" type="id" />
+    <item name="tag_units" type="id" />
+    <item name="tag_selected" type="id" />
+</resources>
