@@ -1,22 +1,21 @@
 package com.nickteck.inventariosanidad.sampledata;
 
-import com.google.gson.annotations.SerializedName;
 
 public class Material {
-    @SerializedName("name")
+
     String nombre;
     int id;
-    @SerializedName("description")
+
     String descripcion;
-    @SerializedName("units")
+
     int unidades;
-    @SerializedName("min_units")
+
     int unidades_min;
-    @SerializedName("storage")
+
     String almacen;
-    @SerializedName("cabinet")
+
     String armario;
-    @SerializedName("shelf")
+
     String estante;
     String cajon;
     String tipo;
