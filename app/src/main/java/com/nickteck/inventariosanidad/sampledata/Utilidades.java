@@ -816,7 +816,50 @@ public class Utilidades {
         });
     }
 
+    public static void crearPeticiones(int user_id, String nombre_materiales, String units, RespuestaCallback callback){
 
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+         // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.Crear_Peticiones(user_id,units,nombre_materiales);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("Crear_Peticiones", recibido.getMensaje());
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("Crear_Peticiones", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("Crear_Peticiones", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+    }
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -886,6 +929,13 @@ public class Utilidades {
 
         @GET("admin/Sumar_material_admin.php")
         Call<Respuesta>Sumar_material_admin(@Query("user_id")int user_id, @Query("material_id")int material_id, @Query("storage_type") String storage_type, @Query("units")int units);
+
+        @GET("profesor/Crear_Peticiones.php")
+        Call<Respuesta>Crear_Peticiones(@Query("user_id")int user_id, @Query("units")String unidades, @Query("materiales") String materiales );
+
+
+
+
     }
 
     public static void getMaterialList(final MaterialListCallback callback) {
