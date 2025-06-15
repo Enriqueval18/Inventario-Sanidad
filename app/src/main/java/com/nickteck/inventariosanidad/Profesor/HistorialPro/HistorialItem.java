@@ -1,10 +1,10 @@
 package com.nickteck.inventariosanidad.Profesor.HistorialPro;
 
 public class HistorialItem {
-    private String time;
-    private String student;
-    private String material;
-    private String cantidad;
+    private final String time;
+    private final String student;
+    private final String material;
+    private final String cantidad;
 
     public HistorialItem(String time, String student, String material, String cantidad) {
         this.time = time;

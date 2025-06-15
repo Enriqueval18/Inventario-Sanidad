@@ -15,6 +15,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="@string/historial_de_materiales"
+        android:fontFamily="@font/inter2"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#424242" />
 
