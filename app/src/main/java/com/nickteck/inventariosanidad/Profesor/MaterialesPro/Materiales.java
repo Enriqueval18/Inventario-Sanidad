@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialListCallback;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -40,7 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Materiales extends Fragment {
-    private static final String ARCHIVO_MATERIALES = "materiales.txt"; // Nombre del archivo
+    private static final String ARCHIVO_MATERIALES = "materiales.txt";
     private List<MaterialItem> listaMateriales = new ArrayList<>();
     private Button bntAnanir;
     private LinearLayout contenedorg;
@@ -105,6 +106,7 @@ public class Materiales extends Fragment {
             boolean algunoSeleccionado = false;
             List<View> tarjetasAEliminar = new ArrayList<>();
             List<String> nombresAEliminar = new ArrayList<>();
+            List<String> cantidadesAEliminar = new ArrayList<>();
 
             for (int i = 0; i < contenedorg.getChildCount(); i++) {
                 View card = contenedorg.getChildAt(i);
@@ -112,26 +114,56 @@ public class Materiales extends Fragment {
                 if (seleccionada != null && seleccionada) {
                     algunoSeleccionado = true;
                     TextView tvTitle = card.findViewById(R.id.tvTitle);
-                    if (tvTitle != null) {
+                    TextView tvDetail = card.findViewById(R.id.tvDetail);
+                    if (tvTitle != null && tvDetail != null) {
                         nombresAEliminar.add(tvTitle.getText().toString());
+                        String cantidad = tvDetail.getText().toString().replace("Cantidad: ", "").trim();
+                        cantidadesAEliminar.add(cantidad);
                     }
                     tarjetasAEliminar.add(card);
                 }
             }
 
-            if (algunoSeleccionado) {
-                for (int i = 0; i < tarjetasAEliminar.size(); i++) {
-                    contenedorg.removeView(tarjetasAEliminar.get(i));
-                    eliminarDeLista(nombresAEliminar.get(i));
-                }
-                guardarMaterialesEnArchivo();
-                Toast.makeText(getContext(), "Se ha enviado correctamente", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!algunoSeleccionado) {
                 Toast.makeText(getContext(), "Debes seleccionar al menos un material", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            SharedPreferences prefs = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            int userId = prefs.getInt("user_id", -1);
+
+            if (userId == -1) {
+                Toast.makeText(getContext(), "ID de usuario no encontrado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String nombre_materiales = String.join("|", nombresAEliminar);
+            String units = String.join("|", cantidadesAEliminar);
+
+            Utilidades.crearPeticiones(userId, nombre_materiales, units, new RespuestaCallback() {
+                @Override
+                public void onResultado(boolean correcto) {
+                    if (correcto) {
+                        for (int i = 0; i < tarjetasAEliminar.size(); i++) {
+                            contenedorg.removeView(tarjetasAEliminar.get(i));
+                            eliminarDeLista(nombresAEliminar.get(i));
+                        }
+                        guardarMaterialesEnArchivo();
+                        Toast.makeText(getContext(), "Se ha enviado correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "No se pudo enviar la petición", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    Toast.makeText(getContext(), "Fallo de red al enviar", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
         SharedPreferences prefs = getContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        String nombreProfesor = prefs.getString("nombreProfesor", "profesor"); // Usa un valor real
+        String nombreProfesor = prefs.getString("nombreProfesor", "profesor");
         nombreArchivoMateriales = "materiales_" + nombreProfesor + ".txt";
 
         cargarMaterialesDesdeArchivo();
@@ -328,8 +360,5 @@ public class Materiales extends Fragment {
 
 
 
-
-
-
-
 }
+
