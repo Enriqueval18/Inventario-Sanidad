@@ -7,7 +7,7 @@
     android:padding="16dp"
     android:background="@android:color/white">
 
-
+    <!-- Encabezado -->
     <TextView
         android:id="@+id/EncabezadoHistorial"
         android:layout_width="match_parent"
@@ -19,6 +19,36 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#424242" />
 
+    <!-- Filtros de fecha -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <Button
+            android:id="@+id/btnFechaDesde"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Desde"
+            android:fontFamily="@font/inter2"
+            android:backgroundTint="@color/primary_200"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/btnFechaHasta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter2"
+            android:text="Hasta"
+            android:backgroundTint="@color/primary_200"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- Lista de historial -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHistorial"
         android:layout_width="match_parent"
@@ -26,4 +56,5 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingBottom="16dp"/>
+
 </LinearLayout>
