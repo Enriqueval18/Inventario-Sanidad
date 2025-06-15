@@ -91,8 +91,8 @@ public class Dobleinventario extends Fragment {
 
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
-            public void onMaterialObtenido(int material_id, String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
-                listaMateriales.add(new Material(nombre, material_id, descripcion, unidades, unidades_min, almacen, armario, estante, ""));
+            public void onMaterialObtenido(int material_id, String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion,String tipo) {
+                listaMateriales.add(new Material(nombre, material_id, descripcion,  unidades,  unidades_min,    almacen,  armario,  estante,  "",tipo));
 
                 // Reprograma el refresco con un pequeño retraso para evitar múltiples llamadas
                 handler.removeCallbacks(refrescar);

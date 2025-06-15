@@ -101,7 +101,7 @@ public class Utilidades {
                     List<Material> listaMateriales = response.body();
                     Log.d("Materiales", "Cantidad de materiales obtenidos: " + listaMateriales.size());
                     for (Material material : listaMateriales) {
-                        Log.d("Material", "Material recibido: " + material.getNombre() + " - " + material.getAlmacen() + " - " + material.getArmario() + " - " + material.getUnidades());
+                        Log.d("Material", "Material recibido: " + material.getNombre() + " - " + material.getAlmacen() + " - " + material.tipo + " - " + material.getUnidades());
 
                         callback.onMaterialObtenido(
                                 material.getId(),
@@ -111,7 +111,8 @@ public class Utilidades {
                                 material.getArmario(),
                                 material.getEstante(),
                                 material.getUnidades_min(),
-                                material.getDescripcion()
+                                material.getDescripcion(),
+                                material.getTipo()
                         );
                     }
                 } else {
@@ -307,7 +308,8 @@ public class Utilidades {
                                     material.getArmario(),
                                     material.getEstante(),
                                     material.getUnidades_min(),
-                                    material.getDescripcion()
+                                    material.getDescripcion(),
+                                    material.getTipo()
                             );
                             break;
                         }

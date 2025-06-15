@@ -10,8 +10,17 @@ public class Material {
     String armario;
     String estante;
     String cajon;
+    String tipo;
     public Material() {
 
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getCajon() {
@@ -40,7 +49,7 @@ public class Material {
         this.estante = estante;
     }
 
-    public Material(String nombre, int id, String descripcion, int unidades, int unidades_min, String almacen, String armario, String estante, String cajon) {
+    public Material(String nombre, int id, String descripcion, int unidades, int unidades_min, String almacen, String armario, String estante, String cajon,String tipo) {
         this.nombre = nombre;
         this.id = id;
         this.descripcion = descripcion;
@@ -50,6 +59,7 @@ public class Material {
         this.armario = armario;
         this.estante = estante;
         this.cajon = cajon;
+        this.tipo=tipo;
     }
 
     public int getUnidades() {
