@@ -52,7 +52,7 @@ public class Dobleinventario extends Fragment {
         tablaMateriales = view.findViewById(R.id.tableRowMaterial001);
         searchView = view.findViewById(R.id.searchView2);
         ImageView btnAgregarMaterial = view.findViewById(R.id.btnAgregarMaterial);
-        btnAgregarMaterial.setOnClickListener(v -> mostrarDialogoInventarioDestino());
+        btnAgregarMaterial.setOnClickListener(v -> mostrarOpcionesModificacion());
 
         configurarBusqueda();
         obtenerDatosInventario();
@@ -205,29 +205,26 @@ public class Dobleinventario extends Fragment {
                 .setItems(new String[]{"Modificar Inventario Principal", "Modificar Inventario Secundario"}, (dialog, which) -> {
                     if (which == 0) {
                         storagetype = "use";
-                        mostrarOpcionesModificacion("Principal");
+                        mostrarDialogoSumarRestarCantidad();
                     } else if (which == 1) {
                         storagetype = "reserve";
-                        mostrarOpcionesModificacion("Secundario");
+                        mostrarDialogoSumarRestarCantidad();
                     }
                 })
                 .show();
     }
-    private void mostrarOpcionesModificacion(String tipoInventario) {
-        String[] opciones = {"Añadir Material", "Añadir Cantidad", "Trasladar Material"};
+    private void mostrarOpcionesModificacion() {
+        String[] opciones = {"Añadir Material", "Modificar Cantidad"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Acción sobre Inventario " + tipoInventario)
+        builder.setTitle("¿Que deseas realizar?")
                 .setItems(opciones, (dialog, which) -> {
                     switch (which) {
                         case 0:
                             mostrarDialogoAgregarMaterial(); // Ya implementado antes
                             break;
                         case 1:
-                            mostrarDialogoSumarRestarCantidad();
-                            break;
-                        case 2:
-                            mostrarDialogoTrasladarMaterial(tipoInventario); // ya tienes "Principal" o "Secundario"
+                            mostrarDialogoInventarioDestino();
                             break;
                     }
                 })
@@ -252,7 +249,7 @@ public class Dobleinventario extends Fragment {
 
             String[] nombres = new String[listaMateriales.size()];
             for (int i = 0; i < listaMateriales.size(); i++) {
-                    nombres[i] = listaMateriales.get(i).getNombre() + " "+ listaMateriales.get(i).getAlmacen();
+                    nombres[i] = listaMateriales.get(i).getNombre();
             }
 
             builder.setItems(nombres, (dialog, which) -> {
