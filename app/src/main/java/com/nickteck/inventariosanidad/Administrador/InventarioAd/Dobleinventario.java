@@ -182,7 +182,7 @@ public class Dobleinventario extends Fragment {
         EditText etDescripcion = dialogView.findViewById(R.id.etDescripcion);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_spinner_item, new String[]{"CAE", "SAO"});
+                android.R.layout.simple_spinner_item, new String[]{"CAE", "odontología"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAlmacen.setAdapter(adapter);
 
@@ -201,10 +201,30 @@ public class Dobleinventario extends Fragment {
                     if (!nombre.isEmpty() && !unidadesStr.isEmpty() && !unidadesMinStr.isEmpty()) {
                         int unidades = Integer.parseInt(unidadesStr);
                         int unidadesMin = Integer.parseInt(unidadesMinStr);
-                        Material nuevo = new Material(nombre, descripcion, unidades, unidadesMin, almacen, armario, descripcion);
-                        listaMateriales.add(nuevo);
-                        refreshTabla(listaMateriales);
-                        Toast.makeText(getContext(), "Material agregado", Toast.LENGTH_SHORT).show();
+
+                        Material nuevo = new Material(nombre, descripcion, unidades, unidadesMin, almacen, armario, estante);
+
+                        Utilidades.CrearMaterial(nuevo, new RespuestaCallback() {
+                            @Override
+                            public void onResultado(boolean correcto) {
+                                if (correcto) {
+                                    requireActivity().runOnUiThread(() -> {
+                                        listaMateriales.add(nuevo);
+                                        refreshTabla(listaMateriales);
+                                        Toast.makeText(getContext(), "Material creado correctamente", Toast.LENGTH_SHORT).show();
+                                    });
+                                } else {
+                                    requireActivity().runOnUiThread(() ->
+                                            Toast.makeText(getContext(), "Error al crear el material", Toast.LENGTH_SHORT).show());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(boolean error) {
+                                requireActivity().runOnUiThread(() ->
+                                        Toast.makeText(getContext(), "Fallo de red al crear material", Toast.LENGTH_SHORT).show());
+                            }
+                        });
                     } else {
                         Toast.makeText(getContext(), "Completa los campos requeridos", Toast.LENGTH_SHORT).show();
                     }
@@ -212,6 +232,7 @@ public class Dobleinventario extends Fragment {
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
     private void mostrarDialogoInventarioDestino() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("¿Qué inventario deseas modificar?")
