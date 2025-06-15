@@ -962,6 +962,7 @@ public class Utilidades {
 
         // Llamar a la función para eliminar el usuario de la base de datos
         Call<Respuesta> call = api.eliminarPeticion(peticion_id);
+        Log.d("ELIMINAR_PETICION", "antes de recibir la info");
 
         call.enqueue(new Callback<Respuesta>() {
             @Override
@@ -1077,7 +1078,7 @@ public class Utilidades {
         @GET("profesor/Ver_Peticiones.php")
         Call<Respuesta>VerPeticiones();
 
-        @DELETE("usuario/EliminarActividades.php")
+        @DELETE("profesor/Eliminar_Peticiones.php")
         Call<Respuesta>eliminarPeticion( @Query("peticion_id") int activity_id);
 
     }
