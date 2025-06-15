@@ -13,7 +13,8 @@ public class Respuesta {
     private  String tipo_usuario;
     private int unidades_modificacion;
     private String fecha_modificacion;
-
+    private String peticiones_ids;
+    private  String unidades_peticiones;
     public String getEnviados() {
         return enviados;
     }
@@ -22,6 +23,21 @@ public class Respuesta {
         this.enviados = enviados;
     }
 
+    public String getPeticiones_ids() {
+        return peticiones_ids;
+    }
+
+    public void setPeticiones_ids(String peticiones_ids) {
+        this.peticiones_ids = peticiones_ids;
+    }
+
+    public String getUnidades_peticiones() {
+        return unidades_peticiones;
+    }
+
+    public void setUnidades_peticiones(String unidades_peticiones) {
+        this.unidades_peticiones = unidades_peticiones;
+    }
 
     public Respuesta(String mensaje) {
         this.mensaje = mensaje;
@@ -64,6 +80,15 @@ public class Respuesta {
     }
 
 
+    public Respuesta(boolean respuesta, String mensaje,   String materiales,   String nombre_usuario,   String fecha_modificacion, String peticiones_ids, String unidades_peticiones) {
+        this.respuesta = respuesta;
+        this.mensaje = mensaje;
+         this.materiales = materiales;
+         this.nombre_usuario = nombre_usuario;
+         this.fecha_modificacion = fecha_modificacion;
+        this.peticiones_ids = peticiones_ids;
+        this.unidades_peticiones = unidades_peticiones;
+    }
 
     public String getNombre_usuario() {
         return nombre_usuario;

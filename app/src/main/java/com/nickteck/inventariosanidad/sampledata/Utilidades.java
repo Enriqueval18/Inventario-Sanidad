@@ -903,6 +903,54 @@ public class Utilidades {
         });
 
     }
+
+
+    public static void verPeticiones( RespuestaFinalCallback callback) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService api = retrofit.create(ApiService.class);
+        Call<Respuesta> call = api.VerPeticiones();
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("VerPeticiones", "nombre usuario: " + (recibido.getNombre_usuario() != null ? recibido.getNombre_usuario() : "null"));
+                    Log.d("VerPeticiones", "materiales : " + (recibido.getDescripciones() != null ? recibido.getDescripciones() : "null"));
+                    Log.d("VerPeticiones", "Unidades: " + (recibido.getUnidades() != null ? recibido.getUnidades() : "null"));
+                    Log.d("VerPeticiones", "fechas " + (recibido.getMateriales() != null ? recibido.getMateriales() : "null"));
+
+
+                    callback.onResultado(recibido);
+                } else {
+                    Log.d("VerPeticiones", "Respuesta no válida o cuerpo nulo");
+                    callback.onFailure(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("VerPeticiones", "Error en solicitud: " + t.getMessage());
+                callback.onFailure(true);
+            }
+
+            // Método auxiliar para evitar nulls en Log.d()
+            private String safe(String s) {
+                return s != null ? s : "null";
+            }
+        });
+    }
+
+
+
+
+
+
     /**
          * Esta es la interfaz que Retrofit usa para definir cómo hacer las peticiones HTTP.
          * Retrofit la implementa automáticamente usando las anotaciones que tú le pongas.
@@ -979,7 +1027,8 @@ public class Utilidades {
         @GET("profesor/Crear_Peticiones.php")
         Call<Respuesta>Crear_Peticiones(@Query("user_id")int user_id, @Query("units")String unidades, @Query("materiales") String materiales );
 
-
+        @GET("profesor/Ver_Peticiones.php")
+        Call<Respuesta>VerPeticiones();
 
 
     }
