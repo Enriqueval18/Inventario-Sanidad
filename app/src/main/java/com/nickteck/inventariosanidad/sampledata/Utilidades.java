@@ -947,7 +947,57 @@ public class Utilidades {
     }
 
 
+    public static void eliminarPeticiones(int peticion_id, RespuestaCallback callback){
 
+        // Paso 1: Crear la instancia de Retrofit con configuración básica
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL) // Le decimos a Retrofit cuál es la URL base para todas las peticiones
+                .addConverterFactory(GsonConverterFactory.create()) // Le decimos que use Gson para convertir JSON en objetos Java automáticamente
+                .build(); // Creamos la instancia final de Retrofit
+
+        Log.d("crearConexion", "Peticion id a eliminar " + peticion_id );
+
+        // Paso 2: Creamos un objeto que implementa automáticamente la interfaz ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+// Llamar a la función para eliminar el usuario de la base de datos
+        Call<Respuesta> call = api.eliminarPeticion(peticion_id);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("ELIMINAR_PETICION", recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        Log.d("ELIMINAR_PETICION", "se uso correctamente");
+                        callback.onResultado(true);
+                    } else {
+                        Log.d("ELIMINAR_PETICION", recibido.getMensaje());
+
+                        callback.onResultado(false);
+                    }
+                }
+                else {
+                    callback.onResultado(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("ELIMINAR_PETICION", "no se logro enviar la solicitud" + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+
+
+
+
+    }
 
 
 
@@ -1030,6 +1080,8 @@ public class Utilidades {
         @GET("profesor/Ver_Peticiones.php")
         Call<Respuesta>VerPeticiones();
 
+        @DELETE("usuario/EliminarActividades.php")
+        Call<Respuesta>eliminarPeticion( @Query("peticion_id") int activity_id);
 
     }
 
