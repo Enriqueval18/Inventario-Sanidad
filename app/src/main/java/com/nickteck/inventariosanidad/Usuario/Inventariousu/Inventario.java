@@ -115,7 +115,9 @@ public class Inventario extends Fragment {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
             public void onMaterialObtenido(int material_id,String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion,String tipo) {
-                listamateriales.add(new Material( nombre, material_id, descripcion,  unidades,  unidades_min,    almacen,  armario,  estante,  "",tipo));
+                if (tipo.equals("use")) {
+                    listamateriales.add(new Material(nombre, material_id, descripcion, unidades, unidades_min, almacen, armario, estante, "", tipo));
+                }
             }
 
             @Override

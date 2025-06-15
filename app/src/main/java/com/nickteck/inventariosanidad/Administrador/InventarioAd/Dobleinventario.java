@@ -259,13 +259,21 @@ public class Dobleinventario extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle("Elige un material");
 
-            String[] nombres = new String[listaMateriales.size()];
-            for (int i = 0; i < listaMateriales.size(); i++) {
-                nombres[i] = listaMateriales.get(i).getNombre();
+            List<String> nombresList = new ArrayList<>();
+            List<Material> materialesFiltrados = new ArrayList<>();
+
+            for (Material material : listaMateriales) {
+                if (material.getTipo().equalsIgnoreCase(storagetype)) {
+                    Log.d("tipo", "mostrarDialogoSumarRestarCantidad: " + material.getTipo());
+                    nombresList.add(material.getNombre());
+                    materialesFiltrados.add(material);
+                }
             }
 
+            String[] nombres = nombresList.toArray(new String[0]);
+
             builder.setItems(nombres, (dialog, which) -> {
-                Material mat = listaMateriales.get(which);
+                Material mat = materialesFiltrados.get(which);
                 if (filaViews.containsKey(mat.getNombre())) return;
 
                 seleccionados.add(mat);
