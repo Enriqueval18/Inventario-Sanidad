@@ -234,7 +234,9 @@ public class Materiales extends Fragment {
             public void onSuccess(List<Material> materialList) {
                 final List<String> materialNames = new ArrayList<>();
                 for (Material m : materialList) {
-                    materialNames.add(m.getNombre());
+                    if (m.getTipo().equalsIgnoreCase("use")) {
+                        materialNames.add(m.getNombre());
+                    }
                 }
 
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(

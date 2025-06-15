@@ -262,7 +262,9 @@ public class ActividadesAdapter extends RecyclerView.Adapter<ActividadesAdapter.
             public void onSuccess(List<Material> materialList) {
                 List<String> nombres = new ArrayList<>();
                 for (Material m : materialList) {
-                    nombres.add(m.getNombre());
+                    if (m.getTipo().equalsIgnoreCase("use")) {
+                        nombres.add(m.getNombre());
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, nombres);

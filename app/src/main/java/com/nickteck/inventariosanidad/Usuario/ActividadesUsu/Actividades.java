@@ -188,7 +188,9 @@ public class Actividades extends Fragment {
             public void onSuccess(List<Material> materialList) {
                 List<String> nombres = new ArrayList<>();
                 for (Material m : materialList) {
-                    nombres.add(m.getNombre());
+                    if (m.getTipo().equalsIgnoreCase("use")) {
+                        nombres.add(m.getNombre());
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
