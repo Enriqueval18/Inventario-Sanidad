@@ -1,6 +1,8 @@
 package com.nickteck.inventariosanidad.Administrador.InventarioAd;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import com.nickteck.inventariosanidad.R;
 import com.nickteck.inventariosanidad.sampledata.Material;
 import com.nickteck.inventariosanidad.sampledata.MaterialCallback;
+import com.nickteck.inventariosanidad.sampledata.RespuestaCallback;
 import com.nickteck.inventariosanidad.sampledata.Utilidades;
 
 import java.util.ArrayList;
@@ -41,7 +44,8 @@ public class Dobleinventario extends Fragment {
     private LinearLayout tablaMateriales;
     private SearchView searchView;
     private List<Material> listaMateriales = new ArrayList<>();
-
+    int userId;
+    String storagetype;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_doblein, container, false);
@@ -52,7 +56,14 @@ public class Dobleinventario extends Fragment {
 
         configurarBusqueda();
         obtenerDatosInventario();
+        SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        userId = prefs.getInt("user_id", -1);
 
+        if (userId == -1) {
+            Toast.makeText(requireContext(), "No se encontró el ID del usuario", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("USER_ID", "ID obtenido: " + userId);
+        }
         return view;
     }
     private void configurarBusqueda() {
@@ -75,9 +86,8 @@ public class Dobleinventario extends Fragment {
     private void obtenerDatosInventario() {
         Utilidades.obtenerMateriales(new MaterialCallback() {
             @Override
-            public void onMaterialObtenido(int material_id,String nombre, int unidades, String almacen, String armario, String estante, int unidadesMin, String descripcion) {
-                Material material = new Material(nombre, descripcion, unidades, unidadesMin, almacen, armario, descripcion);
-                listaMateriales.add(material);
+            public void onMaterialObtenido(int material_id,String nombre, int unidades, String almacen, String armario, String estante, int unidades_min, String descripcion) {
+                listaMateriales.add(new Material( nombre,  material_id,  descripcion,  unidades,  unidades_min,  almacen,  armario,  estante,  ""));
                 refreshTabla(listaMateriales);
             }
 
@@ -194,8 +204,10 @@ public class Dobleinventario extends Fragment {
         builder.setTitle("¿Qué inventario deseas modificar?")
                 .setItems(new String[]{"Modificar Inventario Principal", "Modificar Inventario Secundario"}, (dialog, which) -> {
                     if (which == 0) {
+                        storagetype = "use";
                         mostrarOpcionesModificacion("Principal");
                     } else if (which == 1) {
+                        storagetype = "reserve";
                         mostrarOpcionesModificacion("Secundario");
                     }
                 })
@@ -226,12 +238,13 @@ public class Dobleinventario extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_sumar_restar_material, null);
         Button btnSeleccionar = dialogView.findViewById(R.id.btnSeleccionarMateriales);
         LinearLayout contenedorSeleccionados = dialogView.findViewById(R.id.contenedorSeleccionados);
-        EditText etSumar = dialogView.findViewById(R.id.etSumar);
-        EditText etRestar = dialogView.findViewById(R.id.etRestar);
+        EditText etOperacion = dialogView.findViewById(R.id.etOperacion);
+        ImageView sumar = dialogView.findViewById(R.id.imageViewSumar);
+        ImageView restar = dialogView.findViewById(R.id.imageViewRestar);
 
         List<Material> seleccionados = new ArrayList<>();
         Map<String, View> filaViews = new HashMap<>();
-        final Material[] materialActivo = {null}; // Solo uno activo
+        final Material[] materialActivo = {null};
 
         btnSeleccionar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -239,7 +252,7 @@ public class Dobleinventario extends Fragment {
 
             String[] nombres = new String[listaMateriales.size()];
             for (int i = 0; i < listaMateriales.size(); i++) {
-                nombres[i] = listaMateriales.get(i).getNombre();
+                    nombres[i] = listaMateriales.get(i).getNombre() + " "+ listaMateriales.get(i).getAlmacen();
             }
 
             builder.setItems(nombres, (dialog, which) -> {
@@ -257,12 +270,10 @@ public class Dobleinventario extends Fragment {
                 filaViews.put(mat.getNombre(), fila);
 
                 fila.setOnClickListener(f -> {
-                    // Marcar este como seleccionado visualmente
                     for (View otraFila : filaViews.values()) {
                         otraFila.setBackgroundColor(Color.TRANSPARENT);
                     }
                     fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_100));
-
                     materialActivo[0] = mat;
                 });
 
@@ -272,15 +283,13 @@ public class Dobleinventario extends Fragment {
             builder.show();
         });
 
-        // Cambio en tiempo real
+        // 👉 TextWatcher para actualizar visualmente
         TextWatcher watcher = new TextWatcherAdapter() {
             public void afterTextChanged(Editable s) {
                 if (materialActivo[0] == null) return;
 
-                int suma = etSumar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etSumar.getText().toString());
-                int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-
-                int nuevaCantidad = materialActivo[0].getUnidades() + suma - resta;
+                int suma = etOperacion.getText().toString().isEmpty() ? 0 : Integer.parseInt(etOperacion.getText().toString());
+                int nuevaCantidad = materialActivo[0].getUnidades() + suma;
                 nuevaCantidad = Math.max(0, nuevaCantidad);
 
                 View fila = filaViews.get(materialActivo[0].getNombre());
@@ -290,26 +299,92 @@ public class Dobleinventario extends Fragment {
                 }
             }
         };
+        etOperacion.addTextChangedListener(watcher);
 
-        etSumar.addTextChangedListener(watcher);
-        etRestar.addTextChangedListener(watcher);
+        // 🔼 SUMAR unidades al material vía API
+        sumar.setOnClickListener(v -> {
+            if (materialActivo[0] == null) {
+                Toast.makeText(getContext(), "Selecciona un material primero", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            int cantidad;
+            try {
+                cantidad = Integer.parseInt(etOperacion.getText().toString());
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Utilidades.SumarMaterialAdmin(userId, materialActivo[0].getId(), storagetype, cantidad, new RespuestaCallback() {
+                @Override
+                public void onResultado(boolean exito) {
+                    if (exito) {
+                        materialActivo[0].setUnidades(materialActivo[0].getUnidades() + cantidad);
+                        refreshTabla(listaMateriales);
+                        Toast.makeText(getContext(), "Sumado con éxito", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Fallo al sumar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    Toast.makeText(getContext(), "Error de red al sumar", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        // 🔽 RESTAR unidades al material vía API
+        restar.setOnClickListener(v -> {
+            if (materialActivo[0] == null) {
+                Toast.makeText(getContext(), "Selecciona un material primero", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int cantidad;
+            try {
+                cantidad = Integer.parseInt(etOperacion.getText().toString());
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (cantidad <= 0 || cantidad > materialActivo[0].getUnidades()) {
+                Toast.makeText(getContext(), "Cantidad no válida para restar", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Utilidades.RestarMaterialAdmin(userId, materialActivo[0].getId(), storagetype, cantidad, new RespuestaCallback() {
+                @Override
+                public void onResultado(boolean exito) {
+                    if (exito) {
+                        materialActivo[0].setUnidades(materialActivo[0].getUnidades() - cantidad);
+                        refreshTabla(listaMateriales);
+                        Toast.makeText(getContext(), "Restado con éxito", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Fallo al restar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(boolean error) {
+                    Toast.makeText(getContext(), "Error de red al restar", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        // ✅ Solo cierra el diálogo
         new AlertDialog.Builder(getContext())
                 .setTitle("Modificar cantidades")
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
-                    if (materialActivo[0] != null) {
-                        int suma = etSumar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etSumar.getText().toString());
-                        int resta = etRestar.getText().toString().isEmpty() ? 0 : Integer.parseInt(etRestar.getText().toString());
-                        int nuevaCantidad = materialActivo[0].getUnidades() + suma - resta;
-                        materialActivo[0].setUnidades(Math.max(0, nuevaCantidad));
-                    }
-                    refreshTabla(listaMateriales);
-                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Cambios revisados", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
 
     public abstract class TextWatcherAdapter implements TextWatcher {
         @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contenedorDialogoCantidad"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,27 +26,33 @@
     </ScrollView>
 
 
+    <EditText
+        android:id="@+id/etOperacion"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="Cantidad"
+        android:inputType="number" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/etSumar"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/imageViewSumar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Sumar"
-            android:inputType="number" />
+            android:layout_weight="1"
+            app:srcCompat="@drawable/plus_solid" />
 
-        <EditText
-            android:id="@+id/etRestar"
+        <ImageView
+            android:id="@+id/imageViewRestar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Restar"
-            android:inputType="number"
-            android:layout_marginStart="8dp" />
+            app:srcCompat="@drawable/minus" />
     </LinearLayout>
+
 </LinearLayout>
