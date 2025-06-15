@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Restar Cantidad"
+        android:fontFamily="@font/inter2"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_marginBottom="16dp"
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Seleccionar material"
+        android:fontFamily="@font/inter2"
         android:backgroundTint="@color/buttonPrimary"
         android:textColor="@android:color/white" />
 
@@ -40,6 +42,8 @@
         android:layout_height="wrap_content"
         android:hint="Cantidad a restar"
         android:inputType="number"
+        android:fontFamily="@font/inter2"
+        android:gravity="center"
         android:backgroundTint="@color/inputBackground"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_edittext"

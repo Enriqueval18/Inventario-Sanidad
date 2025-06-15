@@ -185,45 +185,46 @@ public class Inventario extends Fragment {
      * Cogemos el tipo de usuario del login , atravez de preferencias y todo se modifica en el mismo inventario
      */
     private void mostrarDialogoRestarCantidad() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_restar_material, null);
+        View dialogView = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialog_restar_material, null);
         Button btnSeleccionar = dialogView.findViewById(R.id.btnSeleccionarMateriales);
         LinearLayout contenedorSeleccionados = dialogView.findViewById(R.id.contenedorSeleccionados);
         EditText etRestar = dialogView.findViewById(R.id.etRestar1);
 
-        List<Material> seleccionados = new ArrayList<>();
         Map<String, View> filaViews = new HashMap<>();
         final Material[] materialActivo = {null};
 
-        SharedPreferences prefs = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireContext()
+                .getSharedPreferences("prefs", Context.MODE_PRIVATE);
         String tipo = prefs.getString("tipo_usuario", "");
         int idUsuario = prefs.getInt("user_id", -1);
 
         if (idUsuario == -1 || tipo.isEmpty()) {
-            Toast.makeText(getContext(), "Error al obtener usuario o tipo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Error al obtener usuario o tipo", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (listamateriales == null || listamateriales.isEmpty()) {
-            Toast.makeText(getContext(), "No hay materiales cargados", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "No hay materiales cargados", Toast.LENGTH_SHORT).show();
             return;
         }
 
         btnSeleccionar.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Elige un material");
-
             String[] nombres = new String[listamateriales.size()];
             for (int i = 0; i < listamateriales.size(); i++) {
                 nombres[i] = listamateriales.get(i).getNombre();
             }
-
             builder.setItems(nombres, (dialog, which) -> {
                 Material mat = listamateriales.get(which);
                 if (filaViews.containsKey(mat.getNombre())) return;
 
-                seleccionados.add(mat);
-
-                View fila = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, null);
+                // Creamos la fila usando contenedorSeleccionados como padre
+                View fila = LayoutInflater.from(getContext())
+                        .inflate(android.R.layout.simple_list_item_2,
+                                contenedorSeleccionados, false);
                 TextView tvNombre = fila.findViewById(android.R.id.text1);
                 TextView tvCantidad = fila.findViewById(android.R.id.text2);
 
@@ -232,103 +233,129 @@ public class Inventario extends Fragment {
                 filaViews.put(mat.getNombre(), fila);
 
                 fila.setOnClickListener(f -> {
-                    for (View otraFila : filaViews.values()) {
-                        otraFila.setBackgroundColor(Color.TRANSPARENT);
+                    // Resetea fondo de todas
+                    for (View otra : filaViews.values()) {
+                        otra.setBackgroundColor(Color.TRANSPARENT);
                     }
-                    fila.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary_400));
+                    fila.setBackgroundColor(ContextCompat.getColor(
+                            requireContext(), R.color.primary_400));
                     materialActivo[0] = mat;
+
+                    // Al seleccionar, si ya hay número en etRestar, actualizar
+                    String texto = etRestar.getText().toString().trim();
+                    try {
+                        int resta = Integer.parseInt(texto);
+                        int nuevaCant = Math.max(0, mat.getUnidades() - resta);
+                        tvCantidad.setText("Cantidad nueva: " + nuevaCant);
+                    } catch (NumberFormatException ex) {
+                        tvCantidad.setText("Cantidad actual: " + mat.getUnidades());
+                    }
                 });
 
                 contenedorSeleccionados.addView(fila);
             });
-
             builder.show();
 
-            TextWatcher watcher = new TextWatcherAdapter() {
+            // Watcher que resta o restablece original si borras todo
+            etRestar.addTextChangedListener(new TextWatcherAdapter() {
+                @Override
                 public void afterTextChanged(Editable s) {
                     if (materialActivo[0] == null) return;
+                    View fila = filaViews.get(materialActivo[0].getNombre());
+                    if (fila == null) return;
+                    TextView tvCantidad = fila.findViewById(android.R.id.text2);
 
+                    String txt = s.toString().trim();
                     try {
-                        int resta = Integer.parseInt(s.toString());
-                        int nuevaCantidad = Math.max(0, materialActivo[0].getUnidades() - resta);
-
-                        View fila = filaViews.get(materialActivo[0].getNombre());
-                        if (fila != null) {
-                            TextView tvCantidad = fila.findViewById(android.R.id.text2);
-                            tvCantidad.setText("Cantidad nueva: " + nuevaCantidad);
-                        }
-                    } catch (NumberFormatException ignored) {}
+                        int resta = Integer.parseInt(txt);
+                        int nuevaCant = Math.max(0, materialActivo[0].getUnidades() - resta);
+                        tvCantidad.setText("Cantidad nueva: " + nuevaCant);
+                    } catch (NumberFormatException e) {
+                        // si txt es vacío o no numérico, volvemos al original
+                        tvCantidad.setText("Cantidad actual: " + materialActivo[0].getUnidades());
+                    }
                 }
-            };
-
-            etRestar.addTextChangedListener(watcher);
+            });
         });
 
         new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setPositiveButton("Aceptar", (d, w) -> {
                     if (materialActivo[0] == null) {
-                        Toast.makeText(getContext(), "Debes seleccionar un material", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),
+                                "Debes seleccionar un material", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     int resta;
                     try {
-                        resta = Integer.parseInt(etRestar.getText().toString());
+                        resta = Integer.parseInt(etRestar.getText().toString().trim());
                     } catch (NumberFormatException e) {
-                        Toast.makeText(getContext(), "Introduce un número válido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),
+                                "Introduce un número válido", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     if (resta < 0) {
-                        Toast.makeText(getContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),
+                                "Cantidad inválida", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    int nuevaCantidad = Math.max(0, materialActivo[0].getUnidades() - resta);
-                    materialActivo[0].setUnidades(nuevaCantidad);
+                    // Aplicamos cambio real al objeto
+                    Material mat = materialActivo[0];
+                    int nuevaCantidad = Math.max(0, mat.getUnidades() - resta);
+                    mat.setUnidades(nuevaCantidad);
 
+                    // Llamada según tipo
                     if (tipo.equalsIgnoreCase("student")) {
-                        Utilidades.quitarMaterialesUsuarios(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
-                            @Override
-                            public void onResultado(boolean correcto) {
-                                if (correcto) {
-                                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                                    actualizarTabla(listamateriales);
-                                } else {
-                                    Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(boolean error) {
-                                Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else if (tipo.equalsIgnoreCase("teacher")) {
-                        Utilidades.usarMaterialesProfesor(idUsuario, materialActivo[0].getId(), resta, new RespuestaCallback() {
-                            @Override
-                            public void onResultado(boolean correcto) {
-                                if (correcto) {
-                                    Toast.makeText(getContext(), "Actualización aplicada", Toast.LENGTH_SHORT).show();
-                                    actualizarTabla(listamateriales);
-                                } else {
-                                    Toast.makeText(getContext(), "Stock insuficiente o material no encontrado", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(boolean error) {
-                                Toast.makeText(getContext(), "Fallo de red", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        Toast.makeText(getContext(), "Tipo de usuario no válido", Toast.LENGTH_SHORT).show();
+                        Utilidades.quitarMaterialesUsuarios(
+                                idUsuario, mat.getId(), resta,
+                                new RespuestaCallback() {
+                                    @Override
+                                    public void onResultado(boolean correcto) {
+                                        if (correcto) {
+                                            Toast.makeText(getContext(),
+                                                    "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                            actualizarTabla(listamateriales);
+                                        } else {
+                                            Toast.makeText(getContext(),
+                                                    "Stock insuficiente o material no encontrado",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(boolean error) {
+                                        Toast.makeText(getContext(),
+                                                "Fallo de red", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else { // teacher
+                        Utilidades.usarMaterialesProfesor(
+                                idUsuario, mat.getId(), resta,
+                                new RespuestaCallback() {
+                                    @Override
+                                    public void onResultado(boolean correcto) {
+                                        if (correcto) {
+                                            Toast.makeText(getContext(),
+                                                    "Actualización aplicada", Toast.LENGTH_SHORT).show();
+                                            actualizarTabla(listamateriales);
+                                        } else {
+                                            Toast.makeText(getContext(),
+                                                    "Stock insuficiente o material no encontrado",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(boolean error) {
+                                        Toast.makeText(getContext(),
+                                                "Fallo de red", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
 
 
 

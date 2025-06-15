@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Nueva Actividad"
+        android:fontFamily="@font/inter2"
         android:textColor="@color/textPrimary"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -23,12 +24,14 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Nombre de la actividad"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
         android:background="@drawable/bg_edittext"
         android:inputType="text"
+        android:backgroundTint="@color/inputBackground"
         android:paddingStart="8dp"
+        android:fontFamily="@font/inter2"
+
         android:paddingEnd="8dp"
+        android:gravity="center"
         android:layout_marginBottom="16dp" />
 
     <Button
@@ -38,6 +41,7 @@
         android:text="Seleccionar material"
         android:textColor="#FFFFFF"
         android:textAllCaps="false"
+        android:fontFamily="@font/inter2"
         android:backgroundTint="@color/buttonPrimary"
         android:layout_marginBottom="16dp" />
 
@@ -47,10 +51,12 @@
         android:layout_height="48dp"
         android:hint="Cantidad"
         android:inputType="number"
-        android:textColorHint="@color/black"
+        android:backgroundTint="@color/inputBackground"
         android:background="@drawable/bg_edittext"
         android:paddingStart="8dp"
+        android:fontFamily="@font/inter2"
         android:paddingEnd="8dp"
+        android:gravity="center"
         android:layout_marginBottom="8dp" />
 
 </LinearLayout>
