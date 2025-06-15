@@ -1,13 +1,22 @@
 package com.nickteck.inventariosanidad.sampledata;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Material {
+    @SerializedName("name")
     String nombre;
     int id;
+    @SerializedName("description")
     String descripcion;
+    @SerializedName("units")
     int unidades;
+    @SerializedName("min_units")
     int unidades_min;
+    @SerializedName("storage")
     String almacen;
+    @SerializedName("cabinet")
     String armario;
+    @SerializedName("shelf")
     String estante;
     String cajon;
     String tipo;
@@ -60,6 +69,17 @@ public class Material {
         this.estante = estante;
         this.cajon = cajon;
         this.tipo=tipo;
+    }
+
+    //este se usa para crear los materiales
+    public Material(String name, String description, String storage, String cabinet, String shelf, int units, int minUnits) {
+        this.nombre = name;
+        this.descripcion = description;
+        this.almacen = storage;
+        this.armario = cabinet;
+        this.estante = shelf;
+        this.unidades = units;
+        this.unidades_min = minUnits;
     }
 
     public int getUnidades() {

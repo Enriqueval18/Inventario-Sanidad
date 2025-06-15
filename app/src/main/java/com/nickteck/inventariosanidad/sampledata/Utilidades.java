@@ -818,6 +818,47 @@ public class Utilidades {
         });
     }
 
+    public static void CrearMaterial(Material materia, RespuestaCallback callback)
+    {
+        // Paso 1: Crear instancia Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Log.d("CrearMaterial", "Enviando material: " + materia.getNombre());
+
+        // Paso 2: Crear instancia de ApiService
+        ApiService api = retrofit.create(ApiService.class);
+
+        // Paso 3: Llamada a la API
+        Call<Respuesta> call = api.Crear_material(materia);
+
+        call.enqueue(new Callback<Respuesta>() {
+            @Override
+            public void onResponse(Call<Respuesta> call, Response<Respuesta> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Respuesta recibido = response.body();
+                    Log.d("CrearMaterial", "Respuesta: " + recibido.getMensaje());
+
+                    if (recibido.isRespuesta()) {
+                        callback.onResultado(true);
+                    } else {
+                        callback.onResultado(false);
+                    }
+                } else {
+                    callback.onResultado(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respuesta> call, Throwable t) {
+                Log.e("CrearMaterial", "Fallo en la solicitud: " + t.getMessage());
+                callback.onFailure(true);
+            }
+        });
+    }
+
     public static void crearPeticiones(int user_id, String nombre_materiales, String units, RespuestaCallback callback){
 
         // Paso 1: Crear la instancia de Retrofit con configuración básica
@@ -931,6 +972,9 @@ public class Utilidades {
 
         @GET("admin/Sumar_material_admin.php")
         Call<Respuesta>Sumar_material_admin(@Query("user_id")int user_id, @Query("material_id")int material_id, @Query("storage_type") String storage_type, @Query("units")int units);
+
+        @POST("admin/CrearMaterial.php")
+        Call<Respuesta>Crear_material(@Body Material material);
 
         @GET("profesor/Crear_Peticiones.php")
         Call<Respuesta>Crear_Peticiones(@Query("user_id")int user_id, @Query("units")String unidades, @Query("materiales") String materiales );
