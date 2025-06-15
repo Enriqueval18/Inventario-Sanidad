@@ -127,12 +127,12 @@ public class Dobleinventario extends Fragment {
         TextView tvUnidades = crearCelda(String.valueOf(item.getUnidades()));
         tvUnidades.setGravity(Gravity.CENTER_HORIZONTAL);
         TextView tvAlmacen = crearCelda(item.getAlmacen());
-        TextView tvArmario = crearCelda(item.getArmario());
+        TextView tvTipo = crearCelda(item.getTipo());
 
         fila.addView(tvNombre);
         fila.addView(tvUnidades);
         fila.addView(tvAlmacen);
-        fila.addView(tvArmario);
+        fila.addView(tvTipo);
 
         fila.setOnClickListener(v -> mostrarDialogoDetalle(item));
 
@@ -155,6 +155,7 @@ public class Dobleinventario extends Fragment {
         args.putString("estante", item.getEstante());
         args.putInt("unidadesm", item.getUnidades_min());
         args.putString("descripcion", item.getDescripcion());
+        args.putString("tipo",item.getTipo());
         dialog.setArguments(args);
         dialog.show(getParentFragmentManager(), "MostarDobleinventario");
     }

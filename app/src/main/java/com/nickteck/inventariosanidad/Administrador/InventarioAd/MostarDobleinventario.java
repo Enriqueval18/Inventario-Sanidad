@@ -41,6 +41,7 @@ public class MostarDobleinventario extends DialogFragment {
         TextView tvEstante = view.findViewById(R.id.tvEstante1);
         TextView tvUnidadesMinimas = view.findViewById(R.id.tvUnidadesMinimas1);
         TextView tvDescripcion = view.findViewById(R.id.tvDescripcion1);
+        TextView tvTipo = view.findViewById(R.id.tipo);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -51,6 +52,7 @@ public class MostarDobleinventario extends DialogFragment {
             String balda = args.getString("estante", "");
             int unidades = args.getInt("unidades", 0);
             int unidadesMin = args.getInt("unidadesm", 0);
+            String tipo = args.getString("tipo", "");
 
             // Usamos el metodo auxiliar para que esté en negrita
             tvNombre.setText(createBoldLabel("Nombre: ", nombre));
@@ -60,6 +62,9 @@ public class MostarDobleinventario extends DialogFragment {
             tvEstante.setText(createBoldLabel("Estante: ", balda));
             tvUnidadesMinimas.setText(createBoldLabel("Unidades mínimas: ", String.valueOf(unidadesMin)));
             tvDescripcion.setText(createBoldLabel("Descripción: ", descripcion));
+            tvTipo.setText(createBoldLabel("Tipo: ", String.valueOf(tipo)));
+
+
         }
 
         return view;

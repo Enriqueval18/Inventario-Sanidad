@@ -86,7 +86,8 @@
     <string name="btnananir">Añadir</string>
     <string name="btn_borrar">Quitar</string>
     <string name="btn_cambiar">Cambiar</string>
-
+    <string name="tipo">Tipo</string>
+    <string name="tipos">Tipo:</string>
 
 
 </resources>
