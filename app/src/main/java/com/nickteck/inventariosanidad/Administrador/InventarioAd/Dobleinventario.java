@@ -112,7 +112,8 @@ public class Dobleinventario extends Fragment {
     private void refreshTabla(List<Material> materiales) {
         int childCount = tablaMateriales.getChildCount();
         if (childCount > 1) {
-            tablaMateriales.removeViews(1, childCount - 1);
+            tablaMateriales.removeAllViews();
+
         }
 
         for (Material item : materiales) {
