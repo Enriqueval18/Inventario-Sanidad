@@ -35,7 +35,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.View
     @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistorialItem item = filteredItems.get(position);
         holder.tvHora.setText(String.format("Fecha: %s", item.getTime()));
-        holder.tvEstudiante.setText(String.format("Alumno: %s", item.getStudent()));
+        holder.tvEstudiante.setText(String.format("Usuario: %s", item.getStudent()));
         holder.tvMaterial.setText(String.format("Material: %s", item.getMaterial()));
         holder.tvCantidad.setText(String.format("Cantidad recogida: %s", item.getCantidad()));
     }
